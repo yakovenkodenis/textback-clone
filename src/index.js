@@ -7,6 +7,11 @@ import { Provider } from 'mobx-react';
 
 import registerServiceWorker from './registerServiceWorker';
 
+import 'jquery';
+import 'popper.js/dist/umd/popper';
+// import 'bootstrap/dist/js/bootstrap';
+import 'bootstrap';
+
 import './mdi.css';
 import './vendor.bundle.css'
 import './style.css';
