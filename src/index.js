@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import promiseFinally from 'promise.prototype.finally';
-import { HashRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { configure } from 'mobx';
 import { Provider } from 'mobx-react';
 
@@ -41,9 +41,9 @@ configure({
 
 ReactDOM.render(
     <Provider {...stores}>
-        <HashRouter>
+        <BrowserRouter>
             <App />
-        </HashRouter>
+        </BrowserRouter>
     </Provider>,
     document.getElementById('root')
 );
