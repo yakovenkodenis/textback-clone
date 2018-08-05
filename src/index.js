@@ -7,6 +7,8 @@ import { Provider } from 'mobx-react';
 
 import registerServiceWorker from './registerServiceWorker';
 
+import './mdi.css';
+import './vendor.bundle.css'
 import './style.css';
 import App from './components/App';
 

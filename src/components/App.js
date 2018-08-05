@@ -4,7 +4,8 @@ import { inject, observer } from 'mobx-react';
 
 import PrivateRoute from './PrivateRoute';
 import Home from './Home';
-import Login from './Login';
+import Login from './Login/Login';
+import Register from './Register/Register';
 
 
 @inject('userStore', 'commonStore')
@@ -31,6 +32,7 @@ export default class App extends Component {
         <div>
           <Switch>
             <Route path='/login' component={Login} />
+            <Route path='/register' component={Register} />
             <PrivateRoute path='/private' component={Login} />
             <Route path='/' component={Home} />
           </Switch>
