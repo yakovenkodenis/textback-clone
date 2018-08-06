@@ -1,3 +1,5 @@
+// for mobile burger menu icon
+
 (function($) {
     'use strict';
     $(function() {

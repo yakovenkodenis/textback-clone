@@ -7,10 +7,10 @@ import { Provider } from 'mobx-react';
 
 import registerServiceWorker from './registerServiceWorker';
 
-import 'jquery';
-import 'popper.js/dist/umd/popper';
-// import 'bootstrap/dist/js/bootstrap';
-import 'bootstrap';
+import jQuery from 'jquery';
+// import popper from 'popper.js/dist/umd/popper';
+// import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+// import 'bootstrap';
 
 import './mdi.css';
 import './vendor.bundle.css'
@@ -22,7 +22,9 @@ import userStore from './stores/userStore';
 import authStore from './stores/authStore';
 import commonStore from './stores/commonStore';
 
-
+window.jQuery = window.jquery = window.$ = jQuery;
+require('bootstrap/dist/js/bootstrap.bundle.min.js');
+// window.Popper = popper;
 
 const stores = {
     userStore,

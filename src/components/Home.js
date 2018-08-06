@@ -2,12 +2,13 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 
 import NavBar from './Dashboard/NavBar';
-import SideBar from './Dashboard/SideBar';
+import SideBar from './Dashboard/SideBar/SideBar';
 
 import Dialogs from './Dialogs/Dialogs';
 import Analytics from './Analytics/Analytics';
 import Newsletter from './Newsletter/Newsletter';
 import Settings from './Settings/Settings';
+import Autofunnels from './Autofunnels/Autofunnels';
 
 
 const routes = [
@@ -17,12 +18,23 @@ const routes = [
         component: () => <Dialogs />
     },
     {
+        path: '/dialogs',
+        component: () => <Dialogs />
+    },
+    {
         path: '/analytics',
+        exact: true,
         component: () => <Analytics />
     },
     {
         path: '/newsletter',
+        exact: true,
         component: () => <Newsletter />
+    },
+    {
+        path: '/autofunnels',
+        exact: true,
+        component: () => <Autofunnels />
     },
     {
         path: '/settings',
