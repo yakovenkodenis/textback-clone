@@ -41,12 +41,44 @@ export default class Audience extends Component {
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
                             <div className="card-body">
+                                <h6 className="card-title">
+                                    <i className="mdi mdi-filter"> </i> Фильтр
+                                </h6>
+
+                                <form className="form-inline">
+                                    <label htmlFor="inputFilter1" className="sr-only"></label>
+                                    <input
+                                        type="text"
+                                        id="inputFilter1"
+                                        className="form-control mb2 mr-sm-2"
+                                        placeholder="Имя"
+                                    />
+
+                                    <label htmlFor="inputFilter2" className="sr-only"></label>
+                                    <input
+                                        type="text"
+                                        id="inputFilter2"
+                                        className="form-control mb2 mr-sm-2"
+                                        placeholder="Возраст"
+                                    />
+
+                                    <label htmlFor="inputFilter3" className="sr-only"></label>
+                                    <input
+                                        type="text"
+                                        id="inputFilter3"
+                                        className="form-control mb2 mr-sm-2"
+                                        placeholder="Еще один супер фильтр"
+                                    />
+                                </form>
+                                <br/><br/>
+
                                 <div className="table-responsive">
                                     <DataTable
                                         columns={columns}
                                         data={data}
                                     />
                                 </div>
+
                                 <br /><br />
                                 <nav>
                                     <ul className="pagination d-flex justify-content-center flat pagination-success">

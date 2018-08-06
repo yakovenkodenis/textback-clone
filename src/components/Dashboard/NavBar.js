@@ -39,7 +39,7 @@ export default class NavBar extends Component {
 
 
             {/* ============ HEADER NAVBAR LEFT ITEMS LIST ===================== */}
-              <ul className="navbar-nav navbar-nav-right">
+              <ul className="navbar-nav navbar-nav-right" style={{cursor: "pointer"}}>
 
 
                 {/* ============ Profile info ===================== */}
@@ -56,7 +56,7 @@ export default class NavBar extends Component {
                   <div className="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
                     <a className="dropdown-item">
                       <i className="mdi mdi-cached mr-2 text-success"></i>
-                      Activity Log
+                      Журнал активности
                     </a>
                     <div className="dropdown-divider"></div>
                     <a className="dropdown-item">

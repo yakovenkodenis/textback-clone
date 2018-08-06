@@ -6,6 +6,7 @@ import PrivateRoute from './PrivateRoute';
 import Home from './Home';
 import Login from './Login/Login';
 import Register from './Register/Register';
+import NotFound from './NotFound';
 
 
 @inject('userStore', 'commonStore')
@@ -31,10 +32,11 @@ export default class App extends Component {
       return (
         <div>
           <Switch>
+            <Route path='/admin' component={Home} />
             <Route path='/login' component={Login} />
             <Route path='/register' component={Register} />
             <PrivateRoute path='/private' component={Login} />
-            <Route path='/' component={Home} />
+            <Route component={NotFound} />
           </Switch>
         </div>
       );

@@ -19,7 +19,7 @@ export default class NavBar extends Component {
             <ul className="nav">
 
               <li className="nav-item nav-profile">
-                <Link to='/' className="nav-link">
+                <Link to='/admin' className="nav-link">
                   <div className="nav-profile-image">
                     <img src="https://placeimg.com/100/100/people" alt="profile" />
         <span className="login-status online"></span> {/* change to offline or busy as needed */}              
@@ -38,44 +38,44 @@ export default class NavBar extends Component {
                 routes={[
                   {
                     name: 'Непрочитанные',
-                    route: '/dialogs/unread'
+                    route: '/admin/dialogs/unread'
                   },
                   {
                     name: 'Telegram',
-                    route: '/dialogs/telegram'
+                    route: '/admin/dialogs/telegram'
                   },
                   {
                     name: 'Viber',
-                    route: '/dialogs/viber'
+                    route: '/admin/dialogs/viber'
                   },
                   {
                     name: 'Facebook',
-                    route: '/dialogs/facebook'
+                    route: '/admin/dialogs/facebook'
                   }
                 ]}
               />
 
               <SidebarItem
                 itemName='Рассылки'
-                routePath='/newsletter'
+                routePath='/admin/newsletter'
                 iconClassName='mdi-newspaper'
               />
 
               <SidebarItem
                 itemName='Автоворонки'
-                routePath='/autofunnels'
+                routePath='/admin/autofunnels'
                 iconClassName='mdi-blender'
               />
 
               <SidebarItem
                 itemName='Аудитория'
-                routePath='/audience'
+                routePath='/admin/audience'
                 iconClassName='mdi-account-multiple'
               />
 
               <SidebarItem
                 itemName='Аналитика'
-                routePath='/analytics'
+                routePath='/admin/analytics'
                 iconClassName='mdi-google-analytics'
               />
 
@@ -86,19 +86,19 @@ export default class NavBar extends Component {
                 routes={[
                   {
                     name: 'Аккаунт',
-                    route: '/settings/account'
+                    route: '/admin/settings/account'
                   },
                   {
                     name: 'Каналы',
-                    route: '/settings/channels'
+                    route: '/admin/settings/channels'
                   },
                   {
                     name: 'Общие',
-                    route: '/settings/general'
+                    route: '/admin/settings/general'
                   },
                   {
                     name: 'Подписка',
-                    route: '/settings/subscription'
+                    route: '/admin/settings/subscription'
                   }
                 ]}
               />

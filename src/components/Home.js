@@ -39,13 +39,14 @@ const routes = [
     },
     {
         path: '/audience',
+        exact: true,
         component: () => <Audience />
     },
     {
         path: '/settings',
         component: () => <Settings />
     }
-]
+];
 
 const Home = () => (
     <div>
@@ -59,7 +60,7 @@ const Home = () => (
                     {routes.map((route, index) => (
                         <Route
                             key={index}
-                            path={route.path}
+                            path={'/admin' + route.path}
                             exact={route.exact}
                             component={route.component}
                         />
