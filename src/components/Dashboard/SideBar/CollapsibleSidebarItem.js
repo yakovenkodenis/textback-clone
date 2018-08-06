@@ -52,7 +52,7 @@ export default class CollapsibleSidebarItem extends Component {
                     <i className="menu-arrow"></i>
                     <i className={`mdi ${iconClassName} menu-icon`}></i>
                 </a>
-                <div className={`collapse ${!this.isCollapsed ? '' : 'show'}`} id="ui-basic">
+                <div className={`collapse ${this.isCollapsed || isActive ? 'show' : ''}`} id="ui-basic">
                     <ul className="nav flex-column sub-menu">
                         {subItems}
                     </ul>

@@ -9,6 +9,7 @@ import Analytics from './Analytics/Analytics';
 import Newsletter from './Newsletter/Newsletter';
 import Settings from './Settings/Settings';
 import Autofunnels from './Autofunnels/Autofunnels';
+import Audience from './Audience/Audience';
 
 
 const routes = [
@@ -35,6 +36,10 @@ const routes = [
         path: '/autofunnels',
         exact: true,
         component: () => <Autofunnels />
+    },
+    {
+        path: '/audience',
+        component: () => <Audience />
     },
     {
         path: '/settings',

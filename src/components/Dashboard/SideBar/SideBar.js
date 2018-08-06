@@ -34,7 +34,7 @@ export default class NavBar extends Component {
 
               <CollapsibleSidebarItem
                 itemName='Диалоги'
-                iconClassName='mdi-message-text'
+                iconClassName='mdi-forum'
                 routes={[
                   {
                     name: 'Непрочитанные',
@@ -65,6 +65,12 @@ export default class NavBar extends Component {
                 itemName='Автоворонки'
                 routePath='/autofunnels'
                 iconClassName='mdi-blender'
+              />
+
+              <SidebarItem
+                itemName='Аудитория'
+                routePath='/audience'
+                iconClassName='mdi-account-multiple'
               />
 
               <SidebarItem
