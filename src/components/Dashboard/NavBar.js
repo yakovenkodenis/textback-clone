@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { observer } from 'mobx-react';
 
 import logo from '../../logo.svg';
@@ -54,15 +54,15 @@ export default class NavBar extends Component {
                     </div>
                   </a>
                   <div className="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                    <a className="dropdown-item">
+                    <Link to="/admin/profile" className="dropdown-item">
                       <i className="mdi mdi-cached mr-2 text-success"></i>
                       Журнал активности
-                    </a>
+                    </Link>
                     <div className="dropdown-divider"></div>
-                    <a className="dropdown-item">
+                    <Link to="/login" className="dropdown-item">
                       <i className="mdi mdi-logout mr-2 text-primary"></i>
                       Выйти
-                    </a>
+                    </Link>
                   </div>
                 </li>
 

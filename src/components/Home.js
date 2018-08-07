@@ -10,6 +10,7 @@ import Newsletter from './Newsletter/Newsletter';
 import Settings from './Settings/Settings';
 import Autofunnels from './Autofunnels/Autofunnels';
 import Audience from './Audience/Audience';
+import Profile from './Profile/Profile';
 
 
 const routes = [
@@ -45,6 +46,10 @@ const routes = [
     {
         path: '/settings',
         component: () => <Settings />
+    },
+    {
+        path: '/profile',
+        component: () => <Profile />
     }
 ];
 

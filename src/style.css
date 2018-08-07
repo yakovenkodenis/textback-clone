@@ -21457,3 +21457,7 @@
   background: linear-gradient(89deg, #5e7188, #3e4b5b);
 }
 
+
+.badge-margin-3 {
+  margin: 3px;
+}
