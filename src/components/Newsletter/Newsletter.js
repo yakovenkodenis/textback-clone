@@ -1,16 +1,29 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { observer } from 'mobx-react';
+import { withRouter } from 'react-router-dom';
+import NewsletterStatistics from './NewsletterStatistics';
+import PlannedNewsletters from './PlannedNewsletters';
+import Drafts from './Drafts';
+import GeneralStatistics from './GeneralStatistics';
 
 
-const Newsletter = () => (
-    <div className="row">
-        <div className="col-12 grid-margin">
-            <div className="card">
-                <div className="card-body">
-                    <h4 className="card-title">Newsletter Page here!</h4>
+@withRouter
+@observer
+export default class Newsletter extends Component {
+
+    render() {
+        return (
+            <React.Fragment>
+                <div className="page-header">
+                    <h3 className="page-title">Рассылки</h3>
                 </div>
-            </div>
-        </div>
-    </div>
-);
 
-export default Newsletter;
+                <GeneralStatistics />
+                <Drafts />
+                <PlannedNewsletters />
+                <NewsletterStatistics />
+
+            </React.Fragment>
+        )
+    }
+}
