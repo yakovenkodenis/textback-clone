@@ -21461,3 +21461,52 @@
 .badge-margin-3 {
   margin: 3px;
 }
+
+
+/* Pricing table */
+
+.pricing-table .pricing-card .pricing-card-body {
+  padding: 50px 56px 43px 56px;
+}
+
+.pricing-table .pricing-card .pricing-card-body .plan-features {
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.pricing-table .pricing-card .pricing-card-body .plan-features li {
+  text-align: left;
+  padding: 4px 0px;
+  font-family: "ubuntu-regular", sans-serif;
+  font-size: 0.875rem;
+}
+
+.badge-font-large {
+  font-size: 13px !important;
+}
+
+
+
+/* Modals */
+.modal .modal-dialog {
+  margin-top: calc(70px + 30px);
+}
+
+.modal .modal-dialog .modal-content .modal-header {
+  padding: 25px 26px;
+}
+
+.modal .modal-dialog .modal-content .modal-header .close span {
+  font-size: 20px;
+  font-weight: 400;
+  color: #6a6a6a;
+}
+
+.modal .modal-dialog .modal-content .modal-body {
+  padding: 35px 26px;
+}
+
+.modal .modal-dialog .modal-content .modal-footer {
+  padding: 15px 31px;
+}
+
