@@ -25,7 +25,7 @@ export default class NavBar extends Component {
         <span className="login-status online"></span> {/* change to offline or busy as needed */}              
                   </div>
                   <div className="nav-profile-text d-flex flex-column">
-                    <span className="font-weight-bold mb-2">Васян Иваныч</span>
+                    <span className="font-weight-bold mb-2">Василий Иванович</span>
                     <span className="text-secondary text-small">Менеджер</span>
                   </div>
                   <i className="mdi mdi-bookmark-check text-success nav-profile-badge"></i>

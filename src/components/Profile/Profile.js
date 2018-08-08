@@ -71,9 +71,9 @@ export default class NewsletterStatistics extends Component {
                                 <div className="col-lg-8">
                                     <div className="d-flex justify-content-between">
                                         <div>
-                                            <h3>Васян Иваныч</h3>
+                                            <h3>Василий Иванович</h3>
                                             <div className="d-flex align-items-center">
-                                                <h5>Украина</h5>
+                                                <h5>Россия</h5>
                                             </div>
                                         </div>
                                         <div>
