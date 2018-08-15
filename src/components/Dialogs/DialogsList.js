@@ -9,17 +9,33 @@ import DialogListItem from './DialogListItem';
 @observer
 export default class DialogsList extends Component {
 
+    truncate = (msg, n, useWordBoundary) => {
+        if (msg.length <= n) { return msg; }
+        let subString = msg.substr(0, n - 1);
+        return (useWordBoundary
+            ? subString.substr(0, subString.lastIndexOf(' '))
+            : subString
+        ) + '...';
+    }
+
     render() {
 
-        const dialogs = [
-            { name: "Екатерина Петрова", timeAgo: "9:04 PM", bodyPreview: "Lorem ipsum dolor sit..." },
-            { name: "Иван Петров", timeAgo: "6:17 PM", bodyPreview: "Lorem ipsum dolor sit..." },
-            { name: "Николай Алексеев", timeAgo: "11:11 AM", bodyPreview: "Lorem ipsum dolor sit..." },
-            { name: "Владимир Куш", timeAgo: "11:21 PM", bodyPreview: "Lorem ipsum dolor sit..." },
-            { name: "Жанна Васильева", timeAgo: "8/2/18", bodyPreview: "Lorem ipsum dolor sit..." },
-            { name: "Константин Ветров", timeAgo: "10:27 PM", bodyPreview: "Lorem ipsum dolor sit..." },
-            { name: "Роман Григорьев", timeAgo: "6:17 PM", bodyPreview: "Lorem ipsum dolor sit..." }
-        ].map(dialog => <DialogListItem {...dialog} />)
+        const dialogs = this.props.dialogs.map((dialog, index) => {
+
+            const { name, timeAgo, path, messages } = dialog;
+            const bodyPreview = this.truncate(
+                messages[messages.length - 1].body,
+                26,
+                true
+            );
+
+
+            const props = {
+                name, timeAgo, bodyPreview, path
+            }
+
+            return <DialogListItem key={index} {...props} />;
+        })
 
         return (
             <div className="list-group">

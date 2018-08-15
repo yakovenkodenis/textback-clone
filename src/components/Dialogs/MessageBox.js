@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 
-import Timeline from '../Timeline/Timeline';
+import DialogMessagesContainer from './DialogMessagesContainer';
 
 
 @withRouter
@@ -13,7 +13,7 @@ export default class MessageBox extends Component {
         return (
             <React.Fragment>
 
-                <Timeline />
+                <DialogMessagesContainer messages={this.props.messages} />
                 <br/>
 
                 <div className="form-group">
@@ -28,7 +28,8 @@ export default class MessageBox extends Component {
                 <button className="btn btn-gradient-primary mr-2" type="submit">
                     Отправить
                 </button>
-                <button className="btn btn-light">
+                <button className="btn btn-light btn-icon-text">
+                    <i className="mdi mdi-upload btn-icon-prepend" />
                     Прикрепить файл
                 </button>
 

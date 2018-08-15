@@ -10,13 +10,17 @@ export default class DialogsList extends Component {
     render() {
 
         const {
-            name, timeAgo, bodyPreview
+            name, timeAgo, bodyPreview, path,
+            history
         } = this.props;
 
         return (
             <a
                 className="list-group-item list-group-item-action flex-column align-items-start list-group-item-dialogs"
                 style={{cursor: "pointer"}}
+                onClick={() => {
+                    history.push(`/admin/dialogs${path}`)
+                }}
             >
                 <div className="d-flex w-100 justify-content-between">
                     <h5 className="mb-1">{name}</h5>

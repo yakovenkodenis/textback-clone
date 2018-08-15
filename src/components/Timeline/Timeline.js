@@ -34,6 +34,7 @@ export default class Timeline extends Component {
 
         return (
             <div
+                id="timeline-scroll"
                 className="timeline"
                 style={{overflowY: "scroll", height: (document.documentElement.clientHeight - 250) + "px"}}
             >
