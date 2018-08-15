@@ -22,7 +22,7 @@ export default class DialogsList extends Component {
 
         const dialogs = this.props.dialogs.map((dialog, index) => {
 
-            const { name, timeAgo, path, messages } = dialog;
+            const { name, timeAgo, path, messages, socialNetwork } = dialog;
             const bodyPreview = this.truncate(
                 messages[messages.length - 1].body,
                 26,
@@ -31,7 +31,7 @@ export default class DialogsList extends Component {
 
 
             const props = {
-                name, timeAgo, bodyPreview, path
+                name, timeAgo, bodyPreview, path, socialNetwork
             }
 
             return <DialogListItem key={index} {...props} />;

@@ -37,8 +37,8 @@ export default class NavBar extends Component {
                 iconClassName='mdi-forum'
                 routes={[
                   {
-                    name: 'Непрочитанные',
-                    route: '/admin/dialogs/unread'
+                    name: 'Все',
+                    route: '/admin/dialogs/all'
                   },
                   {
                     name: 'Telegram',

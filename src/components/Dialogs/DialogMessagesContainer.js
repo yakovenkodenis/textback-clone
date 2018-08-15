@@ -10,8 +10,6 @@ import DialogMessage from './DialogMessage';
 export default class DialogMessagesContainer extends Component {
     render() {
 
-        console.log('DialogMessagesContainer fired!');
-
         const dialogItems = this.props.messages.map((message, index) => (
             <DialogMessage {...message} key={index} />
         ));

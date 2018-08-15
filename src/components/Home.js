@@ -20,7 +20,7 @@ const routes = [
         component: () => <Dialogs />
     },
     {
-        path: '/dialogs',
+        path: '/dialogs/:currentFilter?',
         component: () => <Dialogs />
     },
     {
