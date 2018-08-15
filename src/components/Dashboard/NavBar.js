@@ -55,8 +55,8 @@ export default class NavBar extends Component {
                   </a>
                   <div className="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
                     <Link to="/admin/profile" className="dropdown-item">
-                      <i className="mdi mdi-cached mr-2 text-success"></i>
-                      Журнал активности
+                      <i className="mdi mdi-account mr-2 text-success"></i>
+                      Профиль
                     </Link>
                     <div className="dropdown-divider"></div>
                     <Link to="/login" className="dropdown-item">
@@ -93,7 +93,7 @@ export default class NavBar extends Component {
                           <img src="https://placeimg.com/100/100/people" className="profile-pic" alt="avatar" />
                       </div>
                       <div className="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                        <h6 className="preview-subject ellipsis mb-1 font-weight-normal">Колян отправил вам сообщение</h6>
+                        <h6 className="preview-subject ellipsis mb-1 font-weight-normal">Николай отправил вам сообщение</h6>
                         <p className="text-gray mb-0">
                           15 минут назад
                         </p>

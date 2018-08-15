@@ -21255,7 +21255,8 @@
   position: relative;
 }
 
-.timeline:before {
+/* grey vertical line */
+/* .timeline:before {
   top: 0;
   bottom: 0;
   position: absolute;
@@ -21264,7 +21265,7 @@
   background-color: #d8d8d8;
   left: 50%;
   margin-left: -1.5px;
-}
+} */
 
 .timeline .timeline-wrapper {
   display: block;
@@ -21292,11 +21293,12 @@
   background: #ffffff;
   border-radius: 6px;
   box-shadow: 1px 2px 35px 0 rgba(1, 1, 1, 0.1);
-  width: 35%;
-  margin-left: 15%;
+  width: 60%;
+  margin-left: 3%;
 }
 
-.timeline .timeline-wrapper .timeline-panel:before {
+/* line on top of the message box */
+/* .timeline .timeline-wrapper .timeline-panel:before {
   position: absolute;
   top: 0;
   width: 100%;
@@ -21304,7 +21306,7 @@
   content: "";
   left: 0;
   right: 0;
-}
+} */
 
 .timeline .timeline-wrapper .timeline-panel:after {
   position: absolute;
@@ -21369,7 +21371,7 @@
 
 .timeline .timeline-wrapper.timeline-inverted .timeline-panel {
   margin-left: auto;
-  margin-right: 15%;
+  margin-right: 5%;
 }
 
 .timeline .timeline-wrapper.timeline-inverted .timeline-panel:after {
@@ -21510,3 +21512,21 @@
   padding: 15px 31px;
 }
 
+
+.list-group-item-dialogs {
+  padding: 0.4rem 0.6rem;
+}
+
+
+.clear-pr {
+  padding-right: 0 !important;
+}
+
+.clear-pl {
+  padding-left: 0 !important;
+}
+
+.sticky-bottom {
+  position: fixed;
+  bottom: 0;
+}
