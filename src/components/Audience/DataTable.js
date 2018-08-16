@@ -31,7 +31,7 @@ export default class DataTable extends Component {
                             ))}
 
                             <td>
-                                <label className="badge badge-success">
+                                <label className="badge badge-success" style={{cursor: "pointer"}}>
                                     <i className="mdi mdi-message-text" />
                                 </label>
                             </td>
