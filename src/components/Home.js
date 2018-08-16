@@ -6,7 +6,10 @@ import SideBar from './Dashboard/SideBar/SideBar';
 
 import Dialogs from './Dialogs/Dialogs';
 import Analytics from './Analytics/Analytics';
+
 import Newsletter from './Newsletter/Newsletter';
+import New from './Newsletter/New';
+
 import Settings from './Settings/Settings';
 import Autofunnels from './Autofunnels/Autofunnels';
 import Audience from './Audience/Audience';
@@ -32,6 +35,11 @@ const routes = [
         path: '/newsletter',
         exact: true,
         component: () => <Newsletter />
+    },
+    {
+        path: '/newsletter/new',
+        exact: true,
+        component: () => <New />
     },
     {
         path: '/autofunnels',

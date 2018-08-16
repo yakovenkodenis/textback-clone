@@ -21547,3 +21547,428 @@
   position: fixed;
   bottom: 0;
 }
+
+
+
+/* Breadcrumbs */
+.breadcrumb {
+  border: 1px solid #ebedf2;
+}
+
+.breadcrumb .breadcrumb-item {
+  font-size: 0.875rem;
+}
+
+.breadcrumb.breadcrumb-custom {
+  padding: 0 0;
+  border-color: #dbe3e6;
+}
+
+.breadcrumb.breadcrumb-custom .breadcrumb-item {
+  font-size: 0.875rem;
+  background: #dbe3e6;
+  padding: 0.56rem 10px;
+  color: #000;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.breadcrumb.breadcrumb-custom .breadcrumb-item:last-child {
+  background: transparent;
+}
+
+.breadcrumb.breadcrumb-custom .breadcrumb-item:before {
+  content: "";
+}
+
+.breadcrumb.breadcrumb-custom .breadcrumb-item a {
+  position: relative;
+  color: inherit;
+  border: 1px solid #dbe3e6;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.breadcrumb.breadcrumb-custom .breadcrumb-item a:before, .breadcrumb.breadcrumb-custom .breadcrumb-item a:after {
+  position: absolute;
+  top: -9px;
+  width: 0;
+  height: 0;
+  content: "";
+  border-top: 21px solid transparent;
+  border-bottom: 21px solid transparent;
+}
+
+.breadcrumb.breadcrumb-custom .breadcrumb-item a:before {
+  right: -22px;
+  z-index: 3;
+  border-left-color: #dbe3e6;
+  border-left-style: solid;
+  border-left-width: 12px;
+}
+
+.breadcrumb.breadcrumb-custom .breadcrumb-item a:after {
+  border-top: 21px solid transparent;
+  border-bottom: 22px solid transparent;
+  border-left: 12px solid #ffffff;
+  top: -9px;
+  right: -23px;
+}
+
+.breadcrumb.breadcrumb-custom .breadcrumb-item span {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.breadcrumb.bg-success, .settings-panel .color-tiles .breadcrumb.tiles.success, .swal2-modal .swal2-buttonswrapper .breadcrumb.swal2-styled.swal2-confirm, .breadcrumb.bg-dark, .settings-panel .color-tiles .breadcrumb.tiles.dark, .breadcrumb.bg-danger, .settings-panel .color-tiles .breadcrumb.tiles.danger, .breadcrumb.bg-warning, .settings-panel .color-tiles .breadcrumb.tiles.warning, .breadcrumb.bg-primary, .settings-panel .color-tiles .breadcrumb.tiles.primary, .breadcrumb.bg-info, .settings-panel .color-tiles .breadcrumb.tiles.info {
+  border: none;
+}
+
+.breadcrumb.bg-success .breadcrumb-item, .settings-panel .color-tiles .breadcrumb.tiles.success .breadcrumb-item, .swal2-modal .swal2-buttonswrapper .breadcrumb.swal2-styled.swal2-confirm .breadcrumb-item, .breadcrumb.bg-dark .breadcrumb-item, .settings-panel .color-tiles .breadcrumb.tiles.dark .breadcrumb-item, .breadcrumb.bg-danger .breadcrumb-item, .settings-panel .color-tiles .breadcrumb.tiles.danger .breadcrumb-item, .breadcrumb.bg-warning .breadcrumb-item, .settings-panel .color-tiles .breadcrumb.tiles.warning .breadcrumb-item, .breadcrumb.bg-primary .breadcrumb-item, .settings-panel .color-tiles .breadcrumb.tiles.primary .breadcrumb-item, .breadcrumb.bg-info .breadcrumb-item, .settings-panel .color-tiles .breadcrumb.tiles.info .breadcrumb-item {
+  color: #ffffff;
+}
+
+.breadcrumb.bg-success .breadcrumb-item:before, .settings-panel .color-tiles .breadcrumb.tiles.success .breadcrumb-item:before, .swal2-modal .swal2-buttonswrapper .breadcrumb.swal2-styled.swal2-confirm .breadcrumb-item:before, .breadcrumb.bg-dark .breadcrumb-item:before, .settings-panel .color-tiles .breadcrumb.tiles.dark .breadcrumb-item:before, .breadcrumb.bg-danger .breadcrumb-item:before, .settings-panel .color-tiles .breadcrumb.tiles.danger .breadcrumb-item:before, .breadcrumb.bg-warning .breadcrumb-item:before, .settings-panel .color-tiles .breadcrumb.tiles.warning .breadcrumb-item:before, .breadcrumb.bg-primary .breadcrumb-item:before, .settings-panel .color-tiles .breadcrumb.tiles.primary .breadcrumb-item:before, .breadcrumb.bg-info .breadcrumb-item:before, .settings-panel .color-tiles .breadcrumb.tiles.info .breadcrumb-item:before {
+  color: inherit;
+}
+
+.breadcrumb.bg-success .breadcrumb-item a, .settings-panel .color-tiles .breadcrumb.tiles.success .breadcrumb-item a, .swal2-modal .swal2-buttonswrapper .breadcrumb.swal2-styled.swal2-confirm .breadcrumb-item a, .breadcrumb.bg-success .breadcrumb-item span, .settings-panel .color-tiles .breadcrumb.tiles.success .breadcrumb-item span, .swal2-modal .swal2-buttonswrapper .breadcrumb.swal2-styled.swal2-confirm .breadcrumb-item span, .breadcrumb.bg-dark .breadcrumb-item a, .settings-panel .color-tiles .breadcrumb.tiles.dark .breadcrumb-item a, .breadcrumb.bg-dark .breadcrumb-item span, .settings-panel .color-tiles .breadcrumb.tiles.dark .breadcrumb-item span, .breadcrumb.bg-danger .breadcrumb-item a, .settings-panel .color-tiles .breadcrumb.tiles.danger .breadcrumb-item a, .breadcrumb.bg-danger .breadcrumb-item span, .settings-panel .color-tiles .breadcrumb.tiles.danger .breadcrumb-item span, .breadcrumb.bg-warning .breadcrumb-item a, .settings-panel .color-tiles .breadcrumb.tiles.warning .breadcrumb-item a, .breadcrumb.bg-warning .breadcrumb-item span, .settings-panel .color-tiles .breadcrumb.tiles.warning .breadcrumb-item span, .breadcrumb.bg-primary .breadcrumb-item a, .settings-panel .color-tiles .breadcrumb.tiles.primary .breadcrumb-item a, .breadcrumb.bg-primary .breadcrumb-item span, .settings-panel .color-tiles .breadcrumb.tiles.primary .breadcrumb-item span, .breadcrumb.bg-info .breadcrumb-item a, .settings-panel .color-tiles .breadcrumb.tiles.info .breadcrumb-item a, .breadcrumb.bg-info .breadcrumb-item span, .settings-panel .color-tiles .breadcrumb.tiles.info .breadcrumb-item span {
+  color: inherit;
+}
+
+/* inverse breadcrumb */
+.bg-inverse-primary {
+  background: #f6edff;
+  border-color: #b66dff;
+}
+
+.bg-inverse-primary .breadcrumb-item {
+  color: #b66dff;
+}
+
+.bg-inverse-primary .breadcrumb-item:before {
+  color: inherit;
+}
+
+.bg-inverse-primary .breadcrumb-item a {
+  color: inherit;
+}
+
+.bg-inverse-primary.breadcrumb-custom {
+  background: transparent;
+}
+
+.bg-inverse-primary.breadcrumb-custom .breadcrumb-item {
+  background: #f6edff;
+}
+
+.bg-inverse-primary.breadcrumb-custom .breadcrumb-item a {
+  color: #b66dff;
+  border: none;
+}
+
+.bg-inverse-primary.breadcrumb-custom .breadcrumb-item a:before {
+  border-left-color: #f6edff;
+}
+
+.bg-inverse-primary.breadcrumb-custom .breadcrumb-item span {
+  color: #b66dff;
+}
+
+.bg-inverse-primary.breadcrumb-custom .breadcrumb-item:last-child {
+  background: transparent;
+}
+
+.bg-inverse-secondary {
+  background: white;
+  border-color: #d8d8d8;
+}
+
+.bg-inverse-secondary .breadcrumb-item {
+  color: #d8d8d8;
+}
+
+.bg-inverse-secondary .breadcrumb-item:before {
+  color: inherit;
+}
+
+.bg-inverse-secondary .breadcrumb-item a {
+  color: inherit;
+}
+
+.bg-inverse-secondary.breadcrumb-custom {
+  background: transparent;
+}
+
+.bg-inverse-secondary.breadcrumb-custom .breadcrumb-item {
+  background: white;
+}
+
+.bg-inverse-secondary.breadcrumb-custom .breadcrumb-item a {
+  color: #d8d8d8;
+  border: none;
+}
+
+.bg-inverse-secondary.breadcrumb-custom .breadcrumb-item a:before {
+  border-left-color: white;
+}
+
+.bg-inverse-secondary.breadcrumb-custom .breadcrumb-item span {
+  color: #d8d8d8;
+}
+
+.bg-inverse-secondary.breadcrumb-custom .breadcrumb-item:last-child {
+  background: transparent;
+}
+
+.bg-inverse-success {
+  background: #7ceedd;
+  border-color: #1bcfb4;
+}
+
+.bg-inverse-success .breadcrumb-item {
+  color: #1bcfb4;
+}
+
+.bg-inverse-success .breadcrumb-item:before {
+  color: inherit;
+}
+
+.bg-inverse-success .breadcrumb-item a {
+  color: inherit;
+}
+
+.bg-inverse-success.breadcrumb-custom {
+  background: transparent;
+}
+
+.bg-inverse-success.breadcrumb-custom .breadcrumb-item {
+  background: #7ceedd;
+}
+
+.bg-inverse-success.breadcrumb-custom .breadcrumb-item a {
+  color: #1bcfb4;
+  border: none;
+}
+
+.bg-inverse-success.breadcrumb-custom .breadcrumb-item a:before {
+  border-left-color: #7ceedd;
+}
+
+.bg-inverse-success.breadcrumb-custom .breadcrumb-item span {
+  color: #1bcfb4;
+}
+
+.bg-inverse-success.breadcrumb-custom .breadcrumb-item:last-child {
+  background: transparent;
+}
+
+.bg-inverse-info {
+  background: #89c4f2;
+  border-color: #198ae3;
+}
+
+.bg-inverse-info .breadcrumb-item {
+  color: #198ae3;
+}
+
+.bg-inverse-info .breadcrumb-item:before {
+  color: inherit;
+}
+
+.bg-inverse-info .breadcrumb-item a {
+  color: inherit;
+}
+
+.bg-inverse-info.breadcrumb-custom {
+  background: transparent;
+}
+
+.bg-inverse-info.breadcrumb-custom .breadcrumb-item {
+  background: #89c4f2;
+}
+
+.bg-inverse-info.breadcrumb-custom .breadcrumb-item a {
+  color: #198ae3;
+  border: none;
+}
+
+.bg-inverse-info.breadcrumb-custom .breadcrumb-item a:before {
+  border-left-color: #89c4f2;
+}
+
+.bg-inverse-info.breadcrumb-custom .breadcrumb-item span {
+  color: #198ae3;
+}
+
+.bg-inverse-info.breadcrumb-custom .breadcrumb-item:last-child {
+  background: transparent;
+}
+
+.bg-inverse-warning {
+  background: #ffed92;
+  border-color: #fed713;
+}
+
+.bg-inverse-warning .breadcrumb-item {
+  color: #fed713;
+}
+
+.bg-inverse-warning .breadcrumb-item:before {
+  color: inherit;
+}
+
+.bg-inverse-warning .breadcrumb-item a {
+  color: inherit;
+}
+
+.bg-inverse-warning.breadcrumb-custom {
+  background: transparent;
+}
+
+.bg-inverse-warning.breadcrumb-custom .breadcrumb-item {
+  background: #ffed92;
+}
+
+.bg-inverse-warning.breadcrumb-custom .breadcrumb-item a {
+  color: #fed713;
+  border: none;
+}
+
+.bg-inverse-warning.breadcrumb-custom .breadcrumb-item a:before {
+  border-left-color: #ffed92;
+}
+
+.bg-inverse-warning.breadcrumb-custom .breadcrumb-item span {
+  color: #fed713;
+}
+
+.bg-inverse-warning.breadcrumb-custom .breadcrumb-item:last-child {
+  background: transparent;
+}
+
+.bg-inverse-danger {
+  background: #fffbfb;
+  border-color: #fe7c96;
+}
+
+.bg-inverse-danger .breadcrumb-item {
+  color: #fe7c96;
+}
+
+.bg-inverse-danger .breadcrumb-item:before {
+  color: inherit;
+}
+
+.bg-inverse-danger .breadcrumb-item a {
+  color: inherit;
+}
+
+.bg-inverse-danger.breadcrumb-custom {
+  background: transparent;
+}
+
+.bg-inverse-danger.breadcrumb-custom .breadcrumb-item {
+  background: #fffbfb;
+}
+
+.bg-inverse-danger.breadcrumb-custom .breadcrumb-item a {
+  color: #fe7c96;
+  border: none;
+}
+
+.bg-inverse-danger.breadcrumb-custom .breadcrumb-item a:before {
+  border-left-color: #fffbfb;
+}
+
+.bg-inverse-danger.breadcrumb-custom .breadcrumb-item span {
+  color: #fe7c96;
+}
+
+.bg-inverse-danger.breadcrumb-custom .breadcrumb-item:last-child {
+  background: transparent;
+}
+
+.bg-inverse-light {
+  background: white;
+  border-color: #f8f9fa;
+}
+
+.bg-inverse-light .breadcrumb-item {
+  color: #f8f9fa;
+}
+
+.bg-inverse-light .breadcrumb-item:before {
+  color: inherit;
+}
+
+.bg-inverse-light .breadcrumb-item a {
+  color: inherit;
+}
+
+.bg-inverse-light.breadcrumb-custom {
+  background: transparent;
+}
+
+.bg-inverse-light.breadcrumb-custom .breadcrumb-item {
+  background: white;
+}
+
+.bg-inverse-light.breadcrumb-custom .breadcrumb-item a {
+  color: #f8f9fa;
+  border: none;
+}
+
+.bg-inverse-light.breadcrumb-custom .breadcrumb-item a:before {
+  border-left-color: white;
+}
+
+.bg-inverse-light.breadcrumb-custom .breadcrumb-item span {
+  color: #f8f9fa;
+}
+
+.bg-inverse-light.breadcrumb-custom .breadcrumb-item:last-child {
+  background: transparent;
+}
+
+.bg-inverse-dark {
+  background: #778aa2;
+  border-color: #3e4b5b;
+}
+
+.bg-inverse-dark .breadcrumb-item {
+  color: #3e4b5b;
+}
+
+.bg-inverse-dark .breadcrumb-item:before {
+  color: inherit;
+}
+
+.bg-inverse-dark .breadcrumb-item a {
+  color: inherit;
+}
+
+.bg-inverse-dark.breadcrumb-custom {
+  background: transparent;
+}
+
+.bg-inverse-dark.breadcrumb-custom .breadcrumb-item {
+  background: #778aa2;
+}
+
+.bg-inverse-dark.breadcrumb-custom .breadcrumb-item a {
+  color: #3e4b5b;
+  border: none;
+}
+
+.bg-inverse-dark.breadcrumb-custom .breadcrumb-item a:before {
+  border-left-color: #778aa2;
+}
+
+.bg-inverse-dark.breadcrumb-custom .breadcrumb-item span {
+  color: #3e4b5b;
+}
+
+.bg-inverse-dark.breadcrumb-custom .breadcrumb-item:last-child {
+  background: transparent;
+}

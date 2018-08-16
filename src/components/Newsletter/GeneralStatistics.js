@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 
 
 @withRouter
@@ -14,11 +14,13 @@ export default class GeneralStatistics extends Component {
                         <div className="card-body">
                             <h4 className="card-title">Общая статистика</h4>
                             <p className="card-description">Количество активных подписчиков</p>
-                            <button className="btn btn-success">Новая рассылка</button>
+                            <Link to="/admin/newsletter/new" className="btn btn-success">
+                                Новая рассылка
+                            </Link>
                         </div>
                     </div>
                 </div>
             </div>
-        )
+        );
     }
 }

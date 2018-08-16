@@ -9,6 +9,20 @@ import DialogMessagesContainer from './DialogMessagesContainer';
 @observer
 export default class MessageBox extends Component {
 
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = {
+            file: null
+        };
+    }
+
+    onFileInputChange = e => {
+        this.setState({
+            file: e.target.files[0]
+        });
+    }
+
     render() {
 
         return (
@@ -28,14 +42,34 @@ export default class MessageBox extends Component {
                     />
 
                 </div>
-                <div className="btn-group d-flex justify-content-between">
+
+                <div className="form-group d-flex justify-content-between">
+
                     <button className="btn btn-gradient-primary mr-2" type="submit">
                         Отправить
                     </button>
-                    <button className="btn btn-light btn-icon-text">
-                        <i className="mdi mdi-upload btn-icon-prepend" />
-                        Прикрепить файл
-                    </button>
+
+                    <input
+                        type="file" name="img[]"
+                        className="file-upload-default"
+                        onChange={this.onFileInputChange}
+                    />
+                    <div className="input-group">
+                        <input
+                            className="form-control file-upload-info border-0"
+                            disabled placeholder=""
+                            type="text"
+                        />
+                        <span className="input-group-append">
+                            <button
+                                className="file-upload-browse btn btn-light btn-icon-text"
+                                type="button"
+                            >
+                                <i className="mdi mdi-upload btn-icon-prepend" />
+                                Прикрепить файл
+                            </button>
+                        </span>
+                    </div>
                 </div>
 
             </React.Fragment>
