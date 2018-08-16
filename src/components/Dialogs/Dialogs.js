@@ -4,6 +4,7 @@ import { withRouter, Route } from 'react-router-dom';
 
 import DialogsList from './DialogsList';
 import DialogContainer from './DialogContainer';
+import { Default, Mobile } from '../Responsive';
 
 
 @withRouter
@@ -166,11 +167,17 @@ export default class Dialogs extends Component {
                             
                             <div className="row">
 
-                                <div className="col-3 clear-pr clear-pl">
-                                    <DialogsList dialogs={dialogsList} />
-                                </div>
+                                <Default>
+                                    <div className="col-3 clear-pr clear-pl">
+                                        <DialogsList dialogs={dialogsList} />
+                                    </div>
 
-                                {dialogRoutes}
+                                    {dialogRoutes}
+                                </Default>
+
+                                <Mobile>
+                                    <p>Sorry, mobiles are not supported just yet.</p>
+                                </Mobile>
 
                             </div>
                         </div>

@@ -25,13 +25,15 @@ export default class MessageBox extends Component {
                         placeholder="Отправить сообщение..."
                     />
                 </div>
-                <button className="btn btn-gradient-primary mr-2" type="submit">
-                    Отправить
-                </button>
-                <button className="btn btn-light btn-icon-text">
-                    <i className="mdi mdi-upload btn-icon-prepend" />
-                    Прикрепить файл
-                </button>
+                <div className="btn-group d-flex justify-content-between">
+                    <button className="btn btn-gradient-primary mr-2" type="submit">
+                        Отправить
+                    </button>
+                    <button className="btn btn-light btn-icon-text">
+                        <i className="mdi mdi-upload btn-icon-prepend" />
+                        Прикрепить файл
+                    </button>
+                </div>
 
             </React.Fragment>
         );
