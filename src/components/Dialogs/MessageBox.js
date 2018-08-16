@@ -10,6 +10,7 @@ import DialogMessagesContainer from './DialogMessagesContainer';
 export default class MessageBox extends Component {
 
     render() {
+
         return (
             <React.Fragment>
 
@@ -23,7 +24,9 @@ export default class MessageBox extends Component {
                         rows="3"
                         className="form-control"
                         placeholder="Отправить сообщение..."
+                        name="dialog-message-box"
                     />
+
                 </div>
                 <div className="btn-group d-flex justify-content-between">
                     <button className="btn btn-gradient-primary mr-2" type="submit">

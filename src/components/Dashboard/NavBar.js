@@ -26,8 +26,8 @@ export default class NavBar extends Component {
 
 
             {/* ============ SEARCH FIELD ===================== */}
-              <div className="search-field d-none d-md-block">
-                <form className="d-flex align-items-center h-100" action="#">
+            {/*  <div className="search-field d-none d-md-block">
+                <form className="d-flex align-items-center h-100">
                   <div className="input-group">
                     <div className="input-group-prepend bg-transparent">
                         <i className="input-group-text border-0 mdi mdi-magnify"></i>                
@@ -36,6 +36,7 @@ export default class NavBar extends Component {
                   </div>
                 </form>
               </div>
+            */}
 
 
             {/* ============ HEADER NAVBAR LEFT ITEMS LIST ===================== */}
