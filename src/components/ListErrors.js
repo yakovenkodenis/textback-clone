@@ -4,11 +4,11 @@ import React from 'react';
 const ListErrors = ({ errors }) => {
     if (errors) {
         return (
-            <ul>
+            <ul className="list-arrow">
                 {
-                    Object.keys(errors).map(key => (
-                        <li key={key}>
-                            {key} {errors[key]}
+                    errors.map((error, index) => (
+                        <li className="text-danger" key={index}>
+                            {error}
                         </li>
                     ))
                 }

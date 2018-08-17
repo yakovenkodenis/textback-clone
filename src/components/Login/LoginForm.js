@@ -10,13 +10,15 @@ const LoginForm = ({
     errors,
     inProgress
 }) => (
-    <form onSubmit={handleSubmitForm} className="pt-3">
+    <form onSubmit={handleSubmitForm} className="pt-3" action="" method="post">
         <div className="form-group">
             <input
                 type="email"
                 placeholder="Email"
                 className="form-control form-control-lg"
                 id="inputEmail"
+                onChange={handleEmailChange}
+                // value={values.email}
             />
         </div>
         <div className="form-group">
@@ -25,6 +27,8 @@ const LoginForm = ({
                 placeholder="Пароль"
                 className="form-control form-control-lg"
                 id="inputPassword"
+                onChange={handlePasswordChange}
+                // value={values.password}
             />
         </div>
         <div className="mt-3">
@@ -42,7 +46,7 @@ const LoginForm = ({
         </div>
         <br />
         <div className="mb-2">
-            <button className="btn btn-block btn-facebook auth-form-btn">
+            <button type="button" className="btn btn-block btn-facebook auth-form-btn">
                 <i className="mdi mdi-facebook mr-2"></i>Войти через facebook
             </button>
         </div>

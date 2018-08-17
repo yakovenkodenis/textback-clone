@@ -33,13 +33,28 @@ class AuthStore {
     }
 
     @action login() {
+        console.log('(authStore.login()) Login is initiated');
         this.inProgress = true;
         this.errors = undefined;
 
         return agent.Auth.login(this.values.email, this.values.password)
-            .then(({ user }) => commonStore.setToken(user.token))
-            .then(() => userStore.pullUser())
+            .then(response => {
+
+                if (response.success && response.data.token) {
+                    console.log('authStore.js: login success');
+                    commonStore.setToken(response.data.token);
+                } else {
+                    console.log('authStore.js: login error');
+                    console.log(response);
+                    throw response.errors
+
+                }
+                // console.log('authStore.js login(): ', response);
+                // commonStore.setToken(data.token)
+            })
+            // .then(() => userStore.pullUser())
             .catch(action(err => {
+                console.log('(authStore.login()) error: ', err);
                 this.errors = err.response && err.response.body && err.response.body.errors;
                 throw err;
             }))
@@ -50,9 +65,9 @@ class AuthStore {
         this.inProgress = true;
         this.errors = undefined;
 
-        return agent.Auth.register(this.values.username, this.values.email, this.values.password)
-            .then(({ user }) => commonStore.setToken(user.token))
-            .then(() => userStore.pullUser())
+        return agent.Auth.register(/*this.values.username,*/ this.values.email, this.values.password)
+            // .then(({ data }) => commonStore.setToken(data.token))
+            // .then(() => userStore.pullUser())
             .catch(action(err => {
                 this.errors = err.response && err.response.body && err.response.body.errors;
                 throw err;

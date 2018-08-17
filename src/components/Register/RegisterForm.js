@@ -12,22 +12,24 @@ const RegisterForm = ({
     inProgress
 }) => (
     <form onSubmit={handleSubmitForm} className="pt-3">
-         <div className="form-group">
+         {/*<div className="form-group">
             <input
                 type="text"
                 placeholder="Имя пользователя"
                 className="form-control form-control-lg"
                 id="inputUsername"
             />
-        </div>   
+            </div>  */} 
         <div className="form-group">
             <input
                 type="email"
                 placeholder="Email"
                 className="form-control form-control-lg"
                 id="inputEmail"
+                onChange={handleEmailChange}
             />
         </div>
+        {/*}
         <div className="form-group">
             <select id="inputCountry" className="form-control form-control-lg">
                 <option>Выбрать страну</option>
@@ -38,12 +40,14 @@ const RegisterForm = ({
                 <option>Китай</option>
             </select>
         </div>
+        */}
         <div className="form-group">
             <input
                 type="password"
                 placeholder="Пароль"
                 className="form-control form-control-lg"
                 id="inputPassword"
+                onChange={handlePasswordChange}
             />
         </div>
         <div className="mb-4">

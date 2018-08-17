@@ -3,7 +3,7 @@ import agent from '../agent';
 
 
 class CommonStore {
-    @observable appName = 'Shaitan';
+    @observable appName = 'Занге Ранге';
     @observable token = window.localStorage.getItem('jwt');
     @observable appLoaded = false;
 

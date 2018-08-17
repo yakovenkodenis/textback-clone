@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 
 import RegisterForm from './RegisterForm';
+import ListErrors from '../ListErrors';
 import logo from '../../logo.svg';
 
 
-@inject('authStore')
+@inject('authStore', 'commonStore')
 @withRouter
 @observer
 export default class Register extends Component {
+
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = {
+            errors: []
+        };
+    }
 
     componentWillUnmount() {
         this.props.authStore.reset();
@@ -20,12 +29,32 @@ export default class Register extends Component {
     handleUsernameChange = e => this.props.authStore.setUsername(e.target.value);
     handleSubmitForm = e => {
         e.preventDefault();
+
+        console.log('Register.js:', 'handleSubmitForm fired');
+        console.log(
+            'Register.js',
+            this.props.authStore.values.email, this.props.authStore.values.password
+        );
+
         this.props.authStore.register()
-            .then(() => this.props.history.replace('/'));
+            .then(() => {
+                console.log('REGISTER SUCCESS!!!');
+                this.props.history.replace('/');
+            })
+            .catch(errors => {
+                console.log('Register.js ERROR', errors);
+                this.setState({ errors });
+                // this.props.history.replace('/login');
+            });
     };
 
     render() {
         const { values, errors, inProgress } = this.props.authStore;
+
+
+        if (this.props.commonStore.token) {
+            return <Redirect to="/" />;
+        }
 
         return (
             <div className='container-fluid page-body-wrapper full-page-wrapper'>
@@ -38,6 +67,8 @@ export default class Register extends Component {
                                 </div>
                                 <h4>Впервые здесь?</h4>
                                 <h6 className="font-weight-light">Скорее регистрируйся и присоединяйся к нам</h6>
+
+                                <ListErrors errors={this.state.errors} />
 
                                 <RegisterForm
                                     values={values}

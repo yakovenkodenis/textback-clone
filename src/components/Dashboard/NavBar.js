@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 
 import logo from '../../logo.svg';
 
-
+@inject('authStore')
 @withRouter
 @observer
 export default class NavBar extends Component {
@@ -13,6 +13,11 @@ export default class NavBar extends Component {
       super(props, context);
 
       this.rightSideBarBtn = React.createRef();
+    }
+
+    logout = e => {
+      this.props.authStore.reset();
+      this.props.authStore.logout();
     }
 
     render() {
@@ -60,7 +65,7 @@ export default class NavBar extends Component {
                       Профиль
                     </Link>
                     <div className="dropdown-divider"></div>
-                    <Link to="/login" className="dropdown-item">
+                    <Link to="/login" onClick={this.logout} className="dropdown-item">
                       <i className="mdi mdi-logout mr-2 text-primary"></i>
                       Выйти
                     </Link>

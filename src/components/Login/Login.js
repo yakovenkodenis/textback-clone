@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 
 import LoginForm from './LoginForm';
 import logo from '../../logo.svg';
+import ListErrors from '../ListErrors';
 
 
-@inject('authStore')
+@inject('authStore', 'commonStore')
 @withRouter
 @observer
 export default class Login extends Component {
+
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = {
+            errors: []
+        };
+    }
 
     componentWillUnmount() {
         this.props.authStore.reset();
@@ -19,12 +28,32 @@ export default class Login extends Component {
     handlePasswordChange = e => this.props.authStore.setPassword(e.target.value);
     handleSubmitForm = e => {
         e.preventDefault();
+        console.log('Login.js:', 'handleSubmitForm fired');
+        console.log(
+            'Login.js',
+            this.props.authStore.values.email, this.props.authStore.values.password
+        );
         this.props.authStore.login()
-            .then(() => this.props.history.replace('/'));
+            .then(() => {
+                console.log('LOGGED IN!!!');
+                this.props.history.replace('/')
+            })
+            .catch(errors => {
+                console.log('Login.js ERROR', errors);
+                this.setState({ errors });
+                // this.props.history.replace('/login');
+            });
     };
 
     render() {
         const { values, errors, inProgress } = this.props.authStore;
+
+        console.log('Login.js errors', errors);
+
+
+        if (this.props.commonStore.token) {
+            return <Redirect to="/" />;
+        }
 
         return (
             <div className='container-fluid page-body-wrapper full-page-wrapper'>
@@ -37,6 +66,8 @@ export default class Login extends Component {
                                 </div>
                                 <h4>Привет! Добро пожаловать</h4>
                                 <h6 className="font-weight-light">Войти в систему</h6>
+
+                                <ListErrors errors={this.state.errors} />
 
                                 <LoginForm
                                     values={values}
