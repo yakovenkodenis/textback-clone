@@ -21,6 +21,7 @@ import App from './components/App';
 import userStore from './stores/userStore';
 import authStore from './stores/authStore';
 import commonStore from './stores/commonStore';
+import newsletterMessageTemplateStore from './stores/newsletterMessageTemplateStore';
 
 window.jQuery = window.jquery = window.$ = jQuery;
 require('bootstrap/dist/js/bootstrap.bundle.min.js');
@@ -29,7 +30,8 @@ require('bootstrap/dist/js/bootstrap.bundle.min.js');
 const stores = {
     userStore,
     authStore,
-    commonStore
+    commonStore,
+    newsletterMessageTemplateStore
 };
 
 

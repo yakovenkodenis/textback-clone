@@ -8,7 +8,7 @@ import Dialogs from './Dialogs/Dialogs';
 import Analytics from './Analytics/Analytics';
 
 import Newsletter from './Newsletter/Newsletter';
-import New from './Newsletter/New';
+import New from './Newsletter/New/New';
 
 import Settings from './Settings/Settings';
 import Autofunnels from './Autofunnels/Autofunnels';
