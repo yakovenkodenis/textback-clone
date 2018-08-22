@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 
 
+@inject('channelsStore')
 @withRouter
 @observer
 export default class DialogsListItem extends Component {
@@ -12,7 +13,8 @@ export default class DialogsListItem extends Component {
         const {
             name, timeAgo, bodyPreview,
             path, socialNetwork,
-            history, match
+            history, match,
+            // channelsStore
         } = this.props;
 
         return (
@@ -20,6 +22,10 @@ export default class DialogsListItem extends Component {
                 className="list-group-item list-group-item-action flex-column align-items-start list-group-item-dialogs"
                 style={{cursor: "pointer"}}
                 onClick={() => {
+                    // channelsStore.addTelegramChannel("456676644:AAFU8DDqadohwEbKQlL--ijpY5GIuLaS5FM")
+                    // .then(() => {
+                    //     channelsStore.getChannelsList();
+                    // });
                     history.push(`/admin/dialogs/${match.params.currentFilter}/${path}`)
                 }}
             >

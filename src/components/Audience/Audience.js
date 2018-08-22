@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
+import ReactTable from 'react-table';
+import  Avatar from 'react-avatar';
 
-import DataTable from './DataTable';
+import { reactTableTextProps } from '../../utils';
 
 
 @withRouter
@@ -20,17 +22,68 @@ export default class Audience extends Component {
             ['Юлия Евдокименко', 'Подписалась, обратилась в чат', '29 июн. 2018 г. 14:24:55']
         ];
 
-        const columns = [{
-            header: ''
-        }, {
-            header: 'Имя'
-        }, {
-            header: 'Статус'
-        }, {
-            header: 'Последняя активность'
-        }, {
-            header: ''
-        }];
+        const table = (
+            <ReactTable
+                data={data}
+                columns={[
+                    {
+                        id: 'avatar',
+                        Header: '',
+                        accessor: () => 'avatar', // needs to be changed to work with real data
+                        sortable: false,
+                        filterable: false,
+                        Cell: ({ row }) => (
+                            <div className="col-12 d-flex justify-content-center">
+                                <Avatar name={row.name} size="50" round={true} />
+                            </div>
+                        ),
+                        maxWidth: 100
+                    },
+                    {
+                        id: 'name',
+                        Header: 'Имя',
+                        accessor: row => row[0],
+                        sortable: true,
+                        filterable: true,
+                        className: 'align-self-center'
+                    },
+                    {
+                        id: 'status',
+                        Header: 'Статус',
+                        accessor: row => row[1],
+                        sortable: true,
+                        filterable: true,
+                        className: 'align-self-center'
+                    },
+                    {
+                        id: 'lastActive',
+                        Header: 'Последняя активность',
+                        accessor: row => row[2],
+                        className: 'align-self-center'
+                    },
+                    {
+                        id: 'goToChat',
+                        Header: '',
+                        accessor: () => 'goToChat',
+                        sortable: false,
+                        filterable: false,
+                        Cell: ({ row }) => (
+                            <div className="col-12 d-flex justify-content-center">
+                                <label className="badge badge-success my-auto" style={{cursor: "pointer"}}>
+                                    <i className="mdi mdi-message-text" />
+                                </label>
+                            </div>
+                        ),
+                        className: 'align-self-center',
+                        maxWidth: 100
+                    }
+                ]}
+                defaultPageSize={10}
+                className="-highlight"
+                filterable
+                {...reactTableTextProps}
+            />
+        )
 
         return (
             <React.Fragment>
@@ -41,64 +94,7 @@ export default class Audience extends Component {
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
                             <div className="card-body">
-                                <h6 className="card-title">
-                                    <i className="mdi mdi-filter"> </i> Фильтр
-                                </h6>
-
-                                <form className="form-inline">
-                                    <label htmlFor="inputFilter1" className="sr-only"></label>
-                                    <input
-                                        type="text"
-                                        id="inputFilter1"
-                                        className="form-control mb2 mr-sm-2"
-                                        placeholder="Имя"
-                                    />
-
-                                    <label htmlFor="inputFilter2" className="sr-only"></label>
-                                    <input
-                                        type="text"
-                                        id="inputFilter2"
-                                        className="form-control mb2 mr-sm-2"
-                                        placeholder="Возраст"
-                                    />
-
-                                    <label htmlFor="inputFilter3" className="sr-only"></label>
-                                    <input
-                                        type="text"
-                                        id="inputFilter3"
-                                        className="form-control mb2 mr-sm-2"
-                                        placeholder="Еще один супер фильтр"
-                                    />
-                                </form>
-                                <br/><br/>
-
-                                <div className="table-responsive">
-                                    <DataTable
-                                        columns={columns}
-                                        data={data}
-                                    />
-                                </div>
-
-                                <br /><br />
-                                <nav>
-                                    <ul className="pagination d-flex justify-content-center flat pagination-success">
-                                        <li className="page-item">
-                                            <a className="page-link">
-                                                <i className="mdi mdi-chevron-left"></i>
-                                            </a>
-                                        </li>
-                                        <li className="page-item active"><a className="page-link">1</a></li>
-                                        <li className="page-item"><a className="page-link">2</a></li>
-                                        <li className="page-item"><a className="page-link">3</a></li>
-                                        <li className="page-item"><a className="page-link">4</a></li>
-                                        <li className="page-item"><a className="page-link">5</a></li>
-                                        <li className="page-item">
-                                            <a className="page-link">
-                                                <i className="mdi mdi-chevron-right"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
+                                {table}
                             </div>
                         </div>
                     </div>

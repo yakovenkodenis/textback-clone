@@ -1,55 +1,112 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
+
 import Modal from './Modal';
-import ChannelItem from './ChannelItem';
+import { reactTableTextProps } from '../../utils';
 
 
-const channels = [
-    {
-        channelName: 'Telegram',
-        isConnected: false,
-        modalId: 'add-telegram-modal',
-        modalTitle: 'Подключить Telegram',
-        modalBody: 'Тут будет соответствующая форма'
-    },
-    {
-        channelName: 'Viber',
-        isConnected: false,
-        modalId: 'add-viber-modal',
-        modalTitle: 'Подключить Viber',
-        modalBody: 'Тут будет соответствующая форма'
-    },
-    {
-        channelName: 'Facebook',
-        isConnected: true,
-        modalId: 'add-facebook-modal',
-        modalTitle: 'Подключить Facebook',
-        modalBody: 'Тут будет соответствующая форма'
-    },
-    {
-        channelName: 'WhatsApp',
-        isConnected: true,
-        modalId: 'add-whatsapp-modal',
-        modalTitle: 'Подключить WhatsApp',
-        modalBody: 'Тут будет соответствующая форма'
-    },
-];
-
-
+@inject('channelsStore')
 @withRouter
 @observer
 export default class ChannelsSettings extends Component {
+
+    constructor(props, context) {
+        super(props, context);
+
+        this.socialNetworkModalValue = React.createRef();
+        this.botIdModalValue = React.createRef();
+    }
+
+    componentDidMount() {
+        this.props.channelsStore.getChannelsList();
+    }
+
+    onDeleteChannel = channelId => {
+        this.props.channelsStore.deleteTelegramChannel(channelId);
+    }
+
+    onAddChannel = (socialNetwork, botId) => {
+        this.props.channelsStore.addTelegramChannel(
+            this.botIdModalValue.current.value
+        ).then(res => {
+            this.props.channelsStore.getChannelsList();
+        });
+    }
+
     render() {
 
-        const modals = channels.map((channel, index) => (
-            <Modal {...channel} key={index} />
-        ));
+        const { channels } = this.props.channelsStore;
 
-        const channelItems = channels.map((channel, index) => (
-            <ChannelItem {...channel} key={index} />
-        ));
+        const table = (
+            <ReactTable
+                data={channels.constructor === Array ? channels : []}
+                columns={[
+                    {
+                        id: 'socialNetwork',
+                        Header: 'Соц. сеть',
+                        accessor: channel => channel.socialNetwork
+                                            ? channel.socialNetwork
+                                            : 'Telegram',
+                        filterMethod: (filter, row) => {
+                            if (filter.value === 'all') return true;
+                            return row[filter.id].toLowerCase() === filter.value
+                        },
+                        Filter: ({ filter, onChange }) => (
+                            <select
+                                onChange={e => onChange(e.target.value)}
+                                style={{ width: '100%' }}
+                                value={filter ? filter.value : 'all'}
+                            >
+                                <option value='all'>Все</option>
+                                <option value='telegram'>Telegram</option>
+                                <option value='facebook'>Facebook</option>
+                                <option value='vk'>VK</option>
+                                <option value='viber'>Viber</option>
+                                <option value='instagram'>Instagram</option>
+                            </select>
+                        )
+                    },
+                    {
+                        id: 'name',
+                        Header: 'Название канала',
+                        accessor: 'username'
+                    },
+                    {
+                        Header: '',
+                        sortable: false,
+                        filterable: false,
+                        accessor: 'channel_id',
+                        minWidth: 100,
+                        maxWidth: 350,
+                        Cell: ({ row }) => (
+                            <div className="col-12 d-flex justify-content-center">
+                                <span
+                                    className={
+                                        `badge badge-danger badge-pill badge-font-large`
+                                    }
+                                    style={{cursor: "pointer"}}
+                                    onClick={() => {
+                                        console.log(row);
+                                        if (window.confirm(`Удалить канал ${row.name}?`))
+                                            this.onDeleteChannel(row.channel_id);
+                                    }}
+                                >
+                                    Удалить
+                                </span>
+                            </div>
+                        )
+                    }
+                ]}
+                defaultPageSize={10}
+                className="-highlight"
+                filterable
+                {...reactTableTextProps}
+            />
+        );
 
         return (
             <div className="row">
@@ -57,18 +114,47 @@ export default class ChannelsSettings extends Component {
                     <div className="card">
                         <div className="card-body">
                             <h4 className="card-title">Настройки каналов</h4>
-
-                            <div className="row pt-4">
-                                <div className="col-6">
                                 
-                                    {modals}
-
-                                    <div className="list-group list-group-flush">
-                                        {channelItems}
+                            <Modal
+                                modalId="add-channel-modal"
+                                handleAddChannel={this.onAddChannel}
+                            >
+                                <form>
+                                    <div className="form-group">
+                                        <label htmlFor="socialNetwork" className="col-form-label">Соц. сеть:</label>
+                                        <select
+                                            className="form-control" id="socialNetwork"
+                                            ref={this.socialNetworkModalValue}
+                                        >
+                                            <option value="telegram">Telegram</option>
+                                            <option value="viber">Viber</option>
+                                            <option value="vk">VK</option>
+                                            <option value="instagram">Instagram</option>
+                                            <option value="facebook">Facebook</option>
+                                        </select>
                                     </div>
+                                    <div className="form-group">
+                                        <label htmlFor="botId" className="col-form-label">ID бота:</label>
+                                        <input
+                                            type="text" className="form-control" id="botId"
+                                            ref={this.botIdModalValue}
+                                        />
+                                    </div>
+                                </form>
+                            </Modal>
 
-                                </div>
-                            </div>
+                            <button
+                                type="button" className="btn btn-lg btn-primary"
+                                data-toggle="modal"
+                                data-target="#add-channel-modal"
+                                data-whatever="not yet."
+                            >
+                                Добавить канал
+                            </button>
+
+                            <br/><br/>
+
+                            {table}
                         </div>
                     </div>
                 </div>

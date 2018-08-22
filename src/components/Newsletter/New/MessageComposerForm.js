@@ -61,6 +61,7 @@ export default class MessageComposerForm extends Component {
     onMessageChange = e => {
         const newMessages = [...this.state.messages];
 
+        // eslint-disable-next-line
         const index = newMessages.findIndex(msg => msg.messageId == this.state.activeMessageId);
         newMessages[index].messageText = e.target.value;
 

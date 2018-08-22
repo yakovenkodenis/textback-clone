@@ -10,9 +10,8 @@ export default class Modal extends Component {
 
         const {
             modalId,
-            modalBody,
-            isConnected,
-            channelName
+            handleAddChannel,
+            children
         } = this.props;
 
         return (
@@ -28,7 +27,7 @@ export default class Modal extends Component {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="ModalLabel">
-                                {isConnected ? "Отключить " : "Подключить "}{channelName}
+                                Подключить новый канал
                             </h5>
                             <button
                                 type="button" className="close"
@@ -38,14 +37,16 @@ export default class Modal extends Component {
                             </button>
                         </div>
                         <div className="modal-body">
-                            {modalBody}
+                            {children}
                         </div>
                         <div className="modal-footer">
                             <button
-                                className={`btn ${isConnected ? "btn-gradient-danger" : "btn-gradient-success"}`}
+                                className={`btn btn-gradient-success`}
                                 type="button"
+                                data-dismiss="modal"
+                                onClick={handleAddChannel}
                             >
-                                {isConnected ? "Отключить" : "Подключить"}
+                                Подключить
                             </button>
                             <button
                                 className="btn btn-light"
