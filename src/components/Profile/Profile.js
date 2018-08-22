@@ -20,7 +20,7 @@ class Profile extends Component {
             </div>
 
             <div className="row">
-                <div className={`${isMobile ? "col-12" : "col-6"} mx-auto`}>
+                <div className={`${isMobile ? "col-12 p-0" : "col-6"} mx-auto`}>
                     <div className="card">
                         <div className="card-body">
                             <div className="row">

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
-import MessageComposerForm from './MessageComposerForm';
-import ReceiverChoiceForm from './ReceiverChoiceForm';
+import GeneralInfo from './GeneralInfo';
+import Messages from './Messages';
+import Settings from './Settings';
+import Actions from './Actions';
 import PageHeader from './PageHeader';
 import CardWrapper from '../../CardWrapper';
 
@@ -17,16 +19,20 @@ export default class New extends Component {
                 <PageHeader />
 
                 <div className="row">
-                    <CardWrapper title="Выберите получателя">
-                        <ReceiverChoiceForm />
+                    <CardWrapper title="Общая информация">
+                        <GeneralInfo isCardBody={true} />
                     </CardWrapper>
 
-                    <CardWrapper title="Напишите сообщение">
-                        <MessageComposerForm />
+                    <CardWrapper title="Сообщения">
+                        <Messages />
                     </CardWrapper>
 
-                    <CardWrapper title="Отправьте рассылку">
-                        <p>Пока что в разработке</p>
+                    <CardWrapper title="Настройки">
+                        <Settings />
+                    </CardWrapper>
+
+                    <CardWrapper title="">
+                        <Actions />
                     </CardWrapper>
                 </div>
             </React.Fragment>

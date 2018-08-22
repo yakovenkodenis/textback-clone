@@ -23,8 +23,9 @@ export default class App extends Component {
 
   componentDidMount() {
     if (this.props.commonStore.token) {
-      this.props.userStore.pullUser()
-        .finally(() => this.props.commonStore.setAppLoaded());
+      // this.props.userStore.pullUser()
+      //   .finally(() => this.props.commonStore.setAppLoaded());
+      this.props.commonStore.setAppLoaded();
     }
   }
 

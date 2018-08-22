@@ -8,7 +8,7 @@ import authStore from './stores/authStore';
 const superagent = superagentPromise(_superagent, global.Promise);
 
 // https://cors-anywhere.herokuapp.com/
-const PROXY = 'https://cors-anywhere.herokuapp.com/';
+const PROXY = '';
 const API_ROOT = 'http://35.190.220.217:8900';
 // const encode = encodeURIComponent;
 
@@ -21,10 +21,14 @@ const handleErrors = err => {
 }
 
 // const responseBody = res => res.body;
-const responseBody = res => JSON.parse(res.text);
+const responseBody = res => {
+    console.log('RESPONSE_BODY BITCH');
+    console.log(res);
+    return JSON.parse(res.text);
+}
 
 const tokenPlugin = req => {
-    // req.set("Content-Type", "application/json");
+    req.set("Content-Type", "application/json");
     // req.set("Accept", "application/json");
     if (commonStore.token) {
         req._data = {
@@ -64,6 +68,7 @@ const requests = {
             .use(tokenPlugin)
             .end(handleErrors)
             .then(responseBody),
+
 };
 
 const Auth = {

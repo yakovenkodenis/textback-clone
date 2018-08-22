@@ -8,10 +8,13 @@ import Dialogs from './Dialogs/Dialogs';
 import Analytics from './Analytics/Analytics';
 
 import Newsletter from './Newsletter/Newsletter';
-import New from './Newsletter/New/New';
+import NewNewsletter from './Newsletter/New/New';
 
 import Settings from './Settings/Settings';
+
 import Autofunnels from './Autofunnels/Autofunnels';
+import NewAutofunnel from './Autofunnels/New/New';
+
 import Audience from './Audience/Audience';
 import Profile from './Profile/Profile';
 
@@ -39,12 +42,17 @@ const routes = [
     {
         path: '/newsletter/new',
         exact: true,
-        component: () => <New />
+        component: () => <NewNewsletter />
     },
     {
         path: '/autofunnels',
         exact: true,
         component: () => <Autofunnels />
+    },
+    {
+        path: '/autofunnels/new',
+        exact: true,
+        component: () => <NewAutofunnel />
     },
     {
         path: '/audience',

@@ -51,10 +51,11 @@ const RegisterForm = ({
             />
         </div>
         <div className="mb-4">
-            <div className="form-check">
-                <label htmlFor="" className="form-check-label text-muted">
+            <div className="form-check form-check-flat form-check-primary">
+                <label className="form-check-label text-muted">
                     <input type="checkbox" className="form-check-input"/>
-                    Я принимаю пользовательское соглашение
+                    Я принимаю пользовательское соглашение!
+                    <i className="input-helper"></i>
                 </label>
             </div>
         </div>
