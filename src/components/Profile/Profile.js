@@ -8,10 +8,6 @@ import MediaQuery from 'react-responsive';
 @observer
 class Profile extends Component {
 
-    handleSubmitForm = e => {
-        e.preventDefault();
-    }
-
     render() {
 
         const { isMobile } = this.props;
