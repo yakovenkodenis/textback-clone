@@ -40,10 +40,14 @@ class ChannelsStore {
         this.errors = undefined;
 
         return agent.Channels.addTelegramChannel(botToken)
-            .then(response => {
+            .then(action(response => {
                 console.log('RESPONSE [addTelegramChannel()]');
                 console.log(response);
-            })
+
+                if (!response.success) {
+                    this.errors = response.errors;
+                }
+            }))
             .catch(action(err => {
                 console.log('ERROR [addTelegramChannel()]', err);
             }))

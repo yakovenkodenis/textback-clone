@@ -12,8 +12,10 @@ export default class NavBar extends Component {
 
     render() {
 
+        const { isActive } = this.props;
+
         return (
-            <nav className="sidebar sidebar-offcanvas" id="sidebar">
+            <nav className={`sidebar sidebar-offcanvas ${isActive ? "active" : ""}`} id="sidebar">
 
 
             <ul className="nav">

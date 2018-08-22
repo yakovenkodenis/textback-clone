@@ -21,6 +21,8 @@ export default class NavBar extends Component {
     }
 
     render() {
+        const { toggleSidebar } = this.props;
+
         return (
             <nav className="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
@@ -184,7 +186,11 @@ export default class NavBar extends Component {
 
 
                 {/* ============ Mobile burger icon ===================== */}
-              <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+              <button
+                className="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
+                type="button" data-toggle="offcanvas"
+                onClick={toggleSidebar}
+              >
                 <span className="mdi mdi-menu"></span>
               </button>
             </div>

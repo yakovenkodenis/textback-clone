@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 
 import NavBar from './Dashboard/NavBar';
@@ -61,27 +61,53 @@ const routes = [
     }
 ];
 
-const Home = () => (
-    <div>
-        <NavBar />
+export default class Home extends Component {
 
-        <div className="container-fluid page-body-wrapper">
-            <SideBar />
+    constructor(props, context) {
+        super(props, context);
 
-            <div className="main-panel">
-                <div className="content-wrapper">
-                    {routes.map((route, index) => (
-                        <Route
-                            key={index}
-                            path={'/admin' + route.path}
-                            exact={route.exact}
-                            component={route.component}
-                        />
-                    ))}
+        this.state = {
+            isSidebarActive: false
+        };
+    }
+
+    toggleSidebarActive = () => {
+        this.setState({
+            isSidebarActive: !this.state.isSidebarActive
+        });
+    }
+
+    hideSidebar = e => {
+        if (!document.getElementById('sidebar').contains(e.target)
+            && this.state.isSidebarActive) {
+            this.setState({
+                isSidebarActive: false
+            });
+        }
+    }
+
+    render() {
+        return (
+            <div onClick={this.hideSidebar}>
+                <NavBar toggleSidebar={this.toggleSidebarActive} />
+        
+                <div className="container-fluid page-body-wrapper">
+                    <SideBar isActive={this.state.isSidebarActive} />
+        
+                    <div className="main-panel">
+                        <div className="content-wrapper">
+                            {routes.map((route, index) => (
+                                <Route
+                                    key={index}
+                                    path={'/admin' + route.path}
+                                    exact={route.exact}
+                                    component={route.component}
+                                />
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-);
-
-export default Home;
+        )
+    }
+}

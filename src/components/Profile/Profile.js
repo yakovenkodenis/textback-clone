@@ -1,12 +1,21 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
+import MediaQuery from 'react-responsive';
 
 
 @withRouter
 @observer
-export default class NewsletterStatistics extends Component {
+class Profile extends Component {
+
+    handleSubmitForm = e => {
+        e.preventDefault();
+    }
+
     render() {
+
+        const { isMobile } = this.props;
+
         return (
         <React.Fragment>
 
@@ -15,22 +24,20 @@ export default class NewsletterStatistics extends Component {
             </div>
 
             <div className="row">
-                <div className="col-12">
+                <div className={`${isMobile ? "col-12" : "col-6"} mx-auto`}>
                     <div className="card">
                         <div className="card-body">
                             <div className="row">
-
-                                <div className="col-lg-4">
+                                <div className="col-lg-12"> {/* было col-lg-4 */}
                                     <div className="border-bottom text-center pb-4">
                                         <img
                                             src="https://placeimg.com/100/100/people"
                                             alt="profile"
                                             className="img-lg rounded-circle mb-3"
                                         />
-                                        <p>Это мой супер профиль. Всем привет!</p>
-                                        <div className="d-flex justify-content-between">
-                                            <button className="btn btn-gradient-success">Чундра</button>
-                                            <button className="btn btn-gradient-success">Чучундра</button>
+                                        <h3>Василий Иванович</h3>
+                                        <div className="d-flex align-items-center">
+                                            <h5>Россия</h5>
                                         </div>
                                     </div>
                                     <div className="border-bottom py-4">
@@ -42,6 +49,16 @@ export default class NewsletterStatistics extends Component {
                                             <label className="badge badge-outline-dark badge-margin-3">Graphic Design</label>
                                             <label className="badge badge-outline-dark badge-margin-3">Data Analysis</label>
                                         </div>
+                                    </div>
+                                    <div className="border-bottom pt-4 pb-2">
+                                        <p className="clearfix">
+                                            <span className="float-left">Мои подписчики</span>
+                                            <span className="float-right text-muted">1241</span>
+                                        </p>
+                                        <p className="clearfix">
+                                            <span className="float-left">Мои каналы</span>
+                                            <span className="float-right text-muted">24</span>
+                                        </p>
                                     </div>
                                     <div className="py-4">
                                         <p className="clearfix">
@@ -65,48 +82,8 @@ export default class NewsletterStatistics extends Component {
                                             </span>
                                         </p>
                                     </div>
-                                    <button className="btn btn-gradient-primary btn-block">Кнопочка</button>
+                                    <button className="btn btn-gradient-primary btn-block">Изменить</button>
                                 </div>
-
-                                <div className="col-lg-8">
-                                    <div className="d-flex justify-content-between">
-                                        <div>
-                                            <h3>Василий Иванович</h3>
-                                            <div className="d-flex align-items-center">
-                                                <h5>Россия</h5>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <button className="btn btn-outline-secondary btn-icon badge-margin-3"><i className="mdi mdi-comment-processing" />
-                                            </button>
-                                            <button className="btn btn-gradient-primary badge-margin-3">Набрать</button>
-                                        </div>
-                                    </div>
-
-                                    <div className="mt-4 py-4 border-top border-bottom d-flex justify-content-center">
-                                        <ul className="nav profile-navbar">
-                                            <li className="nav-item">
-                                                <a className="nav-link">
-                                                    <i className="mdi mdi-account outline"></i>
-                                                    Инфо
-                                                </a>
-                                            </li>
-                                            <li className="nav-item">
-                                                <a className="nav-link">
-                                                    <i className="mdi mdi-account outline"></i>
-                                                    Новости
-                                                </a>
-                                            </li>
-                                            <li className="nav-item">
-                                                <a className="nav-link">
-                                                    <i className="mdi mdi-account outline"></i>
-                                                    Задачи
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                     </div>
@@ -116,4 +93,14 @@ export default class NewsletterStatistics extends Component {
         </React.Fragment>
         );
     }
-}
+};
+
+const ResponsiveProfile = props => (
+    <MediaQuery maxDeviceWidth={767}>
+        {isMobile => (
+            <Profile isMobile={isMobile} {...props} />
+        )}
+    </MediaQuery>
+);
+
+export default ResponsiveProfile;

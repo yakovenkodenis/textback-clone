@@ -19,6 +19,12 @@ export default class Audience extends Component {
             ['Полина Артюшенко', 'Подписалась, обратилась в чат', '31 июл. 2018 г. 15:06:11'],
             ['Диана Якубова', 'Подписалась, обратилась в чат', '29 июл. 2018 г. 11:43:45'],
             ['Диана Ежова', 'Подписалась, обратилась в чат', '16 июл. 2018 г. 07:33:27'],
+            ['Юлия Евдокименко', 'Подписалась, обратилась в чат', '29 июн. 2018 г. 14:24:55'],
+            ['Наталья Михальченко', 'Подписалась, обратилась в чат', '3 авг. 2018 г. 9:36:25'],
+            ['Сергей Кружков', 'Подписался, обратился в чат', '2 авг. 2018 г. 13:16:55'],
+            ['Полина Артюшенко', 'Подписалась, обратилась в чат', '31 июл. 2018 г. 15:06:11'],
+            ['Диана Якубова', 'Подписалась, обратилась в чат', '29 июл. 2018 г. 11:43:45'],
+            ['Диана Ежова', 'Подписалась, обратилась в чат', '16 июл. 2018 г. 07:33:27'],
             ['Юлия Евдокименко', 'Подписалась, обратилась в чат', '29 июн. 2018 г. 14:24:55']
         ];
 
@@ -59,6 +65,30 @@ export default class Audience extends Component {
                         id: 'lastActive',
                         Header: 'Последняя активность',
                         accessor: row => row[2],
+                        className: 'align-self-center'
+                    },
+                    {
+                        id: 'channel',
+                        Header: 'Канал',
+                        filterMethod: (filter, row) => {
+                            if (filter.value === '1') return row[filter.id] === 'Канал 1';
+                            if (filter.value === '2') return row[filter.id] === 'Канал 2';
+                            if (filter.value === '3') return row[filter.id] === 'Канал 3';
+                            return true;
+                        },
+                        Filter: ({ filter, onChange }) => (
+                            <select
+                                onChange={e => onChange(e.target.value)}
+                                style={{ width: '100%' }}
+                                value={filter ? filter.value : 'all'}
+                            >
+                            <option value='all'>Все</option>
+                                <option value='1'>Канал 1</option>
+                                <option value='2'>Канал 2</option>
+                                <option value='3'>Канал 3</option>
+                            </select>
+                        ),
+                        Cell: ({ row }) => 'Канал 1',
                         className: 'align-self-center'
                     },
                     {
