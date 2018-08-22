@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 
 import NavBar from './Dashboard/NavBar';
 import SideBar from './Dashboard/SideBar/SideBar';
@@ -61,6 +61,7 @@ const routes = [
     }
 ];
 
+@withRouter
 export default class Home extends Component {
 
     constructor(props, context) {
@@ -69,6 +70,18 @@ export default class Home extends Component {
         this.state = {
             isSidebarActive: false
         };
+    }
+
+    componentWillMount() {
+        this.unlistenRoutesChange = this.props.history.listen((location, action) => {
+            this.setState({
+                isSidebarActive: false
+            });
+        });
+    }
+
+    componentWillUnmount(){
+        this.unlistenRoutesChange();
     }
 
     toggleSidebarActive = () => {
