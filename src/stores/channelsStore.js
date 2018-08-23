@@ -47,6 +47,8 @@ class ChannelsStore {
                 if (!response.success) {
                     this.errors = response.errors;
                 }
+
+                this.getChannelsList();
             }))
             .catch(action(err => {
                 console.log('ERROR [addTelegramChannel()]', err);
@@ -66,6 +68,8 @@ class ChannelsStore {
                 // and wrap everything inside @action
                 console.log('RESPONSE [deleteTelegramChannel()]');
                 console.log(response);
+
+                this.getChannelsList();
             })
             .catch(action(err => {
                 console.log('ERROR [deleteTelegramChannel()]', err);

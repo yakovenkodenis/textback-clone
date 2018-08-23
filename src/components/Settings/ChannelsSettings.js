@@ -32,9 +32,7 @@ export default class ChannelsSettings extends Component {
     onAddChannel = (socialNetwork, botId) => {
         this.props.channelsStore.addTelegramChannel(
             this.botIdModalValue.current.value
-        ).then(res => {
-            this.props.channelsStore.getChannelsList();
-        });
+        );
     }
 
     render() {
