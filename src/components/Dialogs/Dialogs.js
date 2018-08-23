@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { withRouter, Route } from 'react-router-dom';
+import { withRouter, Route, Link } from 'react-router-dom';
+import MediaQuery from 'react-responsive';
 
 import DialogsList from './DialogsList';
 import DialogContainer from './DialogContainer';
@@ -9,7 +10,7 @@ import { Default, Mobile } from '../Responsive';
 
 @withRouter
 @observer
-export default class Dialogs extends Component {
+class Dialogs extends Component {
 
     constructor(props, context) {
         super(props, context);
@@ -140,7 +141,7 @@ export default class Dialogs extends Component {
 
     render() {
 
-        const { match } = this.props;
+        const { match, isMobile } = this.props;
 
         const dialogRoutes = this.state.dialogs.map((dialog, index) => (
             <Route 
@@ -157,13 +158,28 @@ export default class Dialogs extends Component {
                 dialog.socialNetwork === match.params.currentFilter
             );
 
-
         return (
             <div className="row dialogs-page">
-                <div className="col-12 grid-margin">
+                <div className={`col-12 grid-margin ${isMobile ? "p-0" : ""}`}>
                     <div className="card">
                         <div className="card-body">
+
+                        <Default>
                             <h4 className="card-title">Диалоги</h4>
+                        </Default>
+
+                        <Mobile>
+                            <nav aria-label="breadcrumb">
+                                <ol className="breadcrumb">
+                                    <li className="breadcrumb-item">
+                                        <Link to='/admin/dialogs/all'>Диалоги</Link>
+                                    </li>
+                                    <li className="breadcrumb-item active">
+                                        route based list???
+                                    </li>
+                                </ol>
+                            </nav>
+                        </Mobile>
                             
                             <div className="row">
 
@@ -176,7 +192,11 @@ export default class Dialogs extends Component {
                                 </Default>
 
                                 <Mobile>
-                                    <p>Sorry, mobiles are not supported just yet.</p>
+
+                                    <div className="col-12 clear-pr clear-pl">
+                                        <DialogsList dialogs={dialogsList} />
+                                    </div>
+
                                 </Mobile>
 
                             </div>
@@ -187,3 +207,13 @@ export default class Dialogs extends Component {
         );
     }
 }
+
+const ResponsiveDialogs = props => (
+    <MediaQuery maxDeviceWidth={767}>
+        {isMobile => (
+            <Dialogs isMobile={isMobile} {...props} />
+        )}
+    </MediaQuery>
+);
+
+export default ResponsiveDialogs;

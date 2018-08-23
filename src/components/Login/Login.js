@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
+import MediaQuery from 'react-responsive';
 
 import LoginForm from './LoginForm';
 import logo from '../../logo.svg';
@@ -10,7 +11,7 @@ import ListErrors from '../ListErrors';
 @inject('authStore', 'commonStore')
 @withRouter
 @observer
-export default class Login extends Component {
+class Login extends Component {
 
     constructor(props, context) {
         super(props, context);
@@ -47,6 +48,7 @@ export default class Login extends Component {
 
     render() {
         const { values, errors, inProgress } = this.props.authStore;
+        const { isMobile } = this.props;
 
         console.log('Login.js errors', errors);
 
@@ -56,10 +58,17 @@ export default class Login extends Component {
         }
 
         return (
-            <div className='container-fluid page-body-wrapper full-page-wrapper'>
-                <div className="content-wrapper d-flex align-items-center auth">
-                    <div className="row w-100">
-                        <div className="col-lg-4 mx-auto">
+            <div
+                className={`container-fluid page-body-wrapper full-page-wrapper`}
+                style={{
+                    minHeight: isMobile ? '0' : '100vh'
+                }}
+            >
+                <div
+                    className={`content-wrapper d-flex align-items-center auth ${isMobile ? "p-0" : ""}`}
+                >
+                    <div className={`row ${isMobile ? "mx-auto" : "w-100"}`}>
+                        <div className={`col-lg-4 mx-auto ${isMobile ? "p-0" : ""}`}>
                             <div className="auth-form-light text-left p-5">
                                 <div className="brand-logo">
                                     <img src={logo} alt="logo"/>
@@ -85,5 +94,14 @@ export default class Login extends Component {
             </div>
         );
     }
-
 }
+
+const ResponsiveLogin = props => (
+    <MediaQuery maxDeviceWidth={767}>
+        {isMobile => (
+            <Login isMobile={isMobile} {...props} />
+        )}
+    </MediaQuery>
+);
+
+export default ResponsiveLogin;
