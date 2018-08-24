@@ -1,8 +1,20 @@
 import React from 'react';
 
 
-const ListErrors = ({ errors }) => {
+const ListErrors = (props) => {
+
+    alert(props);
+
+    const { errors } = props;
+
     if (errors) {
+
+        if (errors.constructor !== Array) {
+            console.log('Errors object is not array!!!', errors);
+            alert(errors);
+            return null;
+        }
+
         return (
             <ul className="list-arrow">
                 {

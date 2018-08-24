@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Route, withRouter } from 'react-router-dom';
+import MediaQuery from 'react-responsive';
 
 import NavBar from './Dashboard/NavBar';
 import SideBar from './Dashboard/SideBar/SideBar';
@@ -70,7 +71,7 @@ const routes = [
 ];
 
 @withRouter
-export default class Home extends Component {
+class Home extends Component {
 
     constructor(props, context) {
         super(props, context);
@@ -108,15 +109,26 @@ export default class Home extends Component {
     }
 
     render() {
+        const { isMobile } = this.props;
+
         return (
             <div onClick={this.hideSidebar}>
                 <NavBar toggleSidebar={this.toggleSidebarActive} />
         
                 <div className="container-fluid page-body-wrapper">
+
+                    <div id="settings-trigger">
+                        <i className="mdi mdi-settings" />
+                    </div>
+
                     <SideBar isActive={this.state.isSidebarActive} />
         
                     <div className="main-panel">
-                        <div className="content-wrapper">
+                        <div className={`content-wrapper`}
+                            style={{
+                                padding: isMobile ? "0.75rem 0.25rem" : "2.75rem 2.25rem"
+                            }}
+                        >
                             {routes.map((route, index) => (
                                 <Route
                                     key={index}
@@ -131,4 +143,14 @@ export default class Home extends Component {
             </div>
         )
     }
-}
+};
+
+const ResponsiveHome = props => (
+    <MediaQuery maxDeviceWidth={767}>
+        {isMobile => (
+            <Home isMobile={isMobile} {...props} />
+        )}
+    </MediaQuery>
+);
+
+export default ResponsiveHome;

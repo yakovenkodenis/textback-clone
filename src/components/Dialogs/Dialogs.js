@@ -23,8 +23,8 @@ class Dialogs extends Component {
                     path: 'dialog-1', name: 'Екатерина Петрова', timeAgo: '9:04 PM',
                     socialNetwork: 'telegram',
                     messages: [
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.', likesNumber: 5, date: '11 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum sit amet.', date: '16 Oct 2018' },
+                        { isInverted: true, body: 'Lorem ipsum :thumbsup: dolor sit amet consectetur adipisicing elit.', likesNumber: 5, date: '11 Oct 2018' },
+                        { isInverted: true, body: 'Lorem ipsum sit amet :smile:', date: '16 Oct 2018' },
                         { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '18 Oct 2018' },
                         { isInverted: true, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, molestiae. Eaque praesentium expedita cupiditate amet?', date: '22 Oct 2018' },
                         { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '18 Oct 2018' },
@@ -141,7 +141,7 @@ class Dialogs extends Component {
 
     render() {
 
-        const { match, isMobile } = this.props;
+        const { match, isMobile, location } = this.props;
 
         const dialogRoutes = this.state.dialogs.map((dialog, index) => (
             <Route 
@@ -157,6 +157,34 @@ class Dialogs extends Component {
             : this.state.dialogs.filter(dialog =>
                 dialog.socialNetwork === match.params.currentFilter
             );
+
+        let dynamicBreadcrumbRoute = undefined;
+
+        if (isMobile) {
+            const currentRoute = location.pathname;
+            const necessaryRoutePartArr = currentRoute.split('/dialogs/');
+
+            if (
+                necessaryRoutePartArr[0] === '/admin/dialogs/'
+                || (necessaryRoutePartArr.length === 2 && necessaryRoutePartArr[1] === "")
+            ) {
+                dynamicBreadcrumbRoute = "";
+            } else {
+                const [
+                    filter, currentDialog
+                ] = necessaryRoutePartArr[necessaryRoutePartArr.length - 1].split('/');
+
+                // TODO
+                // in dialogsStore find the needed dialog and replace {currentDialog}
+                // with the name of the real person.
+
+                dynamicBreadcrumbRoute = currentDialog;
+                console.log(filter, dynamicBreadcrumbRoute);
+            }
+
+
+            console.log("dynamicBreadcrumbRoute: ", dynamicBreadcrumbRoute);
+        }
 
         return (
             <div className="row dialogs-page">
@@ -175,7 +203,7 @@ class Dialogs extends Component {
                                         <Link to='/admin/dialogs/all'>Диалоги</Link>
                                     </li>
                                     <li className="breadcrumb-item active">
-                                        route based list???
+                                        {dynamicBreadcrumbRoute}
                                     </li>
                                 </ol>
                             </nav>
@@ -193,9 +221,15 @@ class Dialogs extends Component {
 
                                 <Mobile>
 
-                                    <div className="col-12 clear-pr clear-pl">
-                                        <DialogsList dialogs={dialogsList} />
-                                    </div>
+                                    {
+                                        dynamicBreadcrumbRoute && dynamicBreadcrumbRoute !== ""
+                                        ? dialogRoutes
+                                        : (
+                                            <div className="col-12 clear-pr clear-pl">
+                                                <DialogsList dialogs={dialogsList} />
+                                            </div>
+                                        )
+                                    }
 
                                 </Mobile>
 

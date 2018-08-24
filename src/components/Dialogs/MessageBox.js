@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 
 import DialogMessagesContainer from './DialogMessagesContainer';
+import AdvancedTextEditor from '../TextEditor/AdvancedTextEditor';
 
 
 @withRouter
@@ -32,15 +33,7 @@ export default class MessageBox extends Component {
                 <br/>
 
                 <div className="form-group">
-                    <textarea
-                        id="messageBox"
-                        cols="30"
-                        rows="3"
-                        className="form-control"
-                        placeholder="Отправить сообщение..."
-                        name="dialog-message-box"
-                    />
-
+                    <AdvancedTextEditor />
                 </div>
 
                 <div className="form-group d-flex justify-content-between">
@@ -59,6 +52,7 @@ export default class MessageBox extends Component {
                             className="form-control file-upload-info border-0"
                             disabled placeholder=""
                             type="text"
+                            style={{display: 'none'}}
                         />
                         <span className="input-group-append">
                             <button

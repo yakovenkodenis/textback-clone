@@ -20891,361 +20891,359 @@
 
 
 
+/* Settings Panel (Right  sidebar) */
+.settings-panel {
+  display: block;
+  position: fixed;
+  top: 0;
+  right: -300px;
+  bottom: 0;
+  width: 300px;
+  height: 100vh;
+  min-height: 100%;
+  background: #ffffff;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-timing-function: ease;
+  -moz-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
+  -webkit-transition-property: right, box-shadow;
+  -moz-transition-property: right, box-shadow;
+  -o-transition-property: right, box-shadow;
+  transition-property: right, box-shadow;
+  z-index: 9999;
+}
 
-  /* Settings Panel (Right sidebar)
-  .settings-panel {
-    display: block;
-    position: fixed;
-    top: 0;
-    right: -300px;
-    bottom: 0;
-    width: 300px;
-    height: 100vh;
-    min-height: 100%;
-    background: #ffffff;
-    -webkit-transition-duration: 0.25s;
-    -moz-transition-duration: 0.25s;
-    -o-transition-duration: 0.25s;
-    transition-duration: 0.25s;
-    -webkit-transition-timing-function: ease;
-    -moz-transition-timing-function: ease;
-    -o-transition-timing-function: ease;
-    transition-timing-function: ease;
-    -webkit-transition-property: right, box-shadow;
-    -moz-transition-property: right, box-shadow;
-    -o-transition-property: right, box-shadow;
-    transition-property: right, box-shadow;
-    z-index: 9999;
-  }
-  
-  .settings-panel .nav-tabs {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-justify-content: center;
-    justify-content: center;
-    width: auto;
-    margin: 0;
-    border-bottom: none;
-    padding: 0;
-  }
-  
-  .settings-panel .nav-tabs .nav-item {
-    border: none;
-  }
-  
-  .settings-panel .nav-tabs .nav-item .nav-link {
-    text-align: center;
-    border: none;
-    background: transparent;
-    color: rgba(255, 255, 255, 0.5);
-    -webkit-transition-duration: 0.4s;
-    -moz-transition-duration: 0.4s;
-    -o-transition-duration: 0.4s;
-    transition-duration: 0.4s;
-    transition-property: color;
-    -webkit-transition-property: color;
-    -webkit-justify-content: center;
-    justify-content: center;
-  }
-  
-  .settings-panel .nav-tabs .nav-item .nav-link.active {
-    background: transparent;
-    color: #ffffff;
-  }
-  
-  .settings-panel .tab-content {
-    border: none;
-    padding: 20px 0 0px 0;
-  }
-  
-  .settings-panel .tab-content .tab-pane.scroll-wrapper {
-    position: relative;
-    max-height: 100vh;
-    height: 100%;
-    padding-bottom: 100px;
-  }
-  
-  .settings-panel .settings-heading {
-    padding: 16px 0 13px 35px;
-    font-size: 0.875rem;
-    font-family: "ubuntu-bold", sans-serif;
-    line-height: 1;
-    color: rgba(0, 0, 0, 0.9);
-    opacity: 0.9;
-    margin-bottom: 0;
-    border-top: 1px solid #ebedf2;
-    border-bottom: 1px solid #ebedf2;
-  }
-  
-  .rtl .settings-panel .settings-heading {
-    padding: 16px 35px 13px 0;
-  }
-  
-  .rtl .settings-panel small.settings-heading {
-    padding: 16px 0 13px 12px;
-  }
-  
-  .settings-panel .sidebar-bg-options {
-    padding: 13px 35px;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-align-items: center;
-    align-items: center;
-    font-size: 0.875rem;
-    line-height: 1;
-    color: #595959;
-    background: #ffffff;
-    -webkit-transition-duration: 0.25s;
-    -moz-transition-duration: 0.25s;
-    -o-transition-duration: 0.25s;
-    transition-duration: 0.25s;
-    -webkit-transition-property: background;
-    -moz-transition-property: background;
-    -o-transition-property: background;
-    transition-property: background;
-  }
-  
-  .settings-panel .sidebar-bg-options.selected {
-    background: #e6e9ed;
-  }
-  
-  .settings-panel .color-tiles {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-justify-content: space-between;
-    justify-content: space-between;
-    -webkit-flex-wrap: wrap;
-    flex-wrap: wrap;
-    margin: 0px 35px 10px 35px;
-    padding-top: 15px;
-  }
-  
-  .settings-panel .color-tiles .tiles {
-    margin: 10px 18px;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-align-items: center;
-    align-items: center;
-    -webkit-justify-content: center;
-    justify-content: center;
-  }
-  
-  .settings-panel .color-tiles .tiles:before {
-    content: "";
-    width: 0px;
-    height: 0px;
-    opacity: 0;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 100%;
-    border: 0px solid rgba(255, 255, 255, 0.4);
-    -webkit-transition-duration: 0.25s;
-    -moz-transition-duration: 0.25s;
-    -o-transition-duration: 0.25s;
-    transition-duration: 0.25s;
-    -webkit-transition-timing-function: ease;
-    -moz-transition-timing-function: ease;
-    -o-transition-timing-function: ease;
-    transition-timing-function: ease;
-  }
-  
-  .settings-panel .color-tiles .tiles.selected:before {
-    width: 10px;
-    height: 10px;
-    opacity: 1;
-    border-width: 1px;
-  }
-  
-  .settings-panel .color-tiles .tiles.pink {
-    background: #E91E63;
-  }
-  
-  .settings-panel .color-tiles .tiles.light {
-    border: 1px solid #e2e4e7;
-  }
-  
-  .settings-panel .chat-list {
-    padding-left: 0;
-  }
-  
-  .settings-panel .chat-list .list {
-    padding: 0.4rem 0.8rem;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-justify-content: space-between;
-    justify-content: space-between;
-    border-bottom: 1px solid #ebedf2;
-  }
-  
-  .settings-panel .chat-list .list:last-child {
-    border-bottom: none;
-  }
-  
-  .settings-panel .chat-list .list .profile {
-    position: relative;
-    margin-right: 1rem;
-  }
-  
-  .settings-panel .chat-list .list .profile img {
-    width: 2.50rem;
-    height: 2.50rem;
-    border-radius: 100%;
-  }
-  
-  .settings-panel .chat-list .list .profile span {
-    height: 0.75rem;
-    width: 0.75rem;
-    position: absolute;
-    bottom: 0.34rem;
-    right: 0;
-    border: 0.13rem solid #ffffff;
-    border-radius: 100%;
-  }
-  
-  .settings-panel .chat-list .list .profile span.online {
-    background: #1bcfb4;
-  }
-  
-  .settings-panel .chat-list .list .profile span.offline {
-    background: #fed713;
-  }
-  
-  .settings-panel .chat-list .list .info {
-    margin-right: auto;
-  }
-  
-  .settings-panel .chat-list .list .info p {
-    display: block;
-    margin-bottom: 0;
-  }
-  
-  .settings-panel .chat-list .list .info p:last-child {
-    opacity: 0.5;
-    font-size: 0.8rem;
-  }
-  
-  .settings-panel .chat-list .list.active {
-    background: #f8f9fa;
-  }
-  
-  .settings-panel.open {
-    right: 0;
-    -webkit-box-shadow: 7px 0px 80px -9px rgba(0, 0, 0, 0.15);
-    -moz-box-shadow: 7px 0px 80px -9px rgba(0, 0, 0, 0.15);
-    box-shadow: 7px 0px 80px -9px rgba(0, 0, 0, 0.15);
-  }
-  
-  .settings-panel .settings-close {
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    color: #ffffff;
-    background: transparent;
-    border-radius: 4px;
-    padding: 0 3px;
-    cursor: pointer;
-    -webkit-transition-duration: 0.2s;
-    -moz-transition-duration: 0.2s;
-    -o-transition-duration: 0.2s;
-    transition-duration: 0.2s;
-    z-index: 999;
-  }
-  
-  .settings-panel .settings-close:hover {
-    background: rgba(255, 255, 255, 0.3);
-  }
-  
-  .rtl .settings-panel .settings-close {
-    right: unset;
-    left: 10px;
-  }
-  
-  .settings-panel .events p {
-    font-family: "ubuntu-regular", sans-serif;
-  }
-  
-  .rtl .settings-panel {
-    right: unset;
-    left: -300px;
-    -webkit-transition-property: left;
-    -moz-transition-property: left;
-    -o-transition-property: left;
-    transition-property: left;
-  }
-  
-  .rtl .settings-panel .chat-list {
-    padding-right: 0;
-  }
-  
-  .rtl .settings-panel .chat-list .list .profile {
-    margin-right: 0;
-    margin-left: 1rem;
-  }
-  
-  .rtl .settings-panel .chat-list .list .info {
-    margin-right: 0;
-    margin-left: auto;
-  }
-  
-  .rtl .settings-panel .chat-list .list .info .badge {
-    margin-right: 10px;
-  }
-  
-  .rtl .settings-panel.open {
-    left: 0;
-    right: unset;
-  }
-  
-  #theme-settings .settings-close {
-    top: 12px;
-  }
-  
+.settings-panel .nav-tabs {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  width: auto;
+  margin: 0;
+  border-bottom: none;
+  padding: 0;
+}
+
+.settings-panel .nav-tabs .nav-item {
+  border: none;
+}
+
+.settings-panel .nav-tabs .nav-item .nav-link {
+  text-align: center;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.4s;
+  -o-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  transition-property: color;
+  -webkit-transition-property: color;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.settings-panel .nav-tabs .nav-item .nav-link.active {
+  background: transparent;
+  color: #ffffff;
+}
+
+.settings-panel .tab-content {
+  border: none;
+  padding: 20px 0 0px 0;
+}
+
+.settings-panel .tab-content .tab-pane.scroll-wrapper {
+  position: relative;
+  max-height: 100vh;
+  height: 100%;
+  padding-bottom: 100px;
+}
+
+.settings-panel .settings-heading {
+  padding: 16px 0 13px 35px;
+  font-size: 0.875rem;
+  font-family: "ubuntu-bold", sans-serif;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.9);
+  opacity: 0.9;
+  margin-bottom: 0;
+  border-top: 1px solid #ebedf2;
+  border-bottom: 1px solid #ebedf2;
+}
+
+.rtl .settings-panel .settings-heading {
+  padding: 16px 35px 13px 0;
+}
+
+.rtl .settings-panel small.settings-heading {
+  padding: 16px 0 13px 12px;
+}
+
+.settings-panel .sidebar-bg-options {
+  padding: 13px 35px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  font-size: 0.875rem;
+  line-height: 1;
+  color: #595959;
+  background: #ffffff;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: background;
+  -moz-transition-property: background;
+  -o-transition-property: background;
+  transition-property: background;
+}
+
+.settings-panel .sidebar-bg-options.selected {
+  background: #e6e9ed;
+}
+
+.settings-panel .color-tiles {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: 0px 35px 10px 35px;
+  padding-top: 15px;
+}
+
+.settings-panel .color-tiles .tiles {
+  margin: 10px 18px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.settings-panel .color-tiles .tiles:before {
+  content: "";
+  width: 0px;
+  height: 0px;
+  opacity: 0;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 100%;
+  border: 0px solid rgba(255, 255, 255, 0.4);
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-timing-function: ease;
+  -moz-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
+}
+
+.settings-panel .color-tiles .tiles.selected:before {
+  width: 10px;
+  height: 10px;
+  opacity: 1;
+  border-width: 1px;
+}
+
+.settings-panel .color-tiles .tiles.pink {
+  background: #E91E63;
+}
+
+.settings-panel .color-tiles .tiles.light {
+  border: 1px solid #e2e4e7;
+}
+
+.settings-panel .chat-list {
+  padding-left: 0;
+}
+
+.settings-panel .chat-list .list {
+  padding: 0.4rem 0.8rem;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  border-bottom: 1px solid #ebedf2;
+}
+
+.settings-panel .chat-list .list:last-child {
+  border-bottom: none;
+}
+
+.settings-panel .chat-list .list .profile {
+  position: relative;
+  margin-right: 1rem;
+}
+
+.settings-panel .chat-list .list .profile img {
+  width: 2.50rem;
+  height: 2.50rem;
+  border-radius: 100%;
+}
+
+.settings-panel .chat-list .list .profile span {
+  height: 0.75rem;
+  width: 0.75rem;
+  position: absolute;
+  bottom: 0.34rem;
+  right: 0;
+  border: 0.13rem solid #ffffff;
+  border-radius: 100%;
+}
+
+.settings-panel .chat-list .list .profile span.online {
+  background: #1bcfb4;
+}
+
+.settings-panel .chat-list .list .profile span.offline {
+  background: #fed713;
+}
+
+.settings-panel .chat-list .list .info {
+  margin-right: auto;
+}
+
+.settings-panel .chat-list .list .info p {
+  display: block;
+  margin-bottom: 0;
+}
+
+.settings-panel .chat-list .list .info p:last-child {
+  opacity: 0.5;
+  font-size: 0.8rem;
+}
+
+.settings-panel .chat-list .list.active {
+  background: #f8f9fa;
+}
+
+.settings-panel.open {
+  right: 0;
+  -webkit-box-shadow: 7px 0px 80px -9px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 7px 0px 80px -9px rgba(0, 0, 0, 0.15);
+  box-shadow: 7px 0px 80px -9px rgba(0, 0, 0, 0.15);
+}
+
+.settings-panel .settings-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  color: #ffffff;
+  background: transparent;
+  border-radius: 4px;
+  padding: 0 3px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.2s;
+  -moz-transition-duration: 0.2s;
+  -o-transition-duration: 0.2s;
+  transition-duration: 0.2s;
+  z-index: 999;
+}
+
+.settings-panel .settings-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.rtl .settings-panel .settings-close {
+  right: unset;
+  left: 10px;
+}
+
+.settings-panel .events p {
+  font-family: "ubuntu-regular", sans-serif;
+}
+
+.rtl .settings-panel {
+  right: unset;
+  left: -300px;
+  -webkit-transition-property: left;
+  -moz-transition-property: left;
+  -o-transition-property: left;
+  transition-property: left;
+}
+
+.rtl .settings-panel .chat-list {
+  padding-right: 0;
+}
+
+.rtl .settings-panel .chat-list .list .profile {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+.rtl .settings-panel .chat-list .list .info {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+.rtl .settings-panel .chat-list .list .info .badge {
+  margin-right: 10px;
+}
+
+.rtl .settings-panel.open {
+  left: 0;
+  right: unset;
+}
+
+#theme-settings .settings-close {
+  top: 12px;
+}
+
+#settings-trigger {
+  position: fixed;
+  bottom: 40px;
+  right: 30px;
+  height: 45px;
+  width: 45px;
+  background: #b66dff;
+  z-index: 99;
+  -webkit-box-shadow: 0px 0px 31px 6px rgba(0, 0, 0, 0.17);
+  -moz-box-shadow: 0px 0px 31px 6px rgba(0, 0, 0, 0.17);
+  box-shadow: 0px 0px 31px 6px rgba(0, 0, 0, 0.17);
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  border-radius: 100%;
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  -ms-animation-duration: 1s;
+  -o-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-delay: 1s;
+  -moz-animation-delay: 1s;
+  -ms-animation-delay: 1s;
+  -o-animation-delay: 1s;
+  animation-delay: 1s;
+  -webkit-animation-fill-mode: both;
+  -moz-animation-fill-mode: both;
+  -ms-animation-fill-mode: both;
+  -o-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+#settings-trigger i {
+  color: #ffffff;
+  font-size: 1rem;
+  line-height: 1rem;
+}
+
+@media (max-width: 991px) {
   #settings-trigger {
-    position: fixed;
-    bottom: 40px;
-    right: 30px;
-    height: 45px;
-    width: 45px;
-    background: #b66dff;
-    z-index: 99;
-    -webkit-box-shadow: 0px 0px 31px 6px rgba(0, 0, 0, 0.17);
-    -moz-box-shadow: 0px 0px 31px 6px rgba(0, 0, 0, 0.17);
-    box-shadow: 0px 0px 31px 6px rgba(0, 0, 0, 0.17);
-    display: -webkit-flex;
-    display: flex;
-    -webkit-align-items: center;
-    align-items: center;
-    -webkit-justify-content: center;
-    justify-content: center;
-    border-radius: 100%;
-    -webkit-animation-duration: 1s;
-    -moz-animation-duration: 1s;
-    -ms-animation-duration: 1s;
-    -o-animation-duration: 1s;
-    animation-duration: 1s;
-    -webkit-animation-delay: 1s;
-    -moz-animation-delay: 1s;
-    -ms-animation-delay: 1s;
-    -o-animation-delay: 1s;
-    animation-delay: 1s;
-    -webkit-animation-fill-mode: both;
-    -moz-animation-fill-mode: both;
-    -ms-animation-fill-mode: both;
-    -o-animation-fill-mode: both;
-    animation-fill-mode: both;
+    display: none;
   }
-  
-  #settings-trigger i {
-    color: #ffffff;
-    font-size: 1rem;
-    line-height: 1rem;
-  }
-  
-  @media (max-width: 991px) {
-    #settings-trigger {
-      display: none;
-    }
-  }
-   */
+}
 
 
 /* Timeline */
@@ -22915,4 +22913,24 @@
 
 .chain-wrapper-dark .chain-badge {
   background: linear-gradient(89deg, #5e7188, #3e4b5b);
+}
+
+
+
+/*  Message Box in Dialogs page */
+[contenteditable=true]:empty::before {
+  content: attr(placeholder);
+  display: block;
+  color: #aaa;
+}
+
+#messageBox {
+  font-size: .9375rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Emoji */
+.emojione {
+  height: 1.5rem;
 }
