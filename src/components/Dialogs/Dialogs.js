@@ -32,7 +32,7 @@ class Dialogs extends Component {
                         { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '11 Oct 2018' },
                         { isInverted: true, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores, cupiditate eveniet.', date: '16 Oct 2018' },
                         { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '18 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet.', date: '22 Oct 2018' }
+                        { isInverted: true, body: 'Lorem ipsum :thumbsup: dolor sit amet.:smile:', date: '22 Oct 2018' }
                     ]
                 },
                 {

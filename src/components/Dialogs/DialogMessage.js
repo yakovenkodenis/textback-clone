@@ -12,9 +12,12 @@ const DialogMessage = ({
     }>
         <div className="timeline-panel">
             <div className="timeline-body">
-                <p className="convert-emoji" dangerouslySetInnerHTML={{
-                    __html: toImage(body)
-                }}/>
+                <p
+                    className="convert-emoji"
+                    dangerouslySetInnerHTML={{
+                        __html: toImage(body)
+                    }}
+                />
             </div>
         </div>
     </div>

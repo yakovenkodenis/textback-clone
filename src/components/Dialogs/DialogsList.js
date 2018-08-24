@@ -63,7 +63,7 @@ export default class DialogsList extends Component {
             const { name, timeAgo, path, messages, socialNetwork } = dialog;
             const bodyPreview = this.truncate(
                 messages[messages.length - 1].body,
-                26,
+                30, // maybe make this parameter dynamic based on screen size???
                 true
             );
 

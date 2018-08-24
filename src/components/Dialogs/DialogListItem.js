@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
+import { toImage } from 'emojione';
 
 
 @inject('channelsStore')
@@ -40,7 +41,12 @@ export default class DialogsListItem extends Component {
                     </h5>
                     <small className="text-muted">{timeAgo}</small>
                 </div>
-                <p className="mb-1">{bodyPreview}</p>
+                <p
+                    className="mb-1"
+                    dangerouslySetInnerHTML={{
+                        __html: toImage(bodyPreview)
+                    }}
+                />
             </a>
         );
     }
