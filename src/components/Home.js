@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { inject } from 'mobx-react';
 import { Route, withRouter } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
 
@@ -70,6 +71,7 @@ const routes = [
     }
 ];
 
+@inject('channelsStore')
 @withRouter
 class Home extends Component {
 
@@ -91,6 +93,10 @@ class Home extends Component {
 
     componentWillUnmount(){
         this.unlistenRoutesChange();
+    }
+
+    componentDidMount() {
+        this.props.channelsStore.getChannelsList();
     }
 
     toggleSidebarActive = () => {

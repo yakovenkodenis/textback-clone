@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 
 import DialogListItem from './DialogListItem';
 
 
+@inject('messagesStore', 'channelsStore', 'subscribersStore')
 @withRouter
 @observer
 export default class DialogsList extends Component {
@@ -31,6 +32,29 @@ export default class DialogsList extends Component {
     componentWillMount() {
         this.setState({
             dialogs: this.props.dialogs
+        });
+    }
+
+    componentDidMount() {
+        const { messages } = this.props.messagesStore;
+
+        console.log('GETTING MESSAGES!!!');
+
+        // MESSAGE OBJECT EXAMPLE
+        // channel_id: 9
+        // chat_id: 63113727
+        // date: 1535194570
+        // is_attachment: false
+        // message_id: 2259
+        // owner: false
+        // text : "/start"
+        // update_date: null
+        // user_id: 63113727
+
+        this.props.subscribersStore.subscribers.forEach(subscriber => {
+            this.props.messagesStore.getTelegramMessages(
+                subscriber.channel_id, subscriber.subscriber_id
+            );
         });
     }
 
@@ -61,11 +85,14 @@ export default class DialogsList extends Component {
         const dialogs = this.state.dialogs.map((dialog, index) => {
 
             const { name, timeAgo, path, messages, socialNetwork } = dialog;
-            const bodyPreview = this.truncate(
-                messages[messages.length - 1].body,
-                30, // maybe make this parameter dynamic based on screen size???
-                true
-            );
+            // const bodyPreview = this.truncate(
+            //     messages[messages.length - 1].body,
+            //     30, // maybe make this parameter dynamic based on screen size???
+            //     true
+            // );
+
+            const bodyPreview = 'test';
+            
 
 
             const props = {

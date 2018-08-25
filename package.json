@@ -17,6 +17,7 @@
     "chart.js": "^2.7.2",
     "classnames": "^2.2.6",
     "css-loader": "0.28.7",
+    "datediff": "0.0.1",
     "dotenv": "4.0.0",
     "dotenv-expand": "4.2.0",
     "draft-js": "^0.10.5",

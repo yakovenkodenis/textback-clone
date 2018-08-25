@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import { withRouter, Route, Link } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
+import { datediff, unixtimeToDate } from '../../utils';
 
 import DialogsList from './DialogsList';
 import DialogContainer from './DialogContainer';
 import { Default, Mobile } from '../Responsive';
 
 
+@inject('subscribersStore', 'channelsStore')
 @withRouter
 @observer
 class Dialogs extends Component {
@@ -127,6 +129,37 @@ class Dialogs extends Component {
         }
     }
 
+    componentDidMount() {
+        // const { channels } = this.props.channelsStore;
+        // console.log('CHANNELS: ', channels);
+
+        console.log('Dialogs.js componentDidMount()');
+        this.props.subscribersStore.getSubscribersList();
+
+        // console.log('DATES: ', datediff(new Date(unixtimeToDate(1535194570)), new Date()));
+
+        // Single object example from array of subscribers
+        // added_time: 1535194570
+        // channel_id: 9
+        // first_name: "Denis"
+        // image: "http://35.190.220.217/AgADAgADr6cxG_8JwwNgttjdRyya-9xOqw4ABJREmRMFDEP3CPcBAAEC.jpg"
+        // language_code: "ru-RU"
+        // last_activity: 1535194570
+        // last_name: "Yakovenko"
+        // status_id: 1
+        // subscriber_id: 63113727
+        // username: "yakovenkodenis"
+    }
+
+    // componentDidUpdate(prevProps) {
+    //     if (
+    //         this.props.subscribersStore.subscribers
+    //         && this.props.subscribersStore.subscribers.constructor === Array
+    //     ) {
+    //         console.log('componentDidUpdate');
+    //     }
+    // }
+
     trimChar = (string, charToRemove) => {
         while (string.charAt(0) === charToRemove) {
             string = string.substring(1);
@@ -139,23 +172,51 @@ class Dialogs extends Component {
         return string;
     }
 
+    generateDialogPath = ({first_name, last_name, subscriber_id}) => {
+        return `${first_name.toLowerCase()}-${last_name.toLowerCase()}-${subscriber_id}`;
+    }
+
     render() {
 
         const { match, isMobile, location } = this.props;
 
-        const dialogRoutes = this.state.dialogs.map((dialog, index) => (
+        let subscribers = [];
+
+        if (
+            this.props.subscribersStore.subscribers
+            && this.props.subscribersStore.subscribers.constructor === Array
+        ) {
+            console.log('MAPPING SUBSCRIBERS ARRAY...');
+
+            subscribers = this.props.subscribersStore.subscribers.map(subscriber => ({
+                socialNetwork: 'telegram',
+                path: this.generateDialogPath(subscriber),
+                name: `${subscriber.first_name} ${subscriber.last_name}`,
+                timeAgo: datediff(new Date(unixtimeToDate(subscriber.last_activity)), new Date()),
+                messages: [], // GET SOMEWHERE MESSAGES!!!
+                ...subscriber
+            }));
+        }
+
+        const dialogRoutes = subscribers.map((subscriber, index) => (
             <Route 
                 key={index}
-                path={`/admin/dialogs/${match.params.currentFilter}/${dialog.path}`}
+                path={`/admin/dialogs/${match.params.currentFilter}/${subscriber.path}`}
                 exact={true}
-                component={() => <DialogContainer currentFilter={match.params.currentFilter} {...dialog} />}
+                component={() => <DialogContainer currentFilter={match.params.currentFilter} {...subscriber} />}
             />
         ));
 
+        // const dialogsList = match.params.currentFilter === 'all'
+        //     ? this.state.dialogs
+        //     : this.state.dialogs.filter(dialog =>
+        //         dialog.socialNetwork === match.params.currentFilter
+        //     );
+
         const dialogsList = match.params.currentFilter === 'all'
-            ? this.state.dialogs
-            : this.state.dialogs.filter(dialog =>
-                dialog.socialNetwork === match.params.currentFilter
+            ? subscribers
+            : subscribers.filter(subscriber =>
+                subscriber.socialNetwork === match.params.currentFilter
             );
 
         let dynamicBreadcrumbRoute = undefined;

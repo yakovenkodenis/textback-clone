@@ -135,11 +135,10 @@ const Subscribers = {
             StatusId, SubscriberId, ChannelId
         }),
 
-    getList: ChannelId =>
+    getList: () =>
         requests.post('/', {
             "Controller": "Subscriber",
-            "Action": "GetList",
-            ChannelId
+            "Action": "GetList"
         }),
 
     getInfo: (ChannelId, SubscriberId) =>

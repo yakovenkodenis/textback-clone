@@ -22,7 +22,7 @@ export default class ChannelsSettings extends Component {
     }
 
     componentDidMount() {
-        this.props.channelsStore.getChannelsList();
+        // this.props.channelsStore.getChannelsList();
     }
 
     onDeleteChannel = channelId => {
