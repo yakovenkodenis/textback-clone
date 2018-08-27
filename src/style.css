@@ -22934,3 +22934,47 @@
 .emojione {
   height: 1.5rem;
 }
+
+.draftJsEmojiPlugin__emojiSelectPopover__1J1s0 {
+  margin-top: -460px;
+}
+
+
+/* Auth loading spinner */
+.loading-spinner {
+  border: 4px solid #fff;
+  border-top-color: rgba(0, 0, 0, 0);
+  border-left-color: rgba(0, 0, 0, 0);
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+  border-radius: 50%;
+  animation: loading-spinner 0.7s infinite ease-in-out;
+  -webkit-animation: loading-spinner 0.7s infinite ease-in-out;
+}
+
+.auth-form-btn .loading-spinner {
+  /* margin-top: -14px; */
+  margin-left: -14px;
+  position: absolute;
+  /* top: 50%; */
+  left: 50%;
+}
+
+@keyframes loading-spinner {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes loading-spinner {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

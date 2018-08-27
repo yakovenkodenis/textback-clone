@@ -20,15 +20,6 @@ export default class DialogsList extends Component {
         this.searchInputField = React.createRef();
     }
 
-    truncate = (msg, n, useWordBoundary) => {
-        if (msg.length <= n) { return msg; }
-        let subString = msg.substr(0, n - 1);
-        return (useWordBoundary
-            ? subString.substr(0, subString.lastIndexOf(' '))
-            : subString
-        ) + '...';
-    }
-
     componentWillMount() {
         this.setState({
             dialogs: this.props.dialogs
@@ -36,7 +27,7 @@ export default class DialogsList extends Component {
     }
 
     componentDidMount() {
-        const { messages } = this.props.messagesStore;
+        // const { messages } = this.props.messagesStore;
 
         console.log('GETTING MESSAGES!!!');
 
@@ -51,17 +42,26 @@ export default class DialogsList extends Component {
         // update_date: null
         // user_id: 63113727
 
-        this.props.subscribersStore.subscribers.forEach(subscriber => {
-            this.props.messagesStore.getTelegramMessages(
-                subscriber.channel_id, subscriber.subscriber_id
-            );
-        });
+        // this.props.subscribersStore.subscribers.forEach(subscriber => {
+        //     this.props.messagesStore.getTelegramMessages(
+        //         subscriber.channel_id, subscriber.subscriber_id
+        //     );
+        // });
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
             dialogs: nextProps.dialogs
         });
+    }
+
+    truncate = (msg, n, useWordBoundary) => {
+        if (msg.length <= n) { return msg; }
+        let subString = msg.substr(0, n - 1);
+        return (useWordBoundary
+            ? subString.substr(0, subString.lastIndexOf(' '))
+            : subString
+        ) + '...';
     }
 
     filterDialogs = e => {
@@ -85,15 +85,17 @@ export default class DialogsList extends Component {
         const dialogs = this.state.dialogs.map((dialog, index) => {
 
             const { name, timeAgo, path, messages, socialNetwork } = dialog;
-            // const bodyPreview = this.truncate(
-            //     messages[messages.length - 1].body,
-            //     30, // maybe make this parameter dynamic based on screen size???
-            //     true
-            // );
 
-            const bodyPreview = 'test';
-            
+            console.log('DialogsList.render(): [inside dialogs.map(...)]: ', dialog);
 
+            const bodyPreview =
+                messages && messages.length > 0
+                ? this.truncate(
+                    messages[0].text,
+                    30, // maybe make this parameter dynamic based on screen size???
+                    true
+                  )
+                : 'Сообщений нет';
 
             const props = {
                 name, timeAgo, bodyPreview, path, socialNetwork

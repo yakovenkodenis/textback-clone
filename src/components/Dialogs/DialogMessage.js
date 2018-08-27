@@ -3,19 +3,18 @@ import { toImage } from 'emojione';
 
 
 const DialogMessage = ({
-    isInverted,
-    body,
-    date
+    owner,
+    text
 }) => (
     <div className={
-        `timeline-wrapper ${isInverted? 'timeline-inverted' : ''} timeline-wrapper-success`
+        `timeline-wrapper ${owner? 'timeline-inverted' : ''} timeline-wrapper-success`
     }>
         <div className="timeline-panel">
             <div className="timeline-body">
                 <p
                     className="convert-emoji"
                     dangerouslySetInnerHTML={{
-                        __html: toImage(body)
+                        __html: toImage(text)
                     }}
                 />
             </div>

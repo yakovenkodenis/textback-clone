@@ -58,7 +58,7 @@ export default class NavBar extends Component {
                       <span className="availability-status online"></span>             
                     </div>
                     <div className="nav-profile-text">
-                      <p className="mb-1 text-black">Василий Иванович</p>
+                      <p className="mb-1 text-black">{this.props.authStore.values.email}</p>
                     </div>
                   </a>
                   <div className="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">

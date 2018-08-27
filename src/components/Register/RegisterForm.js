@@ -64,7 +64,7 @@ const RegisterForm = ({
                 type="submit"
                 className="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn"
                 disabled={inProgress}>
-                Зарегистрироваться
+                {inProgress ? <div className="loading-spinner"></div> : "Зарегистрироваться"}
             </button>
         </div>
         <div className="text-center mt-4 font-weight-light">

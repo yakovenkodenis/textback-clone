@@ -36,7 +36,7 @@ const LoginForm = ({
                 type="submit"
                 className="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn"
                 disabled={inProgress}>
-                Войти
+                {inProgress ? <div className="loading-spinner"></div> : "Войти"}
             </button>
         </div>
         <div className="my-2 d-flex justify-content-between align-items center">

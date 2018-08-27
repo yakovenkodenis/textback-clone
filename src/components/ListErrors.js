@@ -3,15 +3,12 @@ import React from 'react';
 
 const ListErrors = (props) => {
 
-    alert(props);
-
     const { errors } = props;
 
     if (errors) {
 
         if (errors.constructor !== Array) {
             console.log('Errors object is not array!!!', errors);
-            alert(errors);
             return null;
         }
 

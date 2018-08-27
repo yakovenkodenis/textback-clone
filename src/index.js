@@ -1,3 +1,12 @@
+import 'core-js/es6/map';
+import 'core-js/es6/weak-map';
+import 'core-js/fn/object/assign';
+import 'core-js/fn/symbol';
+import 'core-js/fn/array/from';
+import 'core-js/fn/array/fill';
+import 'core-js/fn/string/starts-with';
+import 'core-js/fn/string/ends-with';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import promiseFinally from 'promise.prototype.finally';

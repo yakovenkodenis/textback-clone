@@ -14,8 +14,10 @@ import createHashtagPlugin from 'draft-js-hashtag-plugin';
 
 import editorStyles from './editorStyles.css';
 
-
-const emojiPlugin = createEmojiPlugin();
+                
+const emojiPlugin = createEmojiPlugin({
+    emojiSelectPopover: 'emoji-select-popover'
+});
 const mentionPlugin = createMentionPlugin();
 const hashtagPlugin = createHashtagPlugin();
 
@@ -52,6 +54,10 @@ export default class AdvancedTextEditor extends Component {
             ...this.state,
             editorState
         });
+
+        this.props.handleInputChange(
+            this.state.editorState.getCurrentContent().getPlainText()
+        );
     };
 
     onSearchChange = ({ value }) => {

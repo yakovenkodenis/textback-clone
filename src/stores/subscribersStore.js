@@ -1,6 +1,7 @@
 import { observable, action } from 'mobx';
 
 import agent from '../agent';
+import messagesStore from './messagesStore';
 
 
 class SubscribersStore {
@@ -27,6 +28,17 @@ class SubscribersStore {
                         response.errors ? response.errors : ""
                     );
                 }
+
+                return this.subscribers;
+            }))
+            .then(action(subscribers => {
+                // get messages for each subscriber
+                subscribers.forEach(subscriber => {
+                    messagesStore.getTelegramMessages(
+                        subscriber.channel_id,
+                        subscriber.subscriber_id
+                    );
+                });
             }))
             .catch(action(err => {
                 console.log('ERROR [getSubscribersList()]', err);

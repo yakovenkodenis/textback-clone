@@ -9,7 +9,7 @@ import DialogContainer from './DialogContainer';
 import { Default, Mobile } from '../Responsive';
 
 
-@inject('subscribersStore', 'channelsStore')
+@inject('subscribersStore', 'channelsStore', 'messagesStore')
 @withRouter
 @observer
 class Dialogs extends Component {
@@ -20,104 +20,7 @@ class Dialogs extends Component {
         this.state = {
             currentDialog: "",
             currentFilter: "all",
-            dialogs: [
-                {
-                    path: 'dialog-1', name: 'Екатерина Петрова', timeAgo: '9:04 PM',
-                    socialNetwork: 'telegram',
-                    messages: [
-                        { isInverted: true, body: 'Lorem ipsum :thumbsup: dolor sit amet consectetur adipisicing elit.', likesNumber: 5, date: '11 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum sit amet :smile:', date: '16 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '18 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, molestiae. Eaque praesentium expedita cupiditate amet?', date: '22 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '18 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet.', date: '22 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '11 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores, cupiditate eveniet.', date: '16 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '18 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum :thumbsup: dolor sit amet.:smile:', date: '22 Oct 2018' }
-                    ]
-                },
-                {
-                    path: 'dialog-2', name: 'Иван Петров', timeAgo: '6:17 PM',
-                    socialNetwork: 'telegram',
-                    messages: [
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet.', date: '22 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '11 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum tempore ea nemo! Dolores.', date: '16 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '18 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet.', date: '22 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '11 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores, cupiditate eveniet.', date: '16 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '18 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet.', date: '22 Oct 2018' }
-                    ]
-                },
-                {
-                    path: 'dialog-3', name: 'Николай Алексеев', timeAgo: '11:11 AM',
-                    socialNetwork: 'telegram',
-                    messages: [
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.', likesNumber: 5, date: '11 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum sit amet.', date: '16 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '18 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, molestiae. Eaque praesentium expedita cupiditate amet?', date: '22 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '11 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '18 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet.', date: '22 Oct 2018' }
-                    ]
-                },
-                {
-                    path: 'dialog-4', name: 'Жанна Васильева', timeAgo: '8/2/18',
-                    socialNetwork: 'facebook',
-                    messages: [
-                        { isInverted: true, body: 'Lorem ipsum sit amet.', date: '16 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '18 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, molestiae. Eaque praesentium expedita cupiditate amet?', date: '22 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '11 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum sit amet.', date: '16 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet.', date: '22 Oct 2018' }
-                    ]
-                },
-                {
-                    path: 'dialog-5', name: 'Роман Зубков', timeAgo: '9:04 PM',
-                    socialNetwork: 'telegram',
-                    messages: [
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.', likesNumber: 5, date: '11 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum sit amet.', date: '16 Oct 2018' }
-                    ]
-                },
-                {
-                    path: 'dialog-6', name: 'Константин Бойко', timeAgo: '6:17 PM',
-                    socialNetwork: 'viber',
-                    messages: [
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet.', date: '22 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet.', date: '11 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores, cupiditate eveniet.', date: '16 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '18 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet.', date: '22 Oct 2018' }
-                    ]
-                },
-                {
-                    path: 'dialog-7', name: 'Владимир Сысоев', timeAgo: '2:15 PM',
-                    socialNetwork: 'telegram',
-                    messages: [
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.', likesNumber: 5, date: '11 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum sit amet.', date: '16 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '18 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo, molestiae. Eaque praesentium expedita cupiditate amet?', date: '22 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '11 Oct 2018' }
-                    ]
-                },
-                {
-                    path: 'dialog-8', name: 'Фёдор Бобров', timeAgo: '9/12/17',
-                    socialNetwork: 'viber',
-                    messages: [
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '11 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores, cupiditate eveniet.', date: '16 Oct 2018' },
-                        { isInverted: false, body: 'Lorem ipsum dolor sit amet.', date: '18 Oct 2018' },
-                        { isInverted: true, body: 'Lorem ipsum dolor sit amet.', date: '22 Oct 2018' }
-                    ]
-                }
-            ]
+            dialogs: []
         };
     }
 
@@ -134,7 +37,14 @@ class Dialogs extends Component {
         // console.log('CHANNELS: ', channels);
 
         console.log('Dialogs.js componentDidMount()');
-        this.props.subscribersStore.getSubscribersList();
+        this.props.subscribersStore.getSubscribersList()
+        //   .then(subscribers => {
+        //     subscribers.forEach(subscriber => {
+        //         this.props.messagesStore.getTelegramMessages(
+        //             subscriber.channel_id, subscriber.subscriber_id
+        //         )
+        //     });
+        // });
 
         // console.log('DATES: ', datediff(new Date(unixtimeToDate(1535194570)), new Date()));
 
@@ -187,15 +97,29 @@ class Dialogs extends Component {
             && this.props.subscribersStore.subscribers.constructor === Array
         ) {
             console.log('MAPPING SUBSCRIBERS ARRAY...');
+            console.log(this.props.messagesStore.messages);
 
-            subscribers = this.props.subscribersStore.subscribers.map(subscriber => ({
-                socialNetwork: 'telegram',
-                path: this.generateDialogPath(subscriber),
-                name: `${subscriber.first_name} ${subscriber.last_name}`,
-                timeAgo: datediff(new Date(unixtimeToDate(subscriber.last_activity)), new Date()),
-                messages: [], // GET SOMEWHERE MESSAGES!!!
-                ...subscriber
-            }));
+            const messages = this.props.messagesStore.messages;
+
+
+            subscribers = this.props.subscribersStore.subscribers.map(subscriber => {
+
+                const existingChat = messages.find(chat =>
+                    chat.subscriber_id === subscriber.subscriber_id
+                    && chat.channel_id === subscriber.channel_id
+                );
+
+                const chat = existingChat ? existingChat.messages : [];
+
+                return {
+                    socialNetwork: 'telegram',
+                    path: this.generateDialogPath(subscriber),
+                    name: `${subscriber.first_name} ${subscriber.last_name}`,
+                    timeAgo: datediff(new Date(unixtimeToDate(subscriber.last_activity)), new Date()),
+                    messages: chat, // GET SOMEWHERE MESSAGES!!!
+                    ...subscriber
+                }
+            });
         }
 
         const dialogRoutes = subscribers.map((subscriber, index) => (
@@ -235,10 +159,6 @@ class Dialogs extends Component {
                     filter, currentDialog
                 ] = necessaryRoutePartArr[necessaryRoutePartArr.length - 1].split('/');
 
-                // TODO
-                // in dialogsStore find the needed dialog and replace {currentDialog}
-                // with the name of the real person.
-
                 dynamicBreadcrumbRoute = currentDialog;
                 console.log(filter, dynamicBreadcrumbRoute);
             }
@@ -249,7 +169,7 @@ class Dialogs extends Component {
 
         return (
             <div className="row dialogs-page">
-                <div className={`col-12 grid-margin ${isMobile ? "p-0" : ""}`}>
+                <div className={`col-12 grid-margin ${isMobile ? "p-0" : /*make more dynamic?*/ "p-0"}`}>
                     <div className="card">
                         <div className="card-body">
 

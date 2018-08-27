@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
+import { action } from 'mobx';
 import MediaQuery from 'react-responsive';
 
 import LoginForm from './LoginForm';
@@ -21,13 +22,14 @@ class Login extends Component {
         };
     }
 
+    @action
     componentWillUnmount() {
         this.props.authStore.reset();
     }
 
-    handleEmailChange = e => this.props.authStore.setEmail(e.target.value);
-    handlePasswordChange = e => this.props.authStore.setPassword(e.target.value);
-    handleSubmitForm = e => {
+    @action handleEmailChange = e => this.props.authStore.setEmail(e.target.value);
+    @action handlePasswordChange = e => this.props.authStore.setPassword(e.target.value);
+    @action handleSubmitForm = e => {
         e.preventDefault();
         console.log('Login.js:', 'handleSubmitForm fired');
         console.log(

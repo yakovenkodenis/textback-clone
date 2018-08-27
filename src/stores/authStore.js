@@ -39,11 +39,12 @@ class AuthStore {
         this.errors = undefined;
 
         return agent.Auth.login(this.values.email, this.values.password)
-            .then(response => {
+            .then(action(response => {
 
                 if (response.success && response.data.token) {
                     console.log('authStore.js: login success');
                     commonStore.setToken(response.data.token);
+
                 } else {
                     console.log('authStore.js: login error');
                     console.log(response);
@@ -52,7 +53,7 @@ class AuthStore {
                 }
                 // console.log('authStore.js login(): ', response);
                 // commonStore.setToken(data.token)
-            })
+            }))
             // .then(() => userStore.pullUser())
             .catch(action(err => {
                 console.log('(authStore.login()) error: ', err);

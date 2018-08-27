@@ -27,8 +27,10 @@ export default class DialogMessagesContainer extends Component {
     }
 
     render() {
+        const chats = this.props.messages;
+        const messages = chats ? [...chats].reverse() : [];
 
-        const dialogItems = this.props.messages.map((message, index) => (
+        const dialogItems = messages.map((message, index) => (
             <DialogMessage {...message} key={index} />
         ));
 
@@ -38,7 +40,7 @@ export default class DialogMessagesContainer extends Component {
                 className="timeline"
                 style={{overflowY: "scroll", height: this.state.viewportHeight + "px"}}
             >
-                {dialogItems}
+                {dialogItems.length > 0 ? dialogItems : <p className="text-muted">Пусто</p>}
             </div>
         );
     }
