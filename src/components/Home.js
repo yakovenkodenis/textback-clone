@@ -132,7 +132,7 @@ class Home extends Component {
                     <div className="main-panel">
                         <div className={`content-wrapper`}
                             style={{
-                                padding: isMobile ? "0.75rem 0.25rem" : "2.75rem 2.25rem"
+                                padding: isMobile ? "0.25rem 0.25rem" : "1.25rem 2.25rem"
                             }}
                         >
                             {routes.map((route, index) => (

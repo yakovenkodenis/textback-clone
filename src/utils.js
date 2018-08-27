@@ -43,4 +43,7 @@ export const datediff = (fromDate, toDate) => {
 
     // return diffDate;
     return `${diffDate.hours} часов назад`;
-}  
+}
+
+export const generateVkOAuthLink = (groups_id, redirect_uri) =>
+    `https://oauth.vk.com/authorize?client_id=6668833&display=page&redirect_uri=${redirect_uri}&scope=messages,photos,docs,manage&group_ids=${groups_id}&response_type=token&state=auth_vk&v=5.80`;

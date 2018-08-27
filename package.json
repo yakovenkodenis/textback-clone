@@ -63,6 +63,7 @@
     "react-contenteditable": "^2.1.5",
     "react-dev-utils": "^5.0.1",
     "react-dom": "^16.4.2",
+    "react-image-webp": "^0.2.2",
     "react-polyfill": "0.0.2",
     "react-responsive": "^5.0.0",
     "react-router-dom": "^4.3.1",

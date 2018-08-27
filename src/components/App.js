@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 
-import PrivateRoute from './PrivateRoute';
+// import PrivateRoute from './PrivateRoute';
 import Home from './Home';
 import Login from './Login/Login';
 import Register from './Register/Register';
 import NotFound from './NotFound';
 import LoadingSpinner from './LoadingSpinner';
+import OAuth from './OAuth';
 
 
 @inject('userStore', 'commonStore', 'authStore')
@@ -44,8 +45,9 @@ export default class App extends Component {
           <Switch>
             <Route path='/login' component={Login} />
             <Route path='/register' component={Register} />
+            <Route path='/oauth' component={OAuth} />
             <Route path='/admin' component={Home} />
-            <PrivateRoute path='/private' component={Login} />
+            {/*<PrivateRoute path='/private' component={Login} />*/}
             <Route component={NotFound} />
           </Switch>
         </div>
