@@ -37,14 +37,7 @@ class Dialogs extends Component {
         // console.log('CHANNELS: ', channels);
 
         console.log('Dialogs.js componentDidMount()');
-        this.props.subscribersStore.getSubscribersList()
-        //   .then(subscribers => {
-        //     subscribers.forEach(subscriber => {
-        //         this.props.messagesStore.getTelegramMessages(
-        //             subscriber.channel_id, subscriber.subscriber_id
-        //         )
-        //     });
-        // });
+        this.props.subscribersStore.getSubscribersList();
 
         // console.log('DATES: ', datediff(new Date(unixtimeToDate(1535194570)), new Date()));
 
@@ -60,15 +53,6 @@ class Dialogs extends Component {
         // subscriber_id: 63113727
         // username: "yakovenkodenis"
     }
-
-    // componentDidUpdate(prevProps) {
-    //     if (
-    //         this.props.subscribersStore.subscribers
-    //         && this.props.subscribersStore.subscribers.constructor === Array
-    //     ) {
-    //         console.log('componentDidUpdate');
-    //     }
-    // }
 
     trimChar = (string, charToRemove) => {
         while (string.charAt(0) === charToRemove) {
@@ -101,8 +85,9 @@ class Dialogs extends Component {
 
             const messages = this.props.messagesStore.messages;
 
+            const subscribersFromStore = [...this.props.subscribersStore.subscribers];
 
-            subscribers = this.props.subscribersStore.subscribers.map(subscriber => {
+            subscribers = subscribersFromStore.reverse().map(subscriber => {
 
                 const existingChat = messages.find(chat =>
                     chat.subscriber_id === subscriber.subscriber_id
@@ -116,7 +101,7 @@ class Dialogs extends Component {
                     path: this.generateDialogPath(subscriber),
                     name: `${subscriber.first_name} ${subscriber.last_name}`,
                     timeAgo: datediff(new Date(unixtimeToDate(subscriber.last_activity)), new Date()),
-                    messages: chat, // GET SOMEWHERE MESSAGES!!!
+                    messages: chat,
                     ...subscriber
                 }
             });
@@ -130,12 +115,6 @@ class Dialogs extends Component {
                 component={() => <DialogContainer currentFilter={match.params.currentFilter} {...subscriber} />}
             />
         ));
-
-        // const dialogsList = match.params.currentFilter === 'all'
-        //     ? this.state.dialogs
-        //     : this.state.dialogs.filter(dialog =>
-        //         dialog.socialNetwork === match.params.currentFilter
-        //     );
 
         const dialogsList = match.params.currentFilter === 'all'
             ? subscribers

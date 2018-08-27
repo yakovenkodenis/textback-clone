@@ -9,8 +9,14 @@ import DialogMessage from './DialogMessage';
 @observer
 export default class DialogMessagesContainer extends Component {
 
-    state = {
-        viewportHeight: document.documentElement.clientHeight - 250
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = {
+            viewportHeight: document.documentElement.clientHeight - 250
+        }
+
+        this.dialogMessagesContainerRef = React.createRef();
     }
 
     componentDidMount() {
@@ -20,6 +26,9 @@ export default class DialogMessagesContainer extends Component {
                 viewportHeight: document.documentElement.clientHeight - 250
             });
         }
+
+        const container = this.dialogMessagesContainerRef.current;
+        container.scrollTop = container.scrollHeight;
     }
 
     componentWillUnmount() {
@@ -39,8 +48,13 @@ export default class DialogMessagesContainer extends Component {
                 id="timeline-scroll"
                 className="timeline"
                 style={{overflowY: "scroll", height: this.state.viewportHeight + "px"}}
+                ref={this.dialogMessagesContainerRef}
             >
-                {dialogItems.length > 0 ? dialogItems : <p className="text-muted">Пусто</p>}
+                {
+                    dialogItems.length > 0
+                    ? dialogItems
+                    : <p className="mx-auto mt-4 text-muted">Пусто...</p>
+                }
             </div>
         );
     }

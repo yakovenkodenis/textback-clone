@@ -12,31 +12,14 @@ import UserProfile from './UserProfile';
 @observer
 class DialogContainer extends Component {
 
-    // constructor(props, context) {
-    //     super(props, context);
-
-    //     this.state = {
-    //         messages: []
-    //     }
-    // }
-
-    componentDidMount() {
-        // this.props.messagesStore.getTelegramMessages(
-        //     this.props.channel_id, this.props.subscriber_id
-        // );
-    }
-
     render() {
 
         const {
             name, /*messages,*/
             isMobile,
-            channel_id, subscriber_id
+            channel_id, subscriber_id,
+            image
         } = this.props;
-
-        // let chat = this.props.messagesStore.messages.find(chat =>
-        //     chat.channel_id === channel_id && chat.subscriber_id === subscriber_id
-        // );
 
         let chat = this.props.messagesStore.messages.find(chat => {
             console.log('INSIDE CHAT FIND:', chat);
@@ -68,7 +51,7 @@ class DialogContainer extends Component {
                         </div>
         
                         <div className="col-3">
-                            <UserProfile name={name} />
+                            <UserProfile name={name} image={image} />
                         </div>
                     </React.Fragment>
                 )
