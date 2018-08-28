@@ -9,7 +9,7 @@ import logo from '../../logo.svg';
 import ListErrors from '../ListErrors';
 
 
-@inject('authStore', 'commonStore')
+@inject('authStore', 'commonStore', 'userStore')
 @withRouter
 @observer
 class Login extends Component {
@@ -38,6 +38,9 @@ class Login extends Component {
         );
         this.props.authStore.login()
             .then(() => {
+                this.props.userStore.saveUser({
+                    email: this.props.authStore.values.email
+                });
                 console.log('LOGGED IN!!!');
                 this.props.history.replace('/')
             })

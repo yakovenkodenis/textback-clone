@@ -6,7 +6,7 @@ import CollapsibleSidebarItem from './CollapsibleSidebarItem';
 import SidebarItem from './SidebarItem';
 
 
-@inject('authStore')
+@inject('userStore')
 @withRouter
 @observer
 export default class NavBar extends Component {
@@ -14,6 +14,10 @@ export default class NavBar extends Component {
     render() {
 
         const { isActive } = this.props;
+
+        const email = this.props.userStore.currentUser
+          ? this.props.userStore.currentUser.email.split("@")[0]
+          : "";
 
         return (
             <nav className={`sidebar sidebar-offcanvas ${isActive ? "active" : ""}`} id="sidebar">
@@ -28,7 +32,9 @@ export default class NavBar extends Component {
         <span className="login-status online"></span> {/* change to offline or busy as needed */}              
                   </div>
                   <div className="nav-profile-text d-flex flex-column">
-                    <span className="font-weight-bold mb-2">{this.props.authStore.values.email}</span>
+                    <span className="font-weight-bold mb-2">
+                      {email}
+                    </span>
                     <span className="text-secondary text-small">Менеджер</span>
                   </div>
                   <i className="mdi mdi-bookmark-check text-success nav-profile-badge"></i>

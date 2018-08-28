@@ -4,7 +4,7 @@ import { observer, inject } from 'mobx-react';
 
 import logo from '../../logo.svg';
 
-@inject('authStore')
+@inject('authStore', 'userStore')
 @withRouter
 @observer
 export default class NavBar extends Component {
@@ -22,6 +22,10 @@ export default class NavBar extends Component {
 
     render() {
         const { toggleSidebar } = this.props;
+
+        const email = this.props.userStore.currentUser
+          ? this.props.userStore.currentUser.email
+          : "";
 
         return (
             <nav className="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -58,7 +62,7 @@ export default class NavBar extends Component {
                       <span className="availability-status online"></span>             
                     </div>
                     <div className="nav-profile-text">
-                      <p className="mb-1 text-black">{this.props.authStore.values.email}</p>
+                      <p className="mb-1 text-black">{email}</p>
                     </div>
                   </a>
                   <div className="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">

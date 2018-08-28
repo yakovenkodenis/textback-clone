@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
 
 
+@inject('userStore')
 @withRouter
 @observer
 class Profile extends Component {
@@ -11,6 +12,10 @@ class Profile extends Component {
     render() {
 
         const { isMobile } = this.props;
+
+        const email = this.props.userStore.currentUser
+          ? this.props.userStore.currentUser.email
+          : "";
 
         return (
         <React.Fragment>
@@ -31,7 +36,7 @@ class Profile extends Component {
                                             alt="profile"
                                             className="img-lg rounded-circle mb-3"
                                         />
-                                        <h3>Василий Иванович</h3>
+                                        <h3>{email}</h3>
                                         <div className="d-flex align-items-center">
                                             <h5>Россия</h5>
                                         </div>
