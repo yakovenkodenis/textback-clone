@@ -17,6 +17,8 @@ export default class NavBar extends Component {
 
         const email = this.props.userStore.currentUser
           ? this.props.userStore.currentUser.email.split("@")[0]
+          : window.localStorage.getItem('user')
+          ? window.localStorage.getItem('user').split("@")[0]
           : "";
 
         return (

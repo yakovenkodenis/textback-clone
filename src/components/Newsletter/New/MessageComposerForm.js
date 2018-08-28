@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
+import { ContentState, EditorState } from 'draft-js';
 
+import AdvancedTextEditor from '../../TextEditor/AdvancedTextEditor';
+
+
+const random = salt => Math.floor(Math.random() * 10000000) + salt;
 
 @withRouter
 @observer
@@ -11,64 +16,121 @@ export default class MessageComposerForm extends Component {
         super(props, context);
 
         this.messageBox = React.createRef();
+        this.textEditorRef = React.createRef();
 
         this.state = {
             messages: [{
-                messageText: '',
+                message: {
+                    messageText: '',
+                    messageButtons: []
+                },
                 messageAttachment: '',
                 messageId: 0
             }],
-            activeMessageId: 0
+            activeMessageId: 0,
+            currentMessage: ''
         };
     }
 
+    setTextEditorCurrentValue = value => {
+        const editor = this.textEditorRef.current;
+        const editorState = EditorState.push(
+            editor.state.editorState, ContentState.createFromText(value)
+        );
+
+        editor.setState({
+            ...editor.state,
+            editorState
+        });
+    }
+
     onAddMessage = e => {
-        this.messageBox.current.value = '';
+
+        this.setTextEditorCurrentValue('');
+
+        const newId = random(this.state.messages.length);
 
         this.setState({
-            activeMessageId: this.state.messages.length,
+            activeMessageId: newId,
             messages: [...this.state.messages, {
-                messageText: this.messageBox.current.value,
+                message: {
+                    messageText: '',
+                    messageButtons: []
+                },
                 messageAttachment: '',
-                messageId: this.state.messages.length
+                messageId: newId
             }]
         });
     }
 
-    removeMessage = index => {
+    removeMessage = messageId => {
+
+        const maybeMessageId = this.state.messages.find(message =>
+            message.messageId === messageId
+        );
+        const activeMessageId = maybeMessageId ? maybeMessageId : 0;
+
         this.setState({
             ...this.state,
-            messages: this.state.messages.filter(msg => msg.messageId !== index)
+            messages: this.state.messages.filter(msg => msg.messageId !== messageId),
+            activeMessageId
+        }, () => {
+            if (this.state.messages.length === 1)
+                this.setMessageActive(0);
         });
     }
 
-    setMessageActive = index => {
+    setMessageActive = messageId => {
+        const message = this.state.messages.find(
+            message => message.messageId === messageId
+        );
+
+        const messageText = message.message ? message.message.messageText : "";
+
+        this.setTextEditorCurrentValue(messageText);
+
         this.setState({
             ...this.state,
-            activeMessageId: index
+            activeMessageId: messageId
         });
-        this.messageBox.current.value = this.state.messages[index].messageText;
     }
 
-    handleAddMessageBtnClick = (e, index) => {
+    handleAddMessageBtnClick = (e, messageId) => {
         if (e.target.tagName === 'I') {
-            this.removeMessage(index + 1)
+            this.removeMessage(messageId)
         } else {
-            this.setMessageActive(index + 1)
+            this.setMessageActive(messageId)
         }
     }
 
-    onMessageChange = e => {
+    onMessageChange = message => {
         const newMessages = [...this.state.messages];
 
-        // eslint-disable-next-line
-        const index = newMessages.findIndex(msg => msg.messageId == this.state.activeMessageId);
-        newMessages[index].messageText = e.target.value;
+        const maybeIndex = newMessages.findIndex(message =>
+            message.messageId === this.state.activeMessageId
+        );
+        const index = maybeIndex ? maybeIndex : 0;
+
+        console.log('FOUND INDEX ', index);
+        console.log('ACTIVE INDEX ', this.state.activeMessageId);
+        console.log('FOR ARRAY: ', newMessages);
+
+        if (index === -1) {
+            this.setMessageActive(this.state.messages[0].messageId);
+            return;
+        }
+
+        newMessages[index].message.messageText = message;
 
         this.setState({
             ...this.state,
             messages: newMessages
         });
+    }
+
+    logFinalJSONobjectToConsole() {
+        console.log('Newsletter object:');
+        console.log(this.state.messages);
     }
 
     render() {
@@ -78,7 +140,11 @@ export default class MessageComposerForm extends Component {
                     <button
                         className="btn btn-outline-success btn-icon-text"
                         type="button"
-                        onClick={() => { this.setMessageActive(0) }}
+                        onClick={() => { this.setMessageActive(this.state.messages[0].messageId) }}
+                        style={{
+                            backgroundColor: this.state.activeMessageId === 0 ? '#1bcfb4' : 'transparent',
+                            color: this.state.activeMessageId === 0 ? '#fff' : '#1bcfb4'
+                        }}
                     >
                         <i className="mdi mdi-comment-plus-outline btn-icon-prepend" />
                         Начальное сообщение
@@ -95,15 +161,19 @@ export default class MessageComposerForm extends Component {
                                 {this.state.messages.slice(1).map((msg, index) => (
                                     <button
                                         key={index}
-                                        className="btn btn-block btn-outline-success btn-icon-text"
+                                        className="btn btn-block btn-outline-success btn-icon-text btn-newsletter-composer"
                                         type="button"
-                                        onClick={(e) => this.handleAddMessageBtnClick(e, index)}
+                                        onClick={(e) => this.handleAddMessageBtnClick(e, msg.messageId)}
+                                        style={{
+                                            backgroundColor: this.state.activeMessageId === msg.messageId ? '#1bcfb4' : 'transparent',
+                                            color: this.state.activeMessageId === msg.messageId ? '#fff' : '#1bcfb4'
+                                        }}
                                     >
                                         {`Новое сообщение #${index+1}`}
                                         <i
                                             type="remove"
                                             className="mdi mdi-close float-right"
-                                            onClick={() => { this.removeMessage(index + 1) }}
+                                            onClick={() => { this.removeMessage(msg.messageId) }}
                                         />
                                     </button>
                                 ))}
@@ -122,7 +192,7 @@ export default class MessageComposerForm extends Component {
                 </div>
 
                 <div className="col-md-5">
-                    <textarea
+                    {/*<textarea
                         id="newMessageBox"
                         cols="10"
                         rows="15"
@@ -131,13 +201,21 @@ export default class MessageComposerForm extends Component {
                         name="newsletter-new-message-box"
                         onChange={this.onMessageChange}
                         ref={this.messageBox}
+                    />*/}
+                    <AdvancedTextEditor
+                        ref={this.textEditorRef}
+                        handleInputChange={this.onMessageChange}
                     />
                 </div>
 
                 <div className="col-md-3">
                     <h4 className="card-title text-success">Проверка перед отправкой</h4>
                     <p className="card-description">Отправьте сообщение себе</p>
-                    <button className="btn btn-light btn-icon-text" type="button">
+                    <button
+                        className="btn btn-light btn-icon-text"
+                        type="button"
+                        onClick={this.logFinalJSONobjectToConsole}
+                    >
                         <i className="mdi mdi-send btn-icon-prepend" />
                         Отправить себе
                     </button>

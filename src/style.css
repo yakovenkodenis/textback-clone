@@ -22989,3 +22989,7 @@
     transform: rotate(360deg);
   }
 }
+
+.btn-newsletter-composer:hover {
+  color: #fff !important;
+}

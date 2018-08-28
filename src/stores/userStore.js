@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, action, reaction } from 'mobx';
 import agent from '../agent';
 
 
@@ -7,6 +7,17 @@ class UserStore {
     @observable loadingUser;
     @observable updatingUser;
     @observable updatingUserErrors;
+
+    constructor() {
+        reaction(
+            () => this.currentUser,
+            user => {
+                if (user) {
+                    window.localStorage.setItem('user', user);
+                } else window.localStorage.removeItem('user');
+            }
+        )
+    }
 
     @action pullUser() {
         this.loadingUser = true;

@@ -15,6 +15,8 @@ class Profile extends Component {
 
         const email = this.props.userStore.currentUser
           ? this.props.userStore.currentUser.email
+          : window.localStorage.getItem('user')
+          ? window.localStorage.getItem('user')
           : "";
 
         return (
