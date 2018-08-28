@@ -3,6 +3,8 @@ import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { toImage } from 'emojione';
 
+import { datediff, unixtimeToDate } from '../../utils';
+
 
 @inject('channelsStore')
 @withRouter
@@ -12,11 +14,15 @@ export default class DialogsListItem extends Component {
     render() {
 
         const {
-            name, timeAgo, bodyPreview,
-            path, socialNetwork,
+            name, last_active, bodyPreview,
+            path, channel_type,
             history, match,
             // channelsStore
         } = this.props;
+
+        const timeAgo = datediff(unixtimeToDate(last_active), new Date());
+
+        
 
         return (
             <a
@@ -29,9 +35,11 @@ export default class DialogsListItem extends Component {
                 <div className="d-flex w-100 justify-content-between">
                     <h5 className="mb-1">
                         {
-                            socialNetwork === 'viber'
-                              ? <span className="text-muted">{`${socialNetwork.charAt(0)}`}  </span>
-                              : <span className="text-muted"><i className={`mdi mdi-${socialNetwork}`} />  </span>      
+                            channel_type === 'viber'
+                              ? <span className="text-muted">{`${channel_type.charAt(0)}`}  </span>
+                              : channel_type
+                              ? <span className="text-muted"><i className={`mdi mdi-${channel_type.toLowerCase()}`} />  </span>
+                              : null
                         }
                         {name}
                     </h5>

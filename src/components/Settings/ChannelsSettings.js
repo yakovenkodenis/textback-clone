@@ -21,13 +21,37 @@ export default class ChannelsSettings extends Component {
         this.botIdModalValue = React.createRef();
     }
 
-    onDeleteChannel = channelId => {
-        this.props.channelsStore.deleteTelegramChannel(channelId)
+    onDeleteChannel = (channelType, channelId) => {
+
+        console.log('onDeleteChannel:', channelType, channelId);
+
+        // this.props.channelsStore.deleteTelegramChannel(channelId)
+        //     .then(() => this.props.channelsStore.getChannelsList());
+
+        this.props.channelsStore.deleteChannel(channelType, channelId)
             .then(() => this.props.channelsStore.getChannelsList());
     }
 
-    onAddChannel = (socialNetwork, botId) => {
-        this.props.channelsStore.addTelegramChannel(
+    onAddChannel = () => {
+        // const socialNetwork = this.socialNetworkModalValue.current.value;
+        // console.log('Adding channel for: ---> ', socialNetwork);
+
+        // switch (socialNetwork) {
+        //     case "telegram":
+        //         this.props.channelsStore.addTelegramChannel(
+        //             this.botIdModalValue.current.value
+        //         );
+        //         break;
+        //     case "vk":
+        //         this.props.channelsStore.addVkChannel(
+        //             this.botIdModalValue.current.value
+        //         );
+        //         break;
+        //     default: break;
+        // }
+
+        this.props.channelsStore.addChannel(
+            this.socialNetworkModalValue.current.value,
             this.botIdModalValue.current.value
         );
     }
@@ -87,7 +111,9 @@ export default class ChannelsSettings extends Component {
                                     onClick={() => {
                                         console.log(row);
                                         if (window.confirm(`Удалить канал ${row.name}?`))
-                                            this.onDeleteChannel(row.channel_id);
+                                            this.onDeleteChannel(
+                                                row.socialNetwork.toLowerCase(), row.channel_id
+                                            );
                                     }}
                                 >
                                     Удалить

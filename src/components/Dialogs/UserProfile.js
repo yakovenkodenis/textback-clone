@@ -9,10 +9,13 @@ import Avatar from 'react-avatar';
 export default class UserProfile extends Component {
 
     render() {
+        console.log('IMAGE', this.props.image);
+
         return (
             <React.Fragment>
                 <div className="border-bottom text-center pb-4">
                         <Avatar
+                            vkontakteId={this.props.subscriber_id}
                             name={this.props.name}
                             size="100"
                             round={true}

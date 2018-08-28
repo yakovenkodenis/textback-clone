@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { toImage } from 'emojione';
 import Image from 'react-image-webp';
 
+import { unixtimeToDate, formatDate } from '../../utils';
+
 
 export default class DialogMessage extends Component {
     render() {
@@ -10,8 +12,15 @@ export default class DialogMessage extends Component {
             owner,
             text,
             is_attachment,
-            file
+            file,
+            date
         } = this.props;
+
+        console.log('MESSAGE: ', this.props);
+
+        console.log(unixtimeToDate(date));
+
+        const messageDate = formatDate(unixtimeToDate(date));
 
         const isImage = is_attachment && file && file.type === 'photo';
         const isSticker = is_attachment && file && file.type ==='sticker';
@@ -61,6 +70,11 @@ export default class DialogMessage extends Component {
                                 />
                             )
                         }
+                    </div>
+                    <div className="timeline-footer d-flex align-items-right">
+                        <span className="ml-auto text-muted">
+                            {messageDate}
+                        </span>
                     </div>
                 </div>
             </div>

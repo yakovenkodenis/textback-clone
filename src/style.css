@@ -21079,18 +21079,21 @@
   border-bottom: none;
 }
 
-.settings-panel .chat-list .list .profile {
+.settings-panel .chat-list .list .profile,
+.settings-panel .chat-list .list a.chat-list-link .profile {
   position: relative;
   margin-right: 1rem;
 }
 
-.settings-panel .chat-list .list .profile img {
+.settings-panel .chat-list .list .profile img,
+.settings-panel .chat-list .list a.chat-list-link .profile img {
   width: 2.50rem;
   height: 2.50rem;
   border-radius: 100%;
 }
 
-.settings-panel .chat-list .list .profile span {
+.settings-panel .chat-list .list .profile span,
+.settings-panel .chat-list .list a.chat-list-link .profile span {
   height: 0.75rem;
   width: 0.75rem;
   position: absolute;
@@ -21100,24 +21103,29 @@
   border-radius: 100%;
 }
 
-.settings-panel .chat-list .list .profile span.online {
+.settings-panel .chat-list .list .profile span.online,
+.settings-panel .chat-list .list a.chat-list-link .profile span.online {
   background: #1bcfb4;
 }
 
-.settings-panel .chat-list .list .profile span.offline {
+.settings-panel .chat-list .list .profile span.offline,
+.settings-panel .chat-list .list a.chat-list-link .profile span.offline {
   background: #fed713;
 }
 
-.settings-panel .chat-list .list .info {
+.settings-panel .chat-list .list .info,
+.settings-panel .chat-list .list a.chat-list-link .info {
   margin-right: auto;
 }
 
-.settings-panel .chat-list .list .info p {
+.settings-panel .chat-list .list .info p,
+.settings-panel .chat-list a.chat-list-link .list .info p {
   display: block;
   margin-bottom: 0;
 }
 
-.settings-panel .chat-list .list .info p:last-child {
+.settings-panel .chat-list .list .info p:last-child,
+.settings-panel .chat-list .list a.chat-list-link .info p:last-child {
   opacity: 0.5;
   font-size: 0.8rem;
 }
@@ -21175,17 +21183,20 @@
   padding-right: 0;
 }
 
-.rtl .settings-panel .chat-list .list .profile {
+.rtl .settings-panel .chat-list .list .profile,
+.rtl .settings-panel .chat-list a .list .profile {
   margin-right: 0;
   margin-left: 1rem;
 }
 
-.rtl .settings-panel .chat-list .list .info {
+.rtl .settings-panel .chat-list .list .info,
+.rtl .settings-panel .chat-list a .list .info {
   margin-right: 0;
   margin-left: auto;
 }
 
-.rtl .settings-panel .chat-list .list .info .badge {
+.rtl .settings-panel .chat-list .list .info .badge,
+.rtl .settings-panel .chat-list .list a .info .badge {
   margin-right: 10px;
 }
 

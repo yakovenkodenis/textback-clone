@@ -21,7 +21,7 @@ import NewAutofunnel from './Autofunnels/New/New';
 
 import Audience from './Audience/Audience';
 import Profile from './Profile/Profile';
-import RightSideBar from './Dashboard/RightSideBar';
+import RightSideBar from './Dashboard/RightSidebar/RightSideBar';
 
 
 const routes = [

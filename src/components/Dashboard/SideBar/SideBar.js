@@ -48,6 +48,10 @@ export default class NavBar extends Component {
                     route: '/admin/dialogs/telegram'
                   },
                   {
+                    name: 'VK',
+                    route: '/admin/dialogs/vk'
+                  },
+                  {
                     name: 'Viber',
                     route: '/admin/dialogs/viber'
                   },

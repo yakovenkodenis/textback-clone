@@ -119,7 +119,7 @@ class Dialogs extends Component {
         const dialogsList = match.params.currentFilter === 'all'
             ? subscribers
             : subscribers.filter(subscriber =>
-                subscriber.socialNetwork === match.params.currentFilter
+                subscriber.channel_type.toLowerCase() === match.params.currentFilter
             );
 
         let dynamicBreadcrumbRoute = undefined;

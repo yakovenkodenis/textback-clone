@@ -174,21 +174,21 @@ const Tags = {
 const Channels = {
 
     Telegram: {
-        getTelegramChannels: () =>
+        getChannels: () =>
             requests.post('/', {
                 "Controller": "Channel",
                 "Action": "GetTelegramChannels",
             }),
 
         // returns telegram token
-        addTelegramChannel: BotToken =>
+        addChannel: BotToken =>
             requests.post('/', {
                 "Controller": "Channel",
                 "Action": "AddTelegramChannel",
                 BotToken
             }),
 
-        deleteTelegramChannel: ChannelId =>
+        deleteChannel: ChannelId =>
             requests.post('/', {
                 "Controller": "Channel",
                 "Action": "DeleteTelegramChannel",
@@ -196,21 +196,21 @@ const Channels = {
             }),
     },
 
-    VK: {
-        getVkChannels: () =>
+    Vk: {
+        getChannels: () =>
             requests.post('/', {
                 "Controller": "Channel",
                 "Action": "GetVkChannels",
             }),
 
-        addVkChannel: BotToken =>
+        addChannel: BotToken =>
             requests.post('/', {
                 "Controller": "Channel",
                 "Action": "AddVkChannel",
                 BotToken
             }),
 
-        deleteVkChannel: ChannelId =>
+        deleteChannel: ChannelId =>
             requests.post('/', {
                 "Controller": "Channel",
                 "Action": "DeleteVkChannel",
@@ -226,7 +226,7 @@ const Messages = {
     ) =>
         requests.post('/', {
             "Controller": "Message",
-            "Action": "GetTelegramMessages",
+            "Action": "GetMessages",
             ChannelId, SubscriberId,
             offset, limit, old_message
         }),
@@ -234,7 +234,7 @@ const Messages = {
     sendMessage: (ChannelId, SubscriberId, Text) =>
         requests.post('/', {
             "Controller": "Message",
-            "Action": "SendTelegramMessage",
+            "Action": "SendMessage",
             ChannelId, SubscriberId, Text
         }),
 

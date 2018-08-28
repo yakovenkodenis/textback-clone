@@ -17,7 +17,7 @@ class DialogContainer extends Component {
         const {
             name, /*messages,*/
             isMobile,
-            channel_id, subscriber_id,
+            channel_id, subscriber_id, channel_type,
             image
         } = this.props;
 
@@ -51,7 +51,9 @@ class DialogContainer extends Component {
                         </div>
         
                         <div className="col-3">
-                            <UserProfile name={name} image={image} />
+                            <UserProfile name={name} image={image}
+                                subscriber_id={channel_type === "Vk" ? subscriber_id+"" : null}
+                            />
                         </div>
                     </React.Fragment>
                 )

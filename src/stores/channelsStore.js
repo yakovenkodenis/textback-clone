@@ -1,6 +1,7 @@
 import { observable, action, toJS } from 'mobx';
 
 import agent from '../agent';
+import { capitalize } from '../utils';
 
 
 class ChannelsStore {
@@ -15,8 +16,8 @@ class ChannelsStore {
         this.errors = undefined;
 
         Promise.all([
-            agent.Channels.Telegram.getTelegramChannels(),
-            agent.Channels.VK.getVkChannels()
+            agent.Channels.Telegram.getChannels(),
+            agent.Channels.Vk.getChannels()
         ]).then(action(channels => {
             console.log('CHANNELS INSIDE PROMISE.ALL [getChannelsList]:', channels);
 
@@ -34,14 +35,14 @@ class ChannelsStore {
         }));
     }
 
-    @action addTelegramChannel(botToken) {
-        console.log('(ChannelsStore.addTelegramChannel()) is initiated');
+    @action addChannel(channelType, botToken) {
+        console.log(`(ChannelsStore.add${capitalize(channelType)}Channel()) is initiated`);
         this.inProgress = true;
         this.errors = undefined;
 
-        return agent.Channels.Telegram.addTelegramChannel(botToken)
+        return agent.Channels[capitalize(channelType)].addChannel(botToken)
             .then(action(response => {
-                console.log('RESPONSE [addTelegramChannel()]');
+                console.log(`RESPONSE [add${capitalize(channelType)}Channel()]`);
                 console.log(response);
 
                 if (!response.success) {
@@ -51,28 +52,27 @@ class ChannelsStore {
                 this.getChannelsList();
             }))
             .catch(action(err => {
-                console.log('ERROR [addTelegramChannel()]', err);
+                console.log(`ERROR [add${capitalize(channelType)}Channel()]`, err);
             }))
             .finally(action(() => { this.inProgress = false; }));
     }
 
-    @action deleteTelegramChannel(channelId) {
-        console.log('(ChannelsStore.deleteTelegramChannel()) is initiated');
+
+    @action deleteChannel(channelType, channelId) {
+        console.log(`(ChannelsStore.delete${capitalize(channelType)}Channel is initiated`);
         this.inProgress = true;
         this.errors = undefined;
 
-        return agent.Channels.Telegram.deleteTelegramChannel(channelId)
+        return agent.Channels[capitalize(channelType)].deleteChannel(channelId)
             .then(response => {
 
-                // filter and update the value of this.channels!!!!!
-                // and wrap everything inside @action
-                console.log('RESPONSE [deleteTelegramChannel()]');
+                console.log(`RESPONSE [delete${capitalize(channelType)}Channel()]`);
                 console.log(response);
 
                 // this.getChannelsList();
             })
             .catch(action(err => {
-                console.log('ERROR [deleteTelegramChannel()]', err);
+                console.log(`ERROR [delete${capitalize(channelType)}Channel()]`, err);
             }))
             .finally(action(() => { this.inProgress = false; }));
     }

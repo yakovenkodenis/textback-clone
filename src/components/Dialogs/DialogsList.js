@@ -78,21 +78,28 @@ export default class DialogsList extends Component {
 
         const dialogs = this.state.dialogs.map((dialog, index) => {
 
-            const { name, timeAgo, path, messages, socialNetwork } = dialog;
+            const { name, path, /*messages,*/ channel_type, message_preview } = dialog;
 
             console.log('DialogsList.render(): [inside dialogs.map(...)]: ', dialog);
 
+            console.log('PREVIEW', message_preview);
+
             const bodyPreview =
-                messages && messages.length > 0
-                ? this.truncate(
-                    messages[0].text,
-                    30, // maybe make this parameter dynamic based on screen size???
-                    true
-                  )
+                // messages && messages.length > 0
+                // ? this.truncate(
+                //     messages[0].text,
+                //     30, // maybe make this parameter dynamic based on screen size???
+                //     true
+                //   )
+                // : 'Сообщений нет';
+                message_preview && (message_preview.text || message_preview.text === "")
+                ? this.truncate(message_preview.text, 30, true)
                 : 'Сообщений нет';
 
+            const last_active = message_preview.date;
+
             const props = {
-                name, timeAgo, bodyPreview, path, socialNetwork
+                name, last_active, bodyPreview, path, channel_type
             }
 
             return <DialogListItem key={index} {...props} />;
