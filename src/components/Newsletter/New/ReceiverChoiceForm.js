@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 
 
+@inject('channelsStore', 'subscribersStore')
 @withRouter
 @observer
 export default class ReceiverChoiceForm extends Component {
+
     render() {
+
+        const { channels } = this.props.channelsStore;
+
         return (
             <form className="d-flex justify-content-left">
                 <div className="form-group mr-5">
@@ -34,9 +39,18 @@ export default class ReceiverChoiceForm extends Component {
                         Каналы
                     </label>
                     <select id="allChannels" className="form-control">
-                        <option value="">Все каналы</option>
-                        <option value="">Что-то еще</option>
-                        <option value="">Что-то еще 2</option>
+                        <option value="all">Все каналы</option>
+                        {
+                            channels && channels.constructor === Array
+                            ? channels.map(channel => (
+                                <option
+                                    key={channel.channel_id}
+                                    value={JSON.stringify(channel)}
+                                >
+                                    {channel.first_name}
+                                </option>
+                            )) : null
+                        }
                     </select>
                 </div>
             </form>

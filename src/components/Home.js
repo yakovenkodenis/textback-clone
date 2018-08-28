@@ -3,6 +3,8 @@ import { inject } from 'mobx-react';
 import { Route, withRouter } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
 
+import { Default } from './Responsive';
+
 import NavBar from './Dashboard/NavBar';
 import SideBar from './Dashboard/SideBar/SideBar';
 
@@ -19,6 +21,7 @@ import NewAutofunnel from './Autofunnels/New/New';
 
 import Audience from './Audience/Audience';
 import Profile from './Profile/Profile';
+import RightSideBar from './Dashboard/RightSideBar';
 
 
 const routes = [
@@ -79,13 +82,15 @@ class Home extends Component {
         super(props, context);
 
         this.state = {
-            isSidebarActive: false
+            isSidebarActive: false,
+            isRightSidebarOpen: false
         };
     }
 
     componentWillMount() {
         this.unlistenRoutesChange = this.props.history.listen((location, action) => {
             this.setState({
+                isRightSidebarOpen: false,
                 isSidebarActive: false
             });
         });
@@ -101,15 +106,43 @@ class Home extends Component {
 
     toggleSidebarActive = () => {
         this.setState({
+            ...this.state,
             isSidebarActive: !this.state.isSidebarActive
         });
     }
 
+    toggleRightSidebar = () => {
+        this.setState({
+            ...this.state,
+            isRightSidebarOpen: !this.state.isRightSidebarOpen
+        })
+    }
+
+    closeRightSidebar = () => {
+        this.setState({
+            ...this.state,
+            isRightSidebarOpen: false
+        });
+    }
+
     hideSidebar = e => {
-        if (!document.getElementById('sidebar').contains(e.target)
-            && this.state.isSidebarActive) {
+        if (
+            !document.getElementById('sidebar').contains(e.target)
+            && this.state.isSidebarActive
+        ) {
             this.setState({
+                ...this.state,
                 isSidebarActive: false
+            });
+        }
+
+        if (
+            !document.getElementById('right-sidebar').contains(e.target)
+            && this.state.isRightSidebarOpen
+        ) {
+            this.setState({
+                ...this.state,
+                isRightSidebarOpen: false
             });
         }
     }
@@ -123,9 +156,13 @@ class Home extends Component {
         
                 <div className="container-fluid page-body-wrapper">
 
-                    <div id="settings-trigger">
-                        <i className="mdi mdi-settings" />
-                    </div>
+                    <Default>
+                        <div id="settings-trigger" onClick={this.toggleRightSidebar}>
+                            <i className="mdi mdi-settings infinite-spin" style={{cursor: 'pointer'}} />
+                        </div>
+
+                        <RightSideBar isOpen={this.state.isRightSidebarOpen} close={this.closeRightSidebar} />
+                    </Default>
 
                     <SideBar isActive={this.state.isSidebarActive} />
         
