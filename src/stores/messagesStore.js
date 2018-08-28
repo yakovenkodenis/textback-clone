@@ -8,17 +8,17 @@ class MessagesStore {
     @observable errors = undefined;
     @observable messages = [];
 
-    @action getTelegramMessages(
+    @action getMessages(
         ChannelId, SubscriberId,
         offset = 999999, limit = 100, old_message = "False"
     ) {
-        console.log('(getTelegramMessages) is initiated');
+        console.log('(getMessages) is initiated');
         this.inProgress = true;
         this.errors = undefined;
 
-        return agent.Messages.getTelegramMessages(ChannelId, SubscriberId, offset, limit, old_message)
+        return agent.Messages.getMessages(ChannelId, SubscriberId, offset, limit, old_message)
             .then(action(response => {
-                console.log('(getTelegramMessages) RESPONSE:');
+                console.log('(getMessages) RESPONSE:');
                 console.log(response);
 
                 if (response.success) {
@@ -28,7 +28,7 @@ class MessagesStore {
                         message.channel_id === ChannelId && message.subscriber_id === SubscriberId
                     );
 
-                    console.log('getTelegramMessages(): alreadyExistingChat: ', alreadyExistingChat)
+                    console.log('getMessages(): alreadyExistingChat: ', alreadyExistingChat)
 
                     if (alreadyExistingChat) {
                         this.messages = [
@@ -49,28 +49,28 @@ class MessagesStore {
                 }
             }))
             .catch(action(err => {
-                console.log('ERROR [getTelegramMessages()]', err);
+                console.log('ERROR [getMessages()]', err);
             }))
             .finally(action(() => { this.inProgress = false; }));
     }
 
-    @action sendTelegramMessage(ChannelId, SubscriberId, Text) {
-        console.log('(sendTelegramMessage) is initiated');
+    @action sendMessage(ChannelId, SubscriberId, Text) {
+        console.log('(sendMessage) is initiated');
         this.inProgress = true;
         this.errors = undefined;
 
-        return agent.Messages.sendTelegramMessage(
+        return agent.Messages.sendMessage(
             ChannelId, SubscriberId, Text
         ).then(action(response => {
-            console.log('sendTelegramMessage [SUCCESS]:');
+            console.log('sendMessage [SUCCESS]:');
             console.log(response);
         }))
         .catch(action(err => {
-            console.log('ERROR [sendTelegramMessage()]', err);
+            console.log('ERROR [sendMessage()]', err);
         }))
         .finally(action(() => {
             this.inProgress = false;
-            this.getTelegramMessages(ChannelId, SubscriberId);
+            this.getMessages(ChannelId, SubscriberId);
         }));
     }
 }

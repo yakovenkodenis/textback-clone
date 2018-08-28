@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, action, toJS } from 'mobx';
 
 import agent from '../agent';
 
@@ -14,24 +14,24 @@ class ChannelsStore {
         this.inProgress = true;
         this.errors = undefined;
 
-        return agent.Channels.getTelegramChannels()
-            .then(action(response => {
-                console.log('RESPONSE [getChannelsList()]');
-                console.log(response);
+        Promise.all([
+            agent.Channels.Telegram.getTelegramChannels(),
+            agent.Channels.VK.getVkChannels()
+        ]).then(action(channels => {
+            console.log('CHANNELS INSIDE PROMISE.ALL [getChannelsList]:', channels);
 
-                if (response.success) {
-                    if (response.data.constructor !== Array)
-                        this.channels = [];
+            this.channels = [];
 
-                    this.channels = response.data;
-                } else {
-                    this.channels = [];
+            channels.forEach(channel => {
+                if (channel.data && channel.data.constructor === Array) {
+                    this.channels = [...this.channels, ...channel.data];
                 }
-            }))
-            .catch(action(err => {
-                console.log('ERROR [getChannelsList()]', err);
-            }))
-            .finally(action(() => { this.inProgress = false; }));
+            });
+        })).catch(action(err => {
+            console.log('ERROR [getChannelsList()]', err);
+        })).finally(action(() => {
+            this.inProgress = false; console.log('FINALLY', toJS(this.channels))
+        }));
     }
 
     @action addTelegramChannel(botToken) {
@@ -39,7 +39,7 @@ class ChannelsStore {
         this.inProgress = true;
         this.errors = undefined;
 
-        return agent.Channels.addTelegramChannel(botToken)
+        return agent.Channels.Telegram.addTelegramChannel(botToken)
             .then(action(response => {
                 console.log('RESPONSE [addTelegramChannel()]');
                 console.log(response);
@@ -61,7 +61,7 @@ class ChannelsStore {
         this.inProgress = true;
         this.errors = undefined;
 
-        return agent.Channels.deleteTelegramChannel(channelId)
+        return agent.Channels.Telegram.deleteTelegramChannel(channelId)
             .then(response => {
 
                 // filter and update the value of this.channels!!!!!
@@ -69,7 +69,7 @@ class ChannelsStore {
                 console.log('RESPONSE [deleteTelegramChannel()]');
                 console.log(response);
 
-                this.getChannelsList();
+                // this.getChannelsList();
             })
             .catch(action(err => {
                 console.log('ERROR [deleteTelegramChannel()]', err);

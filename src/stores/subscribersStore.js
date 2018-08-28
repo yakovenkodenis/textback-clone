@@ -16,7 +16,7 @@ class SubscribersStore {
 
         return agent.Subscribers.getList()
             .then(action(response => {
-                console.log('RESPONSE [getSubscribersList()]');
+                console.log('RESPONSE [Subscribers.getList()]');
                 console.log(response);
 
                 if (response.success) {
@@ -24,7 +24,7 @@ class SubscribersStore {
                 } else {
                     this.subscribers = [];
                     console.log(
-                        'RESPONSE ERROR [getSubscribersList()]: ',
+                        'RESPONSE ERROR [Subscribers.getList()]: ',
                         response.errors ? response.errors : ""
                     );
                 }
@@ -34,7 +34,7 @@ class SubscribersStore {
             .then(action(subscribers => {
                 // get messages for each subscriber
                 subscribers.forEach(subscriber => {
-                    messagesStore.getTelegramMessages(
+                    messagesStore.getMessages(
                         subscriber.channel_id,
                         subscriber.subscriber_id
                     );

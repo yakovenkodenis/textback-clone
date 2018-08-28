@@ -42,7 +42,7 @@ export default class MessageBox extends Component {
 
         const { channel_id, subscriber_id } = this.props;
 
-        this.props.messagesStore.sendTelegramMessage(
+        this.props.messagesStore.sendMessage(
             channel_id, subscriber_id, this.state.message
         ).then(() => {
             const editor = this.textEditorRef.current;

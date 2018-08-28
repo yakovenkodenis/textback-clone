@@ -23,10 +23,6 @@ export default class DialogsListItem extends Component {
                 className="list-group-item list-group-item-action flex-column align-items-start list-group-item-dialogs"
                 style={{cursor: "pointer"}}
                 onClick={() => {
-                    // channelsStore.addTelegramChannel("456676644:AAFU8DDqadohwEbKQlL--ijpY5GIuLaS5FM")
-                    // .then(() => {
-                    //     channelsStore.getChannelsList();
-                    // });
                     history.push(`/admin/dialogs/${match.params.currentFilter}/${path}`)
                 }}
             >

@@ -22,9 +22,9 @@ const handleErrors = err => {
 
 // const responseBody = res => res.body;
 const responseBody = res => {
-    console.log('RESPONSE_BODY BITCH');
-    console.log(res);
-    return JSON.parse(res.text);
+    console.log('RESPONSE_BODY (agent.js)');
+    console.log('RES:', res);
+    return res.text ? JSON.parse(res.text) : {};
 }
 
 const tokenPlugin = req => {
@@ -172,30 +172,55 @@ const Tags = {
 };
 
 const Channels = {
-    getTelegramChannels: () =>
-        requests.post('/', {
-            "Controller": "Channel",
-            "Action": "GetTelegramChannels",
-        }),
 
-    // returns telegram token
-    addTelegramChannel: BotToken =>
-        requests.post('/', {
-            "Controller": "Channel",
-            "Action": "AddTelegramChannel",
-            BotToken
-        }),
+    Telegram: {
+        getTelegramChannels: () =>
+            requests.post('/', {
+                "Controller": "Channel",
+                "Action": "GetTelegramChannels",
+            }),
 
-    deleteTelegramChannel: ChannelId =>
-        requests.post('/', {
-            "Controller": "Channel",
-            "Action": "DeleteTelegramChannel",
-            ChannelId
-        })
+        // returns telegram token
+        addTelegramChannel: BotToken =>
+            requests.post('/', {
+                "Controller": "Channel",
+                "Action": "AddTelegramChannel",
+                BotToken
+            }),
+
+        deleteTelegramChannel: ChannelId =>
+            requests.post('/', {
+                "Controller": "Channel",
+                "Action": "DeleteTelegramChannel",
+                ChannelId
+            }),
+    },
+
+    VK: {
+        getVkChannels: () =>
+            requests.post('/', {
+                "Controller": "Channel",
+                "Action": "GetVkChannels",
+            }),
+
+        addVkChannel: BotToken =>
+            requests.post('/', {
+                "Controller": "Channel",
+                "Action": "AddVkChannel",
+                BotToken
+            }),
+
+        deleteVkChannel: ChannelId =>
+            requests.post('/', {
+                "Controller": "Channel",
+                "Action": "DeleteVkChannel",
+                ChannelId
+            }),
+    }
 };
 
 const Messages = {
-    getTelegramMessages: (
+    getMessages: (
         ChannelId, SubscriberId,
         offset = 999999, limit = 100, old_message = "False"
     ) =>
@@ -206,12 +231,16 @@ const Messages = {
             offset, limit, old_message
         }),
 
-    sendTelegramMessage: (ChannelId, SubscriberId, Text) =>
+    sendMessage: (ChannelId, SubscriberId, Text) =>
         requests.post('/', {
             "Controller": "Message",
             "Action": "SendTelegramMessage",
             ChannelId, SubscriberId, Text
-        })
+        }),
+
+    editMessage: () => undefined,
+
+    deleteMessage: () => undefined
 }
 
 const Profile = {

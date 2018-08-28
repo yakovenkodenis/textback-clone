@@ -21,12 +21,9 @@ export default class ChannelsSettings extends Component {
         this.botIdModalValue = React.createRef();
     }
 
-    componentDidMount() {
-        // this.props.channelsStore.getChannelsList();
-    }
-
     onDeleteChannel = channelId => {
-        this.props.channelsStore.deleteTelegramChannel(channelId);
+        this.props.channelsStore.deleteTelegramChannel(channelId)
+            .then(() => this.props.channelsStore.getChannelsList());
     }
 
     onAddChannel = (socialNetwork, botId) => {
@@ -37,7 +34,7 @@ export default class ChannelsSettings extends Component {
 
     render() {
 
-        const { channels } = this.props.channelsStore;
+        const { channels, inProgress } = this.props.channelsStore;
 
         const table = (
             <ReactTable
@@ -46,8 +43,8 @@ export default class ChannelsSettings extends Component {
                     {
                         id: 'socialNetwork',
                         Header: 'Соц. сеть',
-                        accessor: channel => channel.socialNetwork
-                                            ? channel.socialNetwork
+                        accessor: channel => channel.channel_type
+                                            ? channel.channel_type
                                             : 'Telegram',
                         filterMethod: (filter, row) => {
                             if (filter.value === 'all') return true;
@@ -146,8 +143,8 @@ export default class ChannelsSettings extends Component {
                                 data-toggle="modal"
                                 data-target="#add-channel-modal"
                                 data-whatever="not yet."
-                            >
-                                Добавить канал
+                                disabled={inProgress}>
+                                {inProgress ? <div className="loading-spinner"></div> : "Добавить канал"}
                             </button>
 
                             <br/><br/>

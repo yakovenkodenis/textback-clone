@@ -41,12 +41,6 @@ export default class DialogsList extends Component {
         // text : "/start"
         // update_date: null
         // user_id: 63113727
-
-        // this.props.subscribersStore.subscribers.forEach(subscriber => {
-        //     this.props.messagesStore.getTelegramMessages(
-        //         subscriber.channel_id, subscriber.subscriber_id
-        //     );
-        // });
     }
 
     componentWillReceiveProps(nextProps) {
