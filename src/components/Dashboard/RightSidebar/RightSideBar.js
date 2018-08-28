@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 
 import RightSidebarItem from './RightSidebarItem';
 
 
-
+@inject('subscribersStore')
 @withRouter
 @observer
 export default class RightSideBar extends Component {
@@ -13,8 +13,14 @@ export default class RightSideBar extends Component {
 
         const { isOpen, close } = this.props;
 
-        const items = [1,1,1,1].map((e, index) => (
-          <RightSidebarItem key={index} />
+        console.log('RIGHT SIDE BAR render():');
+        const { subscribers } = this.props.subscribersStore;
+        console.log(subscribers);
+
+        const chats = subscribers ? subscribers : [];
+
+        const items = [...chats].reverse().slice(0, 10).map((chat, index) => (
+          <RightSidebarItem key={index} {...chat} />
         ));
 
         return (
@@ -35,7 +41,7 @@ export default class RightSideBar extends Component {
                   <small className="settings-heading border-top-0 mb-3 pt-0 border-bottom-0 pb-0 pr-3 font-weight-normal">Все</small>
                 </div>
                 <ul className="chat-list">
-                  {items}
+                  {items.length > 0 ? items : <p className="text-gray m-4">Диалогов пока нет</p>}
                 </ul>
               </div>
             </div>

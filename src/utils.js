@@ -26,7 +26,7 @@ export const formatDate = date => {
     } else return `${day}.${month}.${year}`;
 }
 
-export const datediff = (fromDate, toDate) => {
+export const datediff = (fromDate, toDate, shorter=false) => {
     if (!fromDate) throw new Error('Date should be specified');
 
     const startDate = new Date(1970, 0, 1, 0).getTime(),
@@ -73,14 +73,14 @@ export const datediff = (fromDate, toDate) => {
         && diffDate.hours === 0
         && diffDate.minutes <= 59
     ) {
-        return `${diffDate.minutes} минут назад`;
+        return `${diffDate.minutes} минут${shorter ? "" : " назад"}`;
     } else if (
         diffDate.years === 0
         && diffDate.months === 0
         && diffDate.days === 0
         && diffDate.hours < 24
     ) {
-        return `${diffDate.hours} часов назад`;
+        return `${diffDate.hours} часов${shorter ? "" : " назад"}`;
     }
 
     return formatDate(fromDate);

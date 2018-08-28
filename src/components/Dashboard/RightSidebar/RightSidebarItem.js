@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import Avatar from 'react-avatar';
 
+import { datediff, unixtimeToDate } from '../../../utils';
+
 
 @withRouter
 export default class RightSidebarItem extends Component {
@@ -15,11 +17,29 @@ export default class RightSidebarItem extends Component {
     }
 
     goToRoute = e => {
-        this.props.history.push('/');
+        const first_name = this.props.first_name.toLowerCase();
+        const last_name = this.props.last_name.toLowerCase();
+        const { subscriber_id } = this.props;
+        const path = `${first_name}-${last_name}-${subscriber_id}`;
+
+        this.props.history.push(path);
     }
 
     render() {
-        // const { chat } = this.props;
+        const {
+            message_preview,
+            image, subscriber_id,
+            first_name, last_name,
+            channel_type
+        } = this.props;
+
+        const name = `${first_name} ${last_name}`;
+
+        const vkHack = channel_type.toLowerCase() === "vk" ? subscriber_id+"" : null;
+
+        const timeAgo = datediff(unixtimeToDate(message_preview.date), new Date(), true);
+
+        // console.log('RightSidebar Item props: ', this.props);
 
         return (
             <li
@@ -30,14 +50,18 @@ export default class RightSidebarItem extends Component {
                 onMouseLeave={() => { this.setState({ active: false }); }}
             >
                 <div className="profile">
-                    <Avatar name="Thomas Douglas" round={true} size={50}/>
-                    <span className="online"></span>
+                    <Avatar
+                        vkontakteId={vkHack}
+                        name={name} round={true} size={50} src={image}
+                    />
+                    {/*<span className="online"></span>*/}
                 </div>
                 <div className="info">
-                    <p>Thomas Douglas</p>
-                    <p>Available</p>
+                    <p>{name}</p>
+                    <p>{message_preview.text}</p>
                 </div>
-                <small className="text-muted my-auto">19 min</small>
+                <div className="badge badge-success badge-pill my-auto mx-2">1</div>
+                <small className="text-muted my-auto">{timeAgo}</small>
             </li>
         );
     }

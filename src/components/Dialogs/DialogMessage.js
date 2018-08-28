@@ -16,10 +16,6 @@ export default class DialogMessage extends Component {
             date
         } = this.props;
 
-        console.log('MESSAGE: ', this.props);
-
-        console.log(unixtimeToDate(date));
-
         const messageDate = formatDate(unixtimeToDate(date));
 
         const isImage = is_attachment && file && file.type === 'photo';

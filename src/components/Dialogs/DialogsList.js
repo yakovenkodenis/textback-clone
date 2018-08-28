@@ -82,8 +82,6 @@ export default class DialogsList extends Component {
 
             console.log('DialogsList.render(): [inside dialogs.map(...)]: ', dialog);
 
-            console.log('PREVIEW', message_preview);
-
             const bodyPreview =
                 // messages && messages.length > 0
                 // ? this.truncate(
