@@ -4,9 +4,11 @@ import { withRouter } from 'react-router-dom';
 import { ContentState, EditorState } from 'draft-js';
 
 import AdvancedTextEditor from '../../TextEditor/AdvancedTextEditor';
+import FileUpload from '../../FileUpload/FileUpload';
 
 
 const random = salt => Math.floor(Math.random() * 10000000) + salt;
+
 
 @withRouter
 @observer
@@ -24,11 +26,13 @@ export default class MessageComposerForm extends Component {
                     messageText: '',
                     messageButtons: []
                 },
-                messageAttachment: '',
+                messageAttachments: [],
                 messageId: 0
             }],
             activeMessageId: 0,
-            currentMessage: ''
+            currentMessage: '',
+            droppedFiles: [],
+            dropzoneActive: false
         };
     }
 
@@ -57,9 +61,10 @@ export default class MessageComposerForm extends Component {
                     messageText: '',
                     messageButtons: []
                 },
-                messageAttachment: '',
+                messageAttachments: [],
                 messageId: newId
-            }]
+            }],
+            dropzoneActive: false
         });
     }
 
@@ -128,13 +133,77 @@ export default class MessageComposerForm extends Component {
         });
     }
 
-    logFinalJSONobjectToConsole() {
+    logFinalJSONobjectToConsole = () => {
         console.log('Newsletter object:');
         console.log(this.state.messages);
     }
 
+    onDragEnter = () => {
+        console.log('onDragEnter');
+        this.setState({
+            ...this.state,
+            dropzoneActive: true
+        });
+    }
+
+    onDragLeave = () => {
+        console.log('onDragLeave');
+        this.setState({
+            ...this.state,
+            dropzoneActive: false
+        });
+    }
+
+    onFilesDrop = (acceptedFiles, rejectedFiles) => {
+        console.log('onDrop');
+        console.log(acceptedFiles);
+
+        // set attachments to activeMessageId in the state and make dropzone inactive
+
+        this.setState({
+            ...this.state,
+            dropzoneActive: false
+        });
+    }
+
     render() {
+
+        const dropzoneActive = this.state.dropzoneActive;
+
+        const activeDropZoneStyles = {
+            border: '2px solid #777',
+            opacity: '0.7'
+        };
+
         return (
+<FileUpload
+    className="col-md-12 grid-margin stretch-card"
+    onDrop={this.onFilesDrop}
+    disableClick
+    onDragEnter={this.onDragEnter}
+    onDragLeave={this.onDragLeave}
+>
+    <div className="card" style={dropzoneActive ? activeDropZoneStyles : null}>
+        {dropzoneActive &&
+            <div
+                className="dropzone-background h1"
+                style={{
+                    position: 'absolute',
+                    top: 0, left: 0, right: 0, bottom: 0,
+                    backgroundColor: 'rgba(192, 192, 192, 0.4)',
+                    zIndex: 9999,
+                    border: '2px dashed black',
+                    textAlign: 'center',
+                    verticalAlign: 'middle',
+                    lineHeight: '7rem'
+                }}
+            >Перетащите файлы сюда</div>
+        }
+        <div className="card-body">
+            <h4 className="card-title text-primary">Напишите сообщение</h4>
+            <br/>
+
+    
             <form className="d-flex justify-content-left">
                 <div className="col-md-4">
                     <button
@@ -192,16 +261,6 @@ export default class MessageComposerForm extends Component {
                 </div>
 
                 <div className="col-md-5">
-                    {/*<textarea
-                        id="newMessageBox"
-                        cols="10"
-                        rows="15"
-                        className="form-control"
-                        placeholder="Текст сообщения..."
-                        name="newsletter-new-message-box"
-                        onChange={this.onMessageChange}
-                        ref={this.messageBox}
-                    />*/}
                     <AdvancedTextEditor
                         ref={this.textEditorRef}
                         handleInputChange={this.onMessageChange}
@@ -221,6 +280,9 @@ export default class MessageComposerForm extends Component {
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</FileUpload>
         );
     }
 }

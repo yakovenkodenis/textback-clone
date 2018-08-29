@@ -7,6 +7,7 @@ import 'draft-js-mention-plugin/lib/plugin.css';
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import Editor, { createEditorStateWithText } from 'draft-js-plugins-editor';
+import { ContentState, EditorState } from 'draft-js';
 
 import createEmojiPlugin from 'draft-js-emoji-plugin';
 import createMentionPlugin, { defaultSuggestionsFilter } from 'draft-js-mention-plugin';
@@ -42,6 +43,8 @@ const variables = [
     }
 ];
 
+
+
 export default class AdvancedTextEditor extends Component {
     
     state = {
@@ -76,31 +79,44 @@ export default class AdvancedTextEditor extends Component {
         this.editor.focus();
     };
 
+    setEditorCurrentValue = value => {
+        const editorState = EditorState.push(
+            this.state.editorState, ContentState.createFromText(value)
+        );
+
+        this.setState({
+            ...this.state,
+            editorState
+        });
+    }
+
     render() {
 
         const { MentionSuggestions } = mentionPlugin;
 
         return (
             <div>
-                <div className={editorStyles.editor} onClick={this.focus}>
-                    <Editor
-                        editorState={this.state.editorState}
-                        onChange={this.onChange}
-                        plugins={plugins}
-                        ref={e => { this.editor = e; }}
-                        placeholder="Отправить сообщение..."
-                    />
-                    <MentionSuggestions
-                        onSearchChange={this.onSearchChange}
-                        suggestions={this.state.suggestions}
-                        onAddMention={this.onAddMention}
-                    />
-                    <EmojiSuggestions />
-                </div>
-                <div className={classNames(editorStyles.options/*, "d-flex", "justify-content-end"*/)}>
-                    <EmojiSelect />
-                </div>
+                <React.Fragment>
+                    <div className={editorStyles.editor} onClick={this.focus}>
+                        <Editor
+                            editorState={this.state.editorState}
+                            onChange={this.onChange}
+                            plugins={plugins}
+                            ref={e => { this.editor = e; }}
+                            placeholder="Отправить сообщение..."
+                        />
+                        <MentionSuggestions
+                            onSearchChange={this.onSearchChange}
+                            suggestions={this.state.suggestions}
+                            onAddMention={this.onAddMention}
+                        />
+                        <EmojiSuggestions />
+                    </div>
+                    <div className={classNames(editorStyles.options/*, "d-flex", "justify-content-end"*/)}>
+                        <EmojiSelect />
+                    </div>
+                </React.Fragment>
             </div>
-        )
+        );
     }
 }

@@ -5,6 +5,7 @@ import { ContentState, EditorState } from 'draft-js';
 
 import DialogMessagesContainer from './DialogMessagesContainer';
 import AdvancedTextEditor from '../TextEditor/AdvancedTextEditor';
+import FileUpload from '../FileUpload/FileUpload';
 
 
 @inject('messagesStore', 'subscribersStore')
@@ -18,8 +19,9 @@ export default class MessageBox extends Component {
         this.textEditorRef = React.createRef();
 
         this.state = {
-            file: null,
-            message: null
+            files: [],
+            message: null,
+            dropzoneActive: false
         };
     }
 
@@ -57,7 +59,42 @@ export default class MessageBox extends Component {
         });
     }
 
+    onDragEnter = () => {
+        console.log('onDragEnter');
+        this.setState({
+            ...this.state,
+            dropzoneActive: true
+        });
+    }
+
+    onDragLeave = () => {
+        console.log('onDragLeave');
+        this.setState({
+            ...this.state,
+            dropzoneActive: false
+        });
+    }
+
+    onFilesDrop = (acceptedFiles, rejectedFiles) => {
+        console.log('onDrop');
+        console.log(acceptedFiles);
+
+        // set attachments to activeMessageId in the state and make dropzone inactive
+
+        this.setState({
+            ...this.state,
+            dropzoneActive: false
+        });
+    }
+
     render() {
+
+        const dropzoneActive = this.state.dropzoneActive;
+
+        const activeDropZoneStyles = {
+            border: '2px solid #777',
+            opacity: '0.7'
+        };
 
         return (
             <React.Fragment>
@@ -65,12 +102,35 @@ export default class MessageBox extends Component {
                 <DialogMessagesContainer messages={this.props.messages} />
                 <br/>
 
-                <div className="form-group">
-                    <AdvancedTextEditor
-                        handleInputChange={this.handleInputChange}
-                        ref={this.textEditorRef}
-                    />
-                </div>
+            <FileUpload
+                className="ignore"
+                onDrop={this.onFilesDrop}
+                disableClick
+                onDragEnter={this.onDragEnter}
+                onDragLeave={this.onDragLeave}
+            >
+                <div className="form-group" style={dropzoneActive ? activeDropZoneStyles : null}>
+                    {dropzoneActive &&
+                        <div
+                            className="dropzone-background h1"
+                            style={{
+                                position: 'absolute',
+                                top: 0, left: 0, right: 0, bottom: 0,
+                                backgroundColor: 'rgba(192, 192, 192, 0.4)',
+                                zIndex: 9999,
+                                border: '2px dashed black',
+                                textAlign: 'center',
+                                verticalAlign: 'middle',
+                                lineHeight: '7rem'
+                            }}
+                        >Перетащите файлы сюда</div>
+                    }
+                        <AdvancedTextEditor
+                            handleInputChange={this.handleInputChange}
+                            ref={this.textEditorRef}
+                        />
+                    </div>
+                </FileUpload>
 
                 <div className="form-group d-flex justify-content-between" style={{zIndex: 0}}>
 
@@ -105,7 +165,6 @@ export default class MessageBox extends Component {
                         </span>
                     </div>
                 </div>
-
             </React.Fragment>
         );
     }

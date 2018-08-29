@@ -21,9 +21,9 @@ export default class New extends Component {
                         <ReceiverChoiceForm />
                     </CardWrapper>
 
-                    <CardWrapper title="Напишите сообщение">
+                    {/*<CardWrapper title="Напишите сообщение">*/}
                         <MessageComposerForm />
-                    </CardWrapper>
+                    {/*</CardWrapper>*/}
 
                     <CardWrapper title="Отправьте рассылку">
                         <p>Пока что в разработке</p>
