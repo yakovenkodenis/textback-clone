@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { ContentState, EditorState } from 'draft-js';
+import { Line } from 'react-progressbar.js';
 
 import DialogMessagesContainer from './DialogMessagesContainer';
 import AdvancedTextEditor from '../TextEditor/AdvancedTextEditor';
@@ -21,8 +22,18 @@ export default class MessageBox extends Component {
         this.state = {
             files: [],
             message: null,
-            dropzoneActive: false
+            dropzoneActive: false,
+            progress: 0
         };
+    }
+
+    fakeProgress = () => {
+        setTimeout(() => {
+            this.setState({
+                ...this.state,
+                progress: this.state.progress + 1
+            })
+        }, 700);
     }
 
     onFileInputChange = e => {
@@ -85,6 +96,10 @@ export default class MessageBox extends Component {
             ...this.state,
             dropzoneActive: false
         });
+
+        for(let i = 0; i < 100; ++i) {
+            this.fakeProgress();
+        }
     }
 
     render() {
@@ -165,6 +180,15 @@ export default class MessageBox extends Component {
                         </span>
                     </div>
                 </div>
+
+            <div className="progress progress-md">
+                <div
+                    className="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                    role="progressbar"
+                    aria-valuenow={this.state.progress} aria-valuemin="0" aria-valuemax="100"
+                    style={{width: `${this.state.progress}%`}}
+                />
+            </div>
             </React.Fragment>
         );
     }
