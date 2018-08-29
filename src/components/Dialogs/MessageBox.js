@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { ContentState, EditorState } from 'draft-js';
-import { Line } from 'react-progressbar.js';
 
 import DialogMessagesContainer from './DialogMessagesContainer';
 import AdvancedTextEditor from '../TextEditor/AdvancedTextEditor';

@@ -74,7 +74,7 @@ const routes = [
     }
 ];
 
-@inject('channelsStore')
+@inject('channelsStore', 'subscribersStore')
 @withRouter
 class Home extends Component {
 
@@ -101,7 +101,8 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        this.props.channelsStore.getChannelsList();
+        this.props.channelsStore.getChannelsList()
+          .then(() => this.props.subscribersStore.getSubscribersList());
     }
 
     toggleSidebarActive = () => {

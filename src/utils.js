@@ -91,3 +91,22 @@ export const capitalize = str =>
 
 export const generateVkOAuthLink = (groups_id, redirect_uri) =>
     `https://oauth.vk.com/authorize?client_id=6668833&display=page&redirect_uri=${redirect_uri}&scope=messages,photos,docs,manage&group_ids=${groups_id}&response_type=token&state=auth_vk&v=5.80`;
+
+
+export const urlRegex = new RegExp("([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?([^ ])+", "gi");
+
+export const stripURLSfromText = str =>
+    str.match(urlRegex);
+
+export const linkify = text =>
+    text.replace(urlRegex, link => `<a href="${link}">${link}</a>`);
+
+
+export const truncate = (msg, n, useWordBoundary) => {
+    if (msg.length <= n) { return msg; }
+    let subString = msg.substr(0, n - 1);
+    return (useWordBoundary
+        ? subString.substr(0, subString.lastIndexOf(' '))
+        : subString
+    ) + '...';
+};

@@ -44,7 +44,6 @@ const variables = [
 ];
 
 
-
 export default class AdvancedTextEditor extends Component {
     
     state = {

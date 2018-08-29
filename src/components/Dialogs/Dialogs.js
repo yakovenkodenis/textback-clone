@@ -37,9 +37,9 @@ class Dialogs extends Component {
         // console.log('CHANNELS: ', channels);
 
         console.log('Dialogs.js componentDidMount()');
-        this.props.subscribersStore.getSubscribersList();
+        // ВМЕСТО getSubscribersList() тянуть обновления другой функцией!!!
+        // this.props.subscribersStore.getSubscribersList();
 
-        // console.log('DATES: ', datediff(new Date(unixtimeToDate(1535194570)), new Date()));
 
         // Single object example from array of subscribers
         // added_time: 1535194570

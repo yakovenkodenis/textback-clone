@@ -15,7 +15,7 @@ class ChannelsStore {
         this.inProgress = true;
         this.errors = undefined;
 
-        Promise.all([
+        return Promise.all([
             agent.Channels.Telegram.getChannels(),
             agent.Channels.Vk.getChannels()
         ]).then(action(channels => {

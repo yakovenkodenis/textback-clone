@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { toImage } from 'emojione';
 import Image from 'react-image-webp';
+import { withRouter } from 'react-router-dom';
 
-import { unixtimeToDate, formatDate } from '../../utils';
+import { unixtimeToDate, formatDate, linkify } from '../../utils';
 
 
+@withRouter
 export default class DialogMessage extends Component {
     render() {
 
@@ -61,7 +63,7 @@ export default class DialogMessage extends Component {
                                 <p
                                     className="convert-emoji"
                                     dangerouslySetInnerHTML={{
-                                        __html: toImage(text)
+                                        __html: toImage(linkify(text))
                                     }}
                                 />
                             )

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import Avatar from 'react-avatar';
 
-import { datediff, unixtimeToDate } from '../../../utils';
+import { datediff, unixtimeToDate, truncate } from '../../../utils';
 
 
 @withRouter
@@ -20,7 +20,7 @@ export default class RightSidebarItem extends Component {
         const first_name = this.props.first_name.toLowerCase();
         const last_name = this.props.last_name.toLowerCase();
         const { subscriber_id } = this.props;
-        const path = `${first_name}-${last_name}-${subscriber_id}`;
+        const path = `/admin/dialogs/all/${first_name}-${last_name}-${subscriber_id}`;
 
         this.props.history.push(path);
     }
@@ -58,7 +58,7 @@ export default class RightSidebarItem extends Component {
                 </div>
                 <div className="info">
                     <p>{name}</p>
-                    <p>{message_preview.text}</p>
+                    <p>{truncate(message_preview.text, 35, true)}</p>
                 </div>
                 <div className="badge badge-success badge-pill my-auto mx-2">1</div>
                 <small className="text-muted my-auto">{timeAgo}</small>

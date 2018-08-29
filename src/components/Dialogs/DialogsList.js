@@ -3,6 +3,7 @@ import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 
 import DialogListItem from './DialogListItem';
+import { truncate } from '../../utils';
 
 
 @inject('messagesStore', 'channelsStore', 'subscribersStore')
@@ -49,15 +50,6 @@ export default class DialogsList extends Component {
         });
     }
 
-    truncate = (msg, n, useWordBoundary) => {
-        if (msg.length <= n) { return msg; }
-        let subString = msg.substr(0, n - 1);
-        return (useWordBoundary
-            ? subString.substr(0, subString.lastIndexOf(' '))
-            : subString
-        ) + '...';
-    }
-
     filterDialogs = e => {
         const updatedDialogs = this.props.dialogs.filter(dialog =>
             dialog.name.toLowerCase().search(
@@ -91,7 +83,7 @@ export default class DialogsList extends Component {
                 //   )
                 // : 'Сообщений нет';
                 message_preview && (message_preview.text || message_preview.text === "")
-                ? this.truncate(message_preview.text, 30, true)
+                ? truncate(message_preview.text, 30, true)
                 : 'Сообщений нет';
 
             const last_active = message_preview.date;
