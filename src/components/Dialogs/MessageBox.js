@@ -17,6 +17,7 @@ export default class MessageBox extends Component {
         super(props, context);
 
         this.textEditorRef = React.createRef();
+        this.dropzoneRef = React.createRef();
 
         this.state = {
             files: [],
@@ -122,6 +123,7 @@ export default class MessageBox extends Component {
                 disableClick
                 onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave}
+                ref={this.dropzoneRef}
             >
                 <div className="form-group" style={dropzoneActive ? activeDropZoneStyles : null}>
                     {dropzoneActive &&
@@ -172,6 +174,7 @@ export default class MessageBox extends Component {
                             <button
                                 className="file-upload-browse btn btn-light btn-icon-text"
                                 type="button"
+                                onClick={() => { this.dropzoneRef.current.open(); }}
                             >
                                 <i className="mdi mdi-upload btn-icon-prepend" />
                                 Прикрепить файл

@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Dropzone from 'react-dropzone';
 
 
-export default class FileUpload extends Component {
-    render() {
-        return (
-            <Dropzone
-                {...this.props}
-            >
-                {this.props.children}
-            </Dropzone>
-        )
-    }
-}
+const FileUpload = React.forwardRef((props, ref) => (
+    <Dropzone
+        ref={ref}
+        {...props}
+    >
+        {props.children}
+    </Dropzone>
+));
+
+export default FileUpload;
