@@ -5,6 +5,8 @@ import { ContentState, EditorState } from 'draft-js';
 
 import AdvancedTextEditor from '../../TextEditor/AdvancedTextEditor';
 import FileUpload from '../../FileUpload/FileUpload';
+import AddButtonsModal from './AddButtonsModal';
+
 
 
 const random = salt => Math.floor(Math.random() * 10000000) + salt;
@@ -17,8 +19,8 @@ export default class MessageComposerForm extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.messageBox = React.createRef();
         this.textEditorRef = React.createRef();
+        this.dropzoneRef = React.createRef();
 
         this.state = {
             messages: [{
@@ -32,7 +34,8 @@ export default class MessageComposerForm extends Component {
             activeMessageId: 0,
             currentMessage: '',
             droppedFiles: [],
-            dropzoneActive: false
+            dropzoneActive: false,
+            isModalOpen: false
         };
     }
 
@@ -166,6 +169,22 @@ export default class MessageComposerForm extends Component {
         });
     }
 
+    closeModal = () => {
+        console.log('Trying to close modal...')
+        this.setState({
+            ...this.state,
+            isModalOpen: false
+        });
+    }
+
+    openModal = () => {
+        console.log('Trying to open modal');
+        this.setState({
+            ...this.state,
+            isModalOpen: true
+        });
+    }
+
     render() {
 
         const dropzoneActive = this.state.dropzoneActive;
@@ -184,8 +203,10 @@ export default class MessageComposerForm extends Component {
     disableClick
     onDragEnter={this.onDragEnter}
     onDragLeave={this.onDragLeave}
+    ref={this.dropzoneRef}
 >
     <div className="card" style={dropzoneActive ? activeDropZoneStyles : null}>
+
         {dropzoneActive &&
             <div
                 className="dropzone-background h1"
@@ -205,11 +226,21 @@ export default class MessageComposerForm extends Component {
             <h4 className="card-title text-primary">Напишите сообщение</h4>
             <br/>
 
+            <AddButtonsModal isOpen={this.state.isModalOpen} close={this.closeModal}>
+                <form>
+                    <div className="form-group">
+                        <label htmlFor="recipient-name" className="col-form-label">
+                            Recipient:
+                        </label>
+                        <input type="text" className="form-control" id="recipient-name"/>
+                    </div>
+                </form>
+            </AddButtonsModal>
     
             <form className={`${isMobile ? "" : "d-flex justify-content-left"}`}>
                 <div className={`${isMobile ? "col-12 px-0" : "col-md-4"}`}>
                     <button
-                        className="btn btn-outline-success btn-icon-text"
+                        className={`btn btn-outline-success btn-icon-text ${isMobile ? "w-100" : ""}`}
                         type="button"
                         onClick={() => { this.setMessageActive(this.state.messages[0].messageId) }}
                         style={{
@@ -232,7 +263,7 @@ export default class MessageComposerForm extends Component {
                                 {this.state.messages.slice(1).map((msg, index) => (
                                     <button
                                         key={index}
-                                        className="btn btn-block btn-outline-success btn-icon-text btn-newsletter-composer"
+                                        className={`btn btn-block btn-outline-success btn-icon-text btn-newsletter-composer ${isMobile ? "w-100" : ""}`}
                                         type="button"
                                         onClick={(e) => this.handleAddMessageBtnClick(e, msg.messageId)}
                                         style={{
@@ -267,13 +298,38 @@ export default class MessageComposerForm extends Component {
                         ref={this.textEditorRef}
                         handleInputChange={this.onMessageChange}
                     />
+
+                    <div className={`${isMobile ? "" : "justify-content-between d-flex"}`}>
+                        <button 
+                            className={`btn btn-light btn-icon-text ${isMobile ? "mb-1 w-100" : ""}`}
+                            type="button"
+                            // data-toggle="modal"
+                            // data-target="#add-buttons-newsletter-modal"
+                            // data-whatever="@test"
+                            onClick={this.openModal}
+                        >
+                            <i className="mdi mdi-plus btn-icon-prepend" />
+                            Добавить кнопки
+                        </button>
+
+                        <button 
+                            className={`btn btn-light btn-icon-text ${isMobile ? "mt-1 w-100" : ""}`}
+                            type="button"
+                            onClick={() => { this.dropzoneRef.current.open(); }}
+                        >
+                            <i className="mdi mdi-upload btn-icon-prepend" />
+                            Прикрепить файл
+                        </button>
+
+                    </div>
+
                 </div>
 
                 <div className={`${isMobile ? "col-md-3 px-0" : "col-md-3"}`}>
                     <h4 className="card-title text-success">Проверка перед отправкой</h4>
                     <p className="card-description">Отправьте сообщение себе</p>
                     <button
-                        className="btn btn-light btn-icon-text"
+                        className={`btn btn-light btn-icon-text ${isMobile ? "w-100" : ""}`}
                         type="button"
                         onClick={this.logFinalJSONobjectToConsole}
                     >

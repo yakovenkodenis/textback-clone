@@ -11,7 +11,7 @@ export default class ReceiverChoiceForm extends Component {
     render() {
 
         const { channels } = this.props.channelsStore;
-        const isMobile = this.props;
+        const { isMobile } = this.props;
 
         return (
             <form className={`${isMobile ? "" : "d-flex justify-content-left"}`}>

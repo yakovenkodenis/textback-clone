@@ -1,0 +1,21 @@
+/* .modal-backdrop {
+
+} */
+
+.modal-backdrop.modal-backdrop-enter {
+    opacity: 0;
+}
+
+.modal-backdrop.modal-backdrop-enter-active {
+    opacity: 0.5;
+    transition: all 200ms ease-in;
+}
+
+.modal-backdrop.modal-backdrop-exit {
+    opacity: 0.5;
+}
+
+.modal-backdrop.modal-backdrop-exit-active {
+    opacity: 0;
+    transition: all 200ms ease-out;
+}
