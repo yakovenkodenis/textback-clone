@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
+import MediaQuery from 'react-responsive';
+
 import MessageComposerForm from './MessageComposerForm';
 import ReceiverChoiceForm from './ReceiverChoiceForm';
 import PageHeader from './PageHeader';
@@ -9,21 +11,22 @@ import CardWrapper from '../../CardWrapper';
 
 @withRouter
 @observer
-export default class New extends Component {
+class New extends Component {
 
     render() {
+
+        const { isMobile } = this.props;
+
         return (
             <React.Fragment>
-                <PageHeader />
+                <PageHeader isMobile={isMobile} />
 
                 <div className="row">
                     <CardWrapper title="Выберите получателя">
-                        <ReceiverChoiceForm />
+                        <ReceiverChoiceForm isMobile={isMobile} />
                     </CardWrapper>
 
-                    {/*<CardWrapper title="Напишите сообщение">*/}
-                        <MessageComposerForm />
-                    {/*</CardWrapper>*/}
+                    <MessageComposerForm isMobile={isMobile} />
 
                     <CardWrapper title="Отправьте рассылку">
                         <p>Пока что в разработке</p>
@@ -33,3 +36,13 @@ export default class New extends Component {
         );
     }
 }
+
+const ResponsiveNew = props => (
+    <MediaQuery maxDeviceWidth={767}>
+        {isMobile => (
+            <New isMobile={isMobile} {...props} />
+        )}
+    </MediaQuery>
+);
+
+export default ResponsiveNew;

@@ -11,10 +11,11 @@ export default class ReceiverChoiceForm extends Component {
     render() {
 
         const { channels } = this.props.channelsStore;
+        const isMobile = this.props;
 
         return (
-            <form className="d-flex justify-content-left">
-                <div className="form-group mr-5">
+            <form className={`${isMobile ? "" : "d-flex justify-content-left"}`}>
+                <div className={`form-group ${isMobile ? "" : "mr-5"}`}>
                     <label htmlFor="selectReceiver">
                         Получатели
                     </label>
@@ -24,7 +25,7 @@ export default class ReceiverChoiceForm extends Component {
                         <option value="everyone">Все</option>
                     </select>
                 </div>
-                <div className="form-group mx-5">
+                <div className={`form-group ${isMobile ? "" : "mx-5"}`}>
                     <label htmlFor="allSubscriptionPages">
                         Страницы подписки
                     </label>
@@ -34,7 +35,7 @@ export default class ReceiverChoiceForm extends Component {
                         <option value="">Что-то еще 2</option>
                     </select>
                 </div>
-                <div className="form-group mx-5">
+                <div className={`form-group ${isMobile ? "" : "mx-5"}`}>
                     <label htmlFor="allChannels">
                         Каналы
                     </label>

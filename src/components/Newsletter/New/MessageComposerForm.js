@@ -175,6 +175,8 @@ export default class MessageComposerForm extends Component {
             opacity: '0.7'
         };
 
+        const { isMobile } = this.props;
+
         return (
 <FileUpload
     className="col-md-12 grid-margin stretch-card"
@@ -204,8 +206,8 @@ export default class MessageComposerForm extends Component {
             <br/>
 
     
-            <form className="d-flex justify-content-left">
-                <div className="col-md-4">
+            <form className={`${isMobile ? "" : "d-flex justify-content-left"}`}>
+                <div className={`${isMobile ? "col-12 px-0" : "col-md-4"}`}>
                     <button
                         className="btn btn-outline-success btn-icon-text"
                         type="button"
@@ -260,14 +262,14 @@ export default class MessageComposerForm extends Component {
                     </button>
                 </div>
 
-                <div className="col-md-5">
+                <div className={`${isMobile ? "col-12 px-0 my-4" :"col-md-5"}`}>
                     <AdvancedTextEditor
                         ref={this.textEditorRef}
                         handleInputChange={this.onMessageChange}
                     />
                 </div>
 
-                <div className="col-md-3">
+                <div className={`${isMobile ? "col-md-3 px-0" : "col-md-3"}`}>
                     <h4 className="card-title text-success">Проверка перед отправкой</h4>
                     <p className="card-description">Отправьте сообщение себе</p>
                     <button

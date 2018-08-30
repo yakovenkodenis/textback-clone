@@ -138,7 +138,8 @@ class Home extends Component {
         }
 
         if (
-            !document.getElementById('right-sidebar').contains(e.target)
+            !this.props.isMobile
+            && !document.getElementById('right-sidebar').contains(e.target)
             && this.state.isRightSidebarOpen
         ) {
             this.setState({
