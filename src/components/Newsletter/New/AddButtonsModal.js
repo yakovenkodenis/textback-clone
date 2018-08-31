@@ -18,7 +18,9 @@ export default class AddButtonsModal extends Component {
         } = this.props;
 
         const style = {
-            display: isOpen ? 'block' : 'none'
+            display: isOpen ? 'block' : 'none',
+            width: '100%',
+            height: '100%',
         };
 
         return (
@@ -35,14 +37,24 @@ export default class AddButtonsModal extends Component {
                     className={
                         `modal fade ${isOpen ? "show d-flex justify-content-center mt-5" : ""}`
                     }
-                    // id="add-buttons-newsletter-modal"
                     tabIndex="-1"
                     aria-labelledby="ModalLabel"
                     aria-hidden="true"
                     style={style}
                 >
-                    <div className="model-dialog" role="document">
-                        <div className="modal-content">
+                    <div
+                        className="model-dialog" role="document"
+                        style={{
+                            width: '50%'
+                        }}
+                    >
+                        <div className="modal-content" id="timeline-scroll"
+                            style={{
+                                overflowY: 'scroll',
+                                maxHeight: (document.documentElement.clientHeight - 100) + 'px',
+                                boxSizing: 'content-box'
+                            }}
+                        >
                             <div className="modal-header">
                                 <h5 className="modal-title" id="ModalLabel">Добавить кнопки</h5>
                                 <button
@@ -59,16 +71,16 @@ export default class AddButtonsModal extends Component {
                                 {children}
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-success">Добавить кнопку</button>
                                 <button
                                     type="button"
-                                    className="btn btn-light"
+                                    className="btn btn-light w-100"
                                     data-dismiss="modal"
                                     onClick={close}
                                 >
-                                    Закрыть
+                                    Сохранить
                                 </button>
                             </div>
+                            <br/>
                         </div>
                     </div>
                 </div>

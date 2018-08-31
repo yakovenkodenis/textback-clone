@@ -7,6 +7,7 @@ import MessageComposerForm from './MessageComposerForm';
 import ReceiverChoiceForm from './ReceiverChoiceForm';
 import PageHeader from './PageHeader';
 import CardWrapper from '../../CardWrapper';
+import SendNewsletter from './SendNewsletter';
 
 
 @withRouter
@@ -29,7 +30,7 @@ class New extends Component {
                     <MessageComposerForm isMobile={isMobile} />
 
                     <CardWrapper title="Отправьте рассылку">
-                        <p>Пока что в разработке</p>
+                        <SendNewsletter isMobile={isMobile} />
                     </CardWrapper>
                 </div>
             </React.Fragment>

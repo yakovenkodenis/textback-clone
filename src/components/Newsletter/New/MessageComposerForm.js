@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { ContentState, EditorState } from 'draft-js';
+import $ from 'jquery';
 
 import AdvancedTextEditor from '../../TextEditor/AdvancedTextEditor';
 import FileUpload from '../../FileUpload/FileUpload';
@@ -26,7 +27,7 @@ export default class MessageComposerForm extends Component {
             messages: [{
                 message: {
                     messageText: '',
-                    messageButtons: []
+                    buttons: [] // [{name, url, id}, ...]
                 },
                 messageAttachments: [],
                 messageId: 0
@@ -37,6 +38,10 @@ export default class MessageComposerForm extends Component {
             dropzoneActive: false,
             isModalOpen: false
         };
+    }
+
+    componentDidMount() {
+        $('[data-toggle="tooltip"]').tooltip(); // initiate tooltips
     }
 
     setTextEditorCurrentValue = value => {
@@ -136,6 +141,81 @@ export default class MessageComposerForm extends Component {
         });
     }
 
+    getCurrentlyActiveMessage = () => {
+        console.log('getCurrentlyActiveMessage');
+        const { messages, activeMessageId } = this.state;
+
+        console.log('Messages (state): ', messages);
+        console.log('activeMessageId (state): ', activeMessageId);
+
+        const activeMessage = messages.find(message =>
+            message.messageId === activeMessageId
+        ) || messages[0];
+        
+        console.log('found activeMessage: ', activeMessage.message);
+
+        return activeMessage;
+    }
+
+    onAddButton = () => {
+        const activeButtons = this.getCurrentlyActiveMessage().message.buttons;
+
+        const id = random(activeButtons.length);
+        const name = 'Кнопка ' + (activeButtons.length + 1);
+        const url = 'https://google.com';
+
+        const button = { id, name, url };
+
+        activeButtons.push(button);
+        
+        const { messages, activeMessageId } = this.state;
+        messages[activeMessageId].message.buttons = activeButtons;
+
+        this.setState({
+            ...this.state,
+            messages
+        });
+    }
+
+    deleteButton = (e, buttonId) => {
+        const activeButtons = this.getCurrentlyActiveMessage().message.buttons;
+        const { messages, activeMessageId } = this.state;
+
+        const newActiveButtons = activeButtons.filter(button =>
+            button.id !== buttonId
+        );
+
+        messages[activeMessageId].message.buttons = newActiveButtons;
+
+        this.setState({
+            ...this.state,
+            messages
+        });
+    }
+
+    setButtonData = (e, buttonId, attribute) => {
+        const { messages } = this.state;
+
+        const neededMessageIndex = messages.findIndex(message =>
+            message.messageId === this.state.activeMessageId
+        );
+        const neededMessage = neededMessageIndex > -1 ? messages[neededMessageIndex] : messages[0];
+
+        const neededButtonIndex = neededMessage.message.buttons.findIndex(button =>
+            buttonId === button.id
+        );
+
+        const neededButton = neededMessage.message.buttons[neededButtonIndex > -1 ? neededButtonIndex : 0];
+        neededButton[attribute] = e.target.value;
+
+        messages[neededMessageIndex].message.buttons[neededButtonIndex] = neededButton;
+
+        this.setState({
+            ...this.state,
+            messages
+        });
+    }
+
     logFinalJSONobjectToConsole = () => {
         console.log('Newsletter object:');
         console.log(this.state.messages);
@@ -170,7 +250,7 @@ export default class MessageComposerForm extends Component {
     }
 
     closeModal = () => {
-        console.log('Trying to close modal...')
+        console.log('Closing modal...')
         this.setState({
             ...this.state,
             isModalOpen: false
@@ -178,7 +258,7 @@ export default class MessageComposerForm extends Component {
     }
 
     openModal = () => {
-        console.log('Trying to open modal');
+        console.log('Opening modal');
         this.setState({
             ...this.state,
             isModalOpen: true
@@ -195,6 +275,12 @@ export default class MessageComposerForm extends Component {
         };
 
         const { isMobile } = this.props;
+
+        const activeButtons = this.getCurrentlyActiveMessage().message.buttons;
+
+
+
+
 
         return (
 <FileUpload
@@ -227,13 +313,54 @@ export default class MessageComposerForm extends Component {
             <br/>
 
             <AddButtonsModal isOpen={this.state.isModalOpen} close={this.closeModal}>
-                <form>
-                    <div className="form-group">
-                        <label htmlFor="recipient-name" className="col-form-label">
-                            Recipient:
-                        </label>
-                        <input type="text" className="form-control" id="recipient-name"/>
-                    </div>
+                <form className="">
+                    {
+                        activeButtons ? activeButtons.map(button => (
+                            <div className="form-group border" key={button.id}>
+                                <label name="text" htmlFor={button.name} className="col-form-label float-left">
+                                    Текст
+                                </label>
+                                <button
+                                    className="close float-right"
+                                    type="button"
+                                    data-dismiss="modal"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    data-original-title="Удалить кнопку"
+                                    aria-label="Close"
+                                    style={{cursor: 'pointer'}}
+                                    onClick={e => { this.deleteButton(e, button.id) }}
+                                >
+                                    <i className="mdi mdi-delete-forever" />
+                                </button>
+                                <input
+                                    data-id={button.id}
+                                    type="text" className="form-control" id={button.name}
+                                    onChange={e => { this.setButtonData(e, button.id, "name")}}
+                                    value={button.name}
+                                    placeholder="Текст, который будет на кнопке" 
+                                />
+                                <label name="url" htmlFor={button.url} className="col-form-label">
+                                    Ссылка
+                                </label>
+                                <input 
+                                    data-id={button.id}
+                                    type="text" className="form-control" id={button.url}
+                                    value={button.url}    
+                                    onChange={e => { this.setButtonData(e, button.id, "url")}}
+                                    placeholder="Ссылка кнопки"
+                                />
+                                <br/>
+                            </div>
+                        )) : null
+                    }
+                    <button
+                        className={`btn btn-block btn-outline-success btn-icon-text btn-newsletter-composer ${isMobile ? "w-100" : ""}`}
+                        type="button"
+                        onClick={this.onAddButton}
+                    >
+                        Добавить
+                    </button>
                 </form>
             </AddButtonsModal>
     
@@ -298,14 +425,11 @@ export default class MessageComposerForm extends Component {
                         ref={this.textEditorRef}
                         handleInputChange={this.onMessageChange}
                     />
-
+                    <br/>
                     <div className={`${isMobile ? "" : "justify-content-between d-flex"}`}>
                         <button 
-                            className={`btn btn-light btn-icon-text ${isMobile ? "mb-1 w-100" : ""}`}
+                            className={`btn btn-light btn-icon-text ${isMobile ? "mb-1 w-100" : "mr-1"}`}
                             type="button"
-                            // data-toggle="modal"
-                            // data-target="#add-buttons-newsletter-modal"
-                            // data-whatever="@test"
                             onClick={this.openModal}
                         >
                             <i className="mdi mdi-plus btn-icon-prepend" />
@@ -313,9 +437,12 @@ export default class MessageComposerForm extends Component {
                         </button>
 
                         <button 
-                            className={`btn btn-light btn-icon-text ${isMobile ? "mt-1 w-100" : ""}`}
+                            className={`btn btn-light btn-icon-text ${isMobile ? "mt-1 w-100" : "ml-1"}`}
                             type="button"
                             onClick={() => { this.dropzoneRef.current.open(); }}
+                            style={{
+                                zIndex: 9
+                            }}
                         >
                             <i className="mdi mdi-upload btn-icon-prepend" />
                             Прикрепить файл

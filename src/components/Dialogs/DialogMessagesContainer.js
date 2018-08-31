@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
+import $ from 'jquery';
 
 import DialogMessage from './DialogMessage';
 
@@ -27,13 +28,22 @@ export default class DialogMessagesContainer extends Component {
             });
         }
 
-        const container = this.dialogMessagesContainerRef.current;
-        container.scrollTop = container.scrollHeight;
+        this.scrollSmoothToBottom();
     }
 
     componentWillUnmount() {
         window.onresize = undefined;
     }
+
+    scrollSmoothToBottom = () => {
+        const div = this.dialogMessagesContainerRef.current
+
+        if (div) {
+            $('#timeline-scroll').animate({
+            scrollTop: div.scrollHeight * 2
+            }, 500);
+        }
+     }
 
     render() {
         const chats = this.props.messages;
