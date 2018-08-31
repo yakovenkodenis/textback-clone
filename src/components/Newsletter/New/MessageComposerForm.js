@@ -420,7 +420,12 @@ export default class MessageComposerForm extends Component {
                     </button>
                 </div>
 
-                <div className={`${isMobile ? "col-12 px-0 my-4" :"col-md-5"}`}>
+                <div
+                    className={`${isMobile ? "col-12 px-0 my-4" :"col-md-5"}`}
+                    style={{
+                        minHeight: '100px'
+                    }}
+                >
                     <AdvancedTextEditor
                         ref={this.textEditorRef}
                         handleInputChange={this.onMessageChange}
@@ -428,7 +433,7 @@ export default class MessageComposerForm extends Component {
                     <br/>
                     <div className={`${isMobile ? "" : "justify-content-between d-flex"}`}>
                         <button 
-                            className={`btn btn-light btn-icon-text ${isMobile ? "mb-1 w-100" : "mr-1"}`}
+                            className={`btn btn-sm btn-light btn-icon-text ${isMobile ? "mb-1 w-100" : "mr-1"}`}
                             type="button"
                             onClick={this.openModal}
                         >
@@ -437,7 +442,7 @@ export default class MessageComposerForm extends Component {
                         </button>
 
                         <button 
-                            className={`btn btn-light btn-icon-text ${isMobile ? "mt-1 w-100" : "ml-1"}`}
+                            className={`btn btn-sm btn-light btn-icon-text ${isMobile ? "mt-1 w-100" : "ml-1"}`}
                             type="button"
                             onClick={() => { this.dropzoneRef.current.open(); }}
                             style={{

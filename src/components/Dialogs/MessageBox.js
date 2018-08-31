@@ -125,7 +125,16 @@ export default class MessageBox extends Component {
                 onDragLeave={this.onDragLeave}
                 ref={this.dropzoneRef}
             >
-                <div className="form-group" style={dropzoneActive ? activeDropZoneStyles : null}>
+                <div
+                    className="form-group"
+                    style={
+                        dropzoneActive
+                        ? activeDropZoneStyles
+                        : {
+                            minHeight: '100px'
+                        }
+                    }
+                >
                     {dropzoneActive &&
                         <div
                             className="dropzone-background h1"

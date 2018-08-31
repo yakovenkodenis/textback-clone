@@ -103,6 +103,9 @@ export default class AdvancedTextEditor extends Component {
                             plugins={plugins}
                             ref={e => { this.editor = e; }}
                             placeholder="Отправить сообщение..."
+                            style={{
+                                minHeight: '80px'
+                            }}
                         />
                         <MentionSuggestions
                             onSearchChange={this.onSearchChange}
