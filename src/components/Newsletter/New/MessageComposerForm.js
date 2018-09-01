@@ -421,7 +421,7 @@ export default class MessageComposerForm extends Component {
                             </React.Fragment>
                         )
                     }
-                    <br/>
+                    
                     <button 
                         className="btn btn-light btn-icon-text"
                         type="button"
@@ -445,7 +445,7 @@ export default class MessageComposerForm extends Component {
                     <br/>
                     <div className={`${isMobile ? "" : "justify-content-between d-flex"}`}>
                         <button 
-                            className={`btn btn-sm btn-light btn-icon-text ${isMobile ? "mb-1 w-100" : "mr-1"}`}
+                            className={`btn btn-light btn-icon-text ${isMobile ? "mb-1 w-100" : "mr-1"}`}
                             type="button"
                             onClick={this.openModal}
                         >
@@ -454,7 +454,7 @@ export default class MessageComposerForm extends Component {
                         </button>
 
                         <button 
-                            className={`btn btn-sm btn-light btn-icon-text ${isMobile ? "mt-1 w-100" : "ml-1"}`}
+                            className={`btn btn-light btn-icon-text ${isMobile ? "mt-1 w-100" : "ml-1"}`}
                             type="button"
                             onClick={() => { this.dropzoneRef.current.open(); }}
                             style={{
