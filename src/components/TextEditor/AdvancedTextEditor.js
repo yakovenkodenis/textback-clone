@@ -13,7 +13,8 @@ import createEmojiPlugin from 'draft-js-emoji-plugin';
 import createMentionPlugin, { defaultSuggestionsFilter } from 'draft-js-mention-plugin';
 import createHashtagPlugin from 'draft-js-hashtag-plugin';
 
-import editorStyles from './editorStyles.css';
+// import editorStyles from './editorStyles.css';
+import './editorStyles.css';
 
                 
 const emojiPlugin = createEmojiPlugin({
@@ -96,7 +97,7 @@ export default class AdvancedTextEditor extends Component {
         return (
             <div>
                 <React.Fragment>
-                    <div className={editorStyles.editor} onClick={this.focus}>
+                    <div className={"editor"/*editorStyles.editor*/} onClick={this.focus}>
                         <Editor
                             editorState={this.state.editorState}
                             onChange={this.onChange}
@@ -114,7 +115,7 @@ export default class AdvancedTextEditor extends Component {
                         />
                         <EmojiSuggestions />
                     </div>
-                    <div className={classNames(editorStyles.options/*, "d-flex", "justify-content-end"*/)}>
+                    <div className={classNames("options"/*editorStyles.options/* /*, "d-flex", "justify-content-end"*/)}>
                         <EmojiSelect />
                     </div>
                 </React.Fragment>
