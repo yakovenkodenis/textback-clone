@@ -67,7 +67,7 @@ export default class MessageComposerForm extends Component {
             messages: [...this.state.messages, {
                 message: {
                     messageText: '',
-                    messageButtons: []
+                    buttons: []
                 },
                 messageAttachments: [],
                 messageId: newId
@@ -158,7 +158,7 @@ export default class MessageComposerForm extends Component {
     }
 
     onAddButton = () => {
-        const activeButtons = this.getCurrentlyActiveMessage().message.buttons;
+        const activeButtons = this.getCurrentlyActiveMessage().message.buttons || [];
 
         const id = random(activeButtons.length);
         const name = 'Кнопка ' + (activeButtons.length + 1);
@@ -169,7 +169,13 @@ export default class MessageComposerForm extends Component {
         activeButtons.push(button);
         
         const { messages, activeMessageId } = this.state;
-        messages[activeMessageId].message.buttons = activeButtons;
+        const neededMessageIndex = messages.findIndex(message =>
+            message.messageId === activeMessageId
+        ) || 0;
+        
+        messages[
+            neededMessageIndex > -1 ? neededMessageIndex : 0
+        ].message.buttons = activeButtons;
 
         this.setState({
             ...this.state,
@@ -178,14 +184,20 @@ export default class MessageComposerForm extends Component {
     }
 
     deleteButton = (e, buttonId) => {
-        const activeButtons = this.getCurrentlyActiveMessage().message.buttons;
+        const activeButtons = this.getCurrentlyActiveMessage().message.buttons || [];
         const { messages, activeMessageId } = this.state;
 
         const newActiveButtons = activeButtons.filter(button =>
             button.id !== buttonId
         );
 
-        messages[activeMessageId].message.buttons = newActiveButtons;
+        const neededMessageIndex = messages.findIndex(message =>
+            message.messageId === activeMessageId
+        ) || 0;
+
+        messages[
+            neededMessageIndex > -1 ? neededMessageIndex : 0
+        ].message.buttons = newActiveButtons;
 
         this.setState({
             ...this.state,
@@ -276,7 +288,7 @@ export default class MessageComposerForm extends Component {
 
         const { isMobile } = this.props;
 
-        const activeButtons = this.getCurrentlyActiveMessage().message.buttons;
+        const activeButtons = this.getCurrentlyActiveMessage().message.buttons || [];
 
 
 

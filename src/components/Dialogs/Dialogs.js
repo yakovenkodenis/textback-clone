@@ -175,8 +175,19 @@ class Dialogs extends Component {
                                     <div className="col-3 clear-pr clear-pl">
                                         <DialogsList dialogs={dialogsList} />
                                     </div>
+                                    
+                                    {
+                                        (location.pathname === `/admin/dialogs/${match.params.currentFilter}`
+                                        || location.pathname === `/admin/dialogs/${match.params.currentFilter}/`)
+                                        && dialogRoutes.length > 0
+                                        ? (
+                                            <div className="col-9 d-flex justify-content-center mt-5">
+                                                <p className="text-muted">Выберите диалог из списка</p>
+                                            </div>
+                                        ) : dialogRoutes
+                                        
+                                    }
 
-                                    {dialogRoutes}
                                 </Default>
 
                                 <Mobile>

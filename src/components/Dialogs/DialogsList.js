@@ -117,7 +117,13 @@ export default class DialogsList extends Component {
                     </form>
                 </div>
 
-                {dialogs}                                               
+                {
+                    dialogs && dialogs.length > 0
+                    ? dialogs
+                    : this.props.messagesStore.inProgress
+                    ? <p className="text-muted">Загрузка...</p>
+                    : <p className="text-muted">Диалогов пока нет</p>
+                }
             </div>
         );
     }
