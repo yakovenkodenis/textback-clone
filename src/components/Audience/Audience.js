@@ -11,6 +11,11 @@ import { reactTableTextProps } from '../../utils';
 @observer
 export default class Audience extends Component {
 
+    componentDidMount() {
+        // get subscribers list or use already loaded one.
+        // but maybe better to update the list by calling to the api once again.
+    }
+
     render() {
 
         const data = [

@@ -37,8 +37,8 @@ class Dialogs extends Component {
         // console.log('CHANNELS: ', channels);
 
         console.log('Dialogs.js componentDidMount()');
-        // ВМЕСТО getSubscribersList() тянуть обновления другой функцией!!!
-        // this.props.subscribersStore.getSubscribersList();
+        // ВМЕСТО getSubscribersDetailedList() тянуть обновления другой функцией!!!
+        // this.props.subscribersStore.getSubscribersDetailedList();
 
 
         // Single object example from array of subscribers

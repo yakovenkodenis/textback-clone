@@ -13,14 +13,14 @@ export default class SendNewsletter extends Component {
 
         return (
            <div className="flex justify-content-left">
-            <button
-            className={`btn btn-outline-success btn-icon-text mr-1 ${isMobile ? "w-100" : ""}`}
-            type="button"
-        >
-            Отправить
-        </button>
                 <button
-                    className={`btn btn-light btn-icon-text ml-1 ${isMobile ? "w-100" : ""}`}
+                    className={`btn btn-outline-success btn-icon-text ${isMobile ? "w-100 mb-1" : "mr-1"}`}
+                    type="button"
+                >
+                    Отправить
+                </button>
+                <button
+                    className={`btn btn-light btn-icon-text ${isMobile ? "w-100 mt-2" : "ml-1"}`}
                     type="button"
                 >
                     Сохранить

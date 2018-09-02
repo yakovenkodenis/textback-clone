@@ -324,7 +324,11 @@ export default class MessageComposerForm extends Component {
             <h4 className="card-title text-primary">Напишите сообщение</h4>
             <br/>
 
-            <AddButtonsModal isOpen={this.state.isModalOpen} close={this.closeModal}>
+            <AddButtonsModal
+                isOpen={this.state.isModalOpen}
+                close={this.closeModal}
+                isMobile={isMobile}
+            >
                 <form className="">
                     {
                         activeButtons ? activeButtons.map(button => (

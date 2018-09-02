@@ -73,6 +73,29 @@ class MessagesStore {
             this.getMessages(ChannelId, SubscriberId);
         }));
     }
+
+    @action setReadStatus(ChannelId, SubscriberId) {
+        console.log('(setReadStatus) is initiated');
+        this.inProgress = true;
+        this.errors = undefined;
+
+        return agent.Messages.setReadStatus(
+            ChannelId, SubscriberId
+        ).then(action(response => {
+            console.log('setReadStatus [SUCCESS]:');
+            console.log(response);
+
+            // set messages container status for channel/subscriber to be read (preview is not bold)
+            // maybe make it optimistic ui update?
+
+        }))
+        .catch(action(err => {
+            console.log('ERROR [setReadStatus()]', err);
+        }))
+        .finally(action(() => {
+            this.inProgress = false;
+        }));
+    }
 }
 
 export default new MessagesStore();

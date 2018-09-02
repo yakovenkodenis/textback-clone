@@ -114,7 +114,11 @@ export default class MessageBox extends Component {
         return (
             <React.Fragment>
 
-                <DialogMessagesContainer messages={this.props.messages} />
+                <DialogMessagesContainer
+                    messages={this.props.messages}
+                    channel_id={this.props.channel_id}
+                    subscriber_id={this.props.subscriber_id}
+                />
                 <br/>
 
             <FileUpload

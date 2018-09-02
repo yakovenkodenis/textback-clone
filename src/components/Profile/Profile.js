@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
 
 
@@ -85,7 +85,7 @@ class Profile extends Component {
                                             </span>
                                         </p>
                                     </div>
-                                    <button className="btn btn-gradient-primary btn-block">Изменить</button>
+                                    <Link to="/admin/profile/edit" className="btn btn-gradient-primary btn-block">Изменить</Link>
                                 </div>
                             </div>
                         </div>

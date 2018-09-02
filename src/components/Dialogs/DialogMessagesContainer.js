@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import $ from 'jquery';
 
 import DialogMessage from './DialogMessage';
 
 
+@inject('messagesStore')
 @withRouter
 @observer
 export default class DialogMessagesContainer extends Component {
@@ -29,6 +30,13 @@ export default class DialogMessagesContainer extends Component {
         }
 
         this.scrollSmoothToBottom();
+
+        this.props.messagesStore.setReadStatus(
+            this.props.channel_id, this.props.subscriber_id
+        ).then(() => {
+            // call the state function passed from DialogsList???
+            // make a reaction call ??
+        });
     }
 
     componentWillUnmount() {

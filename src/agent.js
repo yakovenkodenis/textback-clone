@@ -141,6 +141,12 @@ const Subscribers = {
             "Action": "GetList"
         }),
 
+    getDetailedList: () =>
+        requests.post('/', {
+            "Controller": "Subscriber",
+            "Action": "GetDetailedList"
+        }),
+
     getInfo: (ChannelId, SubscriberId) =>
         requests.post('/', {
             "Controller": "Subscriber",
@@ -240,7 +246,20 @@ const Messages = {
 
     editMessage: () => undefined,
 
-    deleteMessage: () => undefined
+    deleteMessage: () => undefined,
+
+    getUpdates: unixTimestamp =>
+        requests.post('/', {
+            "Controller": "Message",
+            "Action": "LpGetUpdates",
+            "LastUpdateTime": unixTimestamp
+        }),
+
+    setReadStatus: (ChannelId, SubscriberId) =>
+        requests.post('/', {
+            "Controller": "Message",
+            "Action": "SetReadStatus"
+        })
 }
 
 const Profile = {

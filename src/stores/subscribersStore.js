@@ -9,14 +9,14 @@ class SubscribersStore {
     @observable errors = undefined;
     @observable subscribers = [];
 
-    @action getSubscribersList() {
+    @action getSubscribersDetailedList() {
         console.log('(subscribersStore.getSubscribersList()) is initiated');
         this.inProgress = true;
         this.errors = undefined;
 
-        return agent.Subscribers.getList()
+        return agent.Subscribers.getDetailedList()
             .then(action(response => {
-                console.log('RESPONSE [Subscribers.getList()]');
+                console.log('RESPONSE [Subscribers.getDetailedList()]');
                 console.log(response);
 
                 if (response.success) {
@@ -24,7 +24,7 @@ class SubscribersStore {
                 } else {
                     this.subscribers = [];
                     console.log(
-                        'RESPONSE ERROR [Subscribers.getList()]: ',
+                        'RESPONSE ERROR [Subscribers.getDetailedList()]: ',
                         response.errors ? response.errors : ""
                     );
                 }
@@ -41,7 +41,7 @@ class SubscribersStore {
                 });
             }))
             .catch(action(err => {
-                console.log('ERROR [getSubscribersList()]', err);
+                console.log('ERROR [Subscribers.getDetailedList()]', err);
             }))
             .finally(action(() => { this.inProgress = false; }));
     }

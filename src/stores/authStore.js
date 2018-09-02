@@ -29,7 +29,7 @@ class AuthStore {
 
     @action reset() {
         this.values.username = '';
-        // this.values.email = '';
+        this.values.email = '';
         this.values.password = '';
     }
 

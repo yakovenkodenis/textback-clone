@@ -14,6 +14,7 @@ export default class AddButtonsModal extends Component {
         const {
             isOpen,
             close,
+            isMobile,
             children
         } = this.props;
 
@@ -45,7 +46,7 @@ export default class AddButtonsModal extends Component {
                     <div
                         className="model-dialog" role="document"
                         style={{
-                            width: '50%'
+                            width: isMobile ? '100%' : '50%'
                         }}
                     >
                         <div className="modal-content" id="timeline-scroll"

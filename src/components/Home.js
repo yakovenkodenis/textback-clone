@@ -20,7 +20,10 @@ import Autofunnels from './Autofunnels/Autofunnels';
 import NewAutofunnel from './Autofunnels/New/New';
 
 import Audience from './Audience/Audience';
+
 import Profile from './Profile/Profile';
+import EditProfile from './Profile/EditProfile';
+
 import RightSideBar from './Dashboard/RightSidebar/RightSideBar';
 
 
@@ -70,7 +73,13 @@ const routes = [
     },
     {
         path: '/profile',
+        exact: true,
         component: () => <Profile />
+    },
+    {
+        path: '/profile/edit',
+        exact: true,
+        component: () => <EditProfile />
     }
 ];
 
@@ -102,7 +111,7 @@ class Home extends Component {
 
     componentDidMount() {
         this.props.channelsStore.getChannelsList()
-          .then(() => this.props.subscribersStore.getSubscribersList());
+          .then(() => this.props.subscribersStore.getSubscribersDetailedList());
     }
 
     toggleSidebarActive = () => {
