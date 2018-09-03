@@ -46,7 +46,13 @@ const variables = [
 
 
 export default class AdvancedTextEditor extends Component {
-    
+
+    constructor(props, context) {
+        super(props, context);
+
+        this.editor = React.createRef();
+    }
+
     state = {
         editorState: createEditorStateWithText(text),
         suggestions: variables
@@ -76,7 +82,7 @@ export default class AdvancedTextEditor extends Component {
     }
 
     focus = () => {
-        this.editor.focus();
+        this.editor.current.focus();
     };
 
     setEditorCurrentValue = value => {
@@ -99,10 +105,11 @@ export default class AdvancedTextEditor extends Component {
                 <React.Fragment>
                     <div className={"editor"/*editorStyles.editor*/} onClick={this.focus}>
                         <Editor
+                            id="advanced-text-editor"
                             editorState={this.state.editorState}
                             onChange={this.onChange}
                             plugins={plugins}
-                            ref={e => { this.editor = e; }}
+                            ref={this.editor}
                             placeholder="Отправить сообщение..."
                             style={{
                                 minHeight: '80px'

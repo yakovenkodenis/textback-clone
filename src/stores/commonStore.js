@@ -10,6 +10,9 @@ class CommonStore {
     @observable tags = [];
     @observable isLoadingTags = false;
 
+    @observable lastUpdateTime = 0;
+    @observable pollingInterval = undefined;
+
     constructor() {
         reaction(
             () => this.token,
@@ -37,6 +40,15 @@ class CommonStore {
 
     @action setAppLoaded() {
         this.appLoaded = true;
+    }
+
+    @action setLastUpdateTime(unixtime) {
+        this.lastUpdateTime = unixtime;
+    }
+
+    @action setPollingInterval(interval) {
+        if (!interval) clearInterval(interval);
+        else this.pollingInterval = interval;
     }
 }
 

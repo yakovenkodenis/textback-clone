@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
-import { ContentState, EditorState } from 'draft-js';
 
 import DialogMessagesContainer from './DialogMessagesContainer';
 import AdvancedTextEditor from '../TextEditor/AdvancedTextEditor';
 import FileUpload from '../FileUpload/FileUpload';
 
 
-@inject('messagesStore', 'subscribersStore')
+@inject('messagesStore', 'subscribersStore', 'commonStore')
 @withRouter
 @observer
 export default class MessageBox extends Component {
@@ -25,6 +24,28 @@ export default class MessageBox extends Component {
             dropzoneActive: false,
             progress: 0
         };
+    }
+
+    componentWillUnmount() {
+        console.log('MessageBox.js componentWillUnmount');
+
+        // this.props.commonStore.setPollingInterval(undefined);
+    }
+
+    componentDidMount() {
+        console.log('MessageBox.js componentDidMount');
+
+        // if (!this.props.commonStore.pollingInterval) {
+        //     this.pollingInterval = setInterval(
+        //         () => {
+        //             console.log('pollUpdates');
+        //             this.props.messagesStore.getUpdates(this.props.commonStore.lastUpdateTime)
+        //         },
+        //         5 * 1000
+        //     );
+
+        //     this.props.commonStore.setPollingInterval(this.pollingInterval);
+        // }
     }
 
     fakeProgress = () => {
@@ -54,20 +75,14 @@ export default class MessageBox extends Component {
         e.preventDefault();
 
         const { channel_id, subscriber_id } = this.props;
+        const { message } = this.state;
+
+        const editor = this.textEditorRef.current;
+        editor.setEditorCurrentValue('');
 
         this.props.messagesStore.sendMessage(
-            channel_id, subscriber_id, this.state.message
-        ).then(() => {
-            const editor = this.textEditorRef.current;
-            const editorState = EditorState.push(
-                editor.state.editorState, ContentState.createFromText('')
-            );
-    
-            editor.setState({
-                ...editor.state,
-                editorState
-            });
-        });
+            channel_id, subscriber_id, message
+        );
     }
 
     onDragEnter = () => {

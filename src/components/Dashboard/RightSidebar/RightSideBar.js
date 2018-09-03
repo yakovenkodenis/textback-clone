@@ -13,9 +13,9 @@ export default class RightSideBar extends Component {
 
         const { isOpen, close } = this.props;
 
-        console.log('RIGHT SIDE BAR render():');
+        // console.log('RIGHT SIDE BAR render():');
         const { subscribers } = this.props.subscribersStore;
-        console.log(subscribers);
+        // console.log(subscribers);
 
         const chats = subscribers ? subscribers : [];
 

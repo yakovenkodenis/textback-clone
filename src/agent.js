@@ -22,8 +22,8 @@ const handleErrors = err => {
 
 // const responseBody = res => res.body;
 const responseBody = res => {
-    console.log('RESPONSE_BODY (agent.js)');
-    console.log('RES:', res);
+    // console.log('RESPONSE_BODY (agent.js)');
+    // console.log('RES:', res);
     return res.text ? JSON.parse(res.text) : {};
 }
 
@@ -36,7 +36,7 @@ const tokenPlugin = req => {
             "Token": commonStore.token
         };
 
-        console.log('REQUEST DATA: ', req._data);
+        console.log('agent.js request: ', req._data);
     }
 };
 
@@ -67,7 +67,7 @@ const requests = {
             .post(`${PROXY}${API_ROOT}${url}`, body)
             .use(tokenPlugin)
             .end(handleErrors)
-            .then(responseBody),
+            .then(responseBody)
 
 };
 
@@ -258,7 +258,8 @@ const Messages = {
     setReadStatus: (ChannelId, SubscriberId) =>
         requests.post('/', {
             "Controller": "Message",
-            "Action": "SetReadStatus"
+            "Action": "SetReadStatus",
+            ChannelId, SubscriberId
         })
 }
 

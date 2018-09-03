@@ -54,6 +54,29 @@ export default class DialogMessagesContainer extends Component {
      }
 
     render() {
+
+        // let chat = this.props.messagesStore.messages.find(chat => {
+        //     // console.log('INSIDE CHAT FIND:', chat);
+        //     // console.log(chat.channel_id, chat.subscriber_id);
+        //     // console.log(channel_id, subscriber_id);
+
+        //     return chat.channel_id === this.props.channel_id
+        //            && chat.subscriber_id === this.props.subscriber_id
+        // });
+        
+        // if (!chat) {
+
+        //     console.log('DialogMessagesContainer.js --> our chat is empty')
+        //     chat = {
+        //         messages: []
+        //     };
+        //     // return null;
+        // }
+
+
+        // const messages = chat.messages;
+
+
         const chats = this.props.messages;
         const messages = chats ? [...chats].reverse() : [];
 

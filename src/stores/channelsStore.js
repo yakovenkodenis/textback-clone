@@ -1,4 +1,4 @@
-import { observable, action, toJS } from 'mobx';
+import { observable, action } from 'mobx';
 
 import agent from '../agent';
 import { capitalize } from '../utils';
@@ -19,7 +19,8 @@ class ChannelsStore {
             agent.Channels.Telegram.getChannels(),
             agent.Channels.Vk.getChannels()
         ]).then(action(channels => {
-            console.log('CHANNELS INSIDE PROMISE.ALL [getChannelsList]:', channels);
+            // console.log('CHANNELS INSIDE PROMISE.ALL [getChannelsList]:', channels);
+            console.log('(ChannelsStore.getChannelsList()) is finished');
 
             this.channels = [];
 
@@ -31,7 +32,8 @@ class ChannelsStore {
         })).catch(action(err => {
             console.log('ERROR [getChannelsList()]', err);
         })).finally(action(() => {
-            this.inProgress = false; console.log('FINALLY', toJS(this.channels))
+            this.inProgress = false;
+            // console.log('FINALLY', toJS(this.channels))
         }));
     }
 

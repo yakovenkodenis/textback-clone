@@ -2,6 +2,7 @@ import { observable, action } from 'mobx';
 
 import agent from '../agent';
 import messagesStore from './messagesStore';
+import commonStore from './commonStore';
 
 
 class SubscribersStore {
@@ -16,22 +17,32 @@ class SubscribersStore {
 
         return agent.Subscribers.getDetailedList()
             .then(action(response => {
-                console.log('RESPONSE [Subscribers.getDetailedList()]');
-                console.log(response);
+                console.log('---- getDetailedList --- step 1 [get subscribers]');
+                // console.log('RESPONSE [Subscribers.getDetailedList()]');
+                // console.log(response);
 
                 if (response.success) {
-                    this.subscribers = response.data;
+                    this.subscribers = response.data.subscribers.reverse();
+
+                    commonStore.setLastUpdateTime(response.data.last_update_time);
+
                 } else {
                     this.subscribers = [];
+                    console.log('---------------------------')
                     console.log(
                         'RESPONSE ERROR [Subscribers.getDetailedList()]: ',
                         response.errors ? response.errors : ""
                     );
+                    console.log('RESPONSE itself: ', response);
+                    console.log('---------------------------');
                 }
 
                 return this.subscribers;
             }))
             .then(action(subscribers => {
+
+                console.log('---- getDetailedList --- step 2 [get messages]');
+
                 // get messages for each subscriber
                 subscribers.forEach(subscriber => {
                     messagesStore.getMessages(

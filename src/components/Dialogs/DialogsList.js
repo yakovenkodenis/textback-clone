@@ -30,7 +30,7 @@ export default class DialogsList extends Component {
     componentDidMount() {
         // const { messages } = this.props.messagesStore;
 
-        console.log('GETTING MESSAGES!!!');
+        // console.log('GETTING MESSAGES!!!');
 
         // MESSAGE OBJECT EXAMPLE
         // channel_id: 9
@@ -72,7 +72,7 @@ export default class DialogsList extends Component {
 
             const { name, path, /*messages,*/ channel_type, message_preview } = dialog;
 
-            console.log('DialogsList.render(): [inside dialogs.map(...)]: ', dialog);
+            // console.log('DialogsList.render(): [inside dialogs.map(...)]: ', dialog);
 
             const bodyPreview =
                 // messages && messages.length > 0

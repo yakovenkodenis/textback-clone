@@ -9,7 +9,7 @@ import DialogContainer from './DialogContainer';
 import { Default, Mobile } from '../Responsive';
 
 
-@inject('subscribersStore', 'channelsStore', 'messagesStore')
+@inject('subscribersStore', 'channelsStore', 'messagesStore', 'commonStore')
 @withRouter
 @observer
 class Dialogs extends Component {
@@ -33,13 +33,7 @@ class Dialogs extends Component {
     }
 
     componentDidMount() {
-        // const { channels } = this.props.channelsStore;
-        // console.log('CHANNELS: ', channels);
-
         console.log('Dialogs.js componentDidMount()');
-        // ВМЕСТО getSubscribersDetailedList() тянуть обновления другой функцией!!!
-        // this.props.subscribersStore.getSubscribersDetailedList();
-
 
         // Single object example from array of subscribers
         // added_time: 1535194570
@@ -72,7 +66,9 @@ class Dialogs extends Component {
 
     render() {
 
-        const { match, isMobile, location } = this.props;
+        const {
+            match, isMobile, location
+        } = this.props;
 
         let subscribers = [];
 
@@ -80,8 +76,8 @@ class Dialogs extends Component {
             this.props.subscribersStore.subscribers
             && this.props.subscribersStore.subscribers.constructor === Array
         ) {
-            console.log('MAPPING SUBSCRIBERS ARRAY...');
-            console.log(this.props.messagesStore.messages);
+            // console.log('MAPPING SUBSCRIBERS ARRAY...');
+            // console.log(this.props.messagesStore.messages);
 
             const messages = this.props.messagesStore.messages;
 
@@ -112,7 +108,12 @@ class Dialogs extends Component {
                 key={index}
                 path={`/admin/dialogs/${match.params.currentFilter}/${subscriber.path}`}
                 exact={true}
-                component={() => <DialogContainer currentFilter={match.params.currentFilter} {...subscriber} />}
+                component={
+                    () => <DialogContainer
+                                currentFilter={match.params.currentFilter}
+                                {...subscriber}
+                          />
+                }
             />
         ));
 
@@ -143,7 +144,7 @@ class Dialogs extends Component {
             }
 
 
-            console.log("dynamicBreadcrumbRoute: ", dynamicBreadcrumbRoute);
+            // console.log("dynamicBreadcrumbRoute: ", dynamicBreadcrumbRoute);
         }
 
         return (

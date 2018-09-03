@@ -21,7 +21,7 @@ export default class NavBar extends Component {
           ? window.localStorage.getItem('user').split("@")[0]
           : "";
 
-        console.log('USER EMAIL: ', email);
+        // console.log('USER EMAIL: ', email);
 
         return (
             <nav className={`sidebar sidebar-offcanvas ${isActive ? "active" : ""}`} id="sidebar">

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import { Route, withRouter } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
 
@@ -25,6 +25,9 @@ import Profile from './Profile/Profile';
 import EditProfile from './Profile/EditProfile';
 
 import RightSideBar from './Dashboard/RightSidebar/RightSideBar';
+
+
+// import asyncPoll from './HOCs/asyncPoll';
 
 
 const routes = [
@@ -83,8 +86,9 @@ const routes = [
     }
 ];
 
-@inject('channelsStore', 'subscribersStore')
+@inject('channelsStore', 'subscribersStore', 'commonStore', 'messagesStore')
 @withRouter
+@observer
 class Home extends Component {
 
     constructor(props, context) {
@@ -107,11 +111,38 @@ class Home extends Component {
 
     componentWillUnmount(){
         this.unlistenRoutesChange();
+        clearInterval(this.pollingInterval);
+        this.props.commonStore.setPollingInterval(undefined);
     }
 
     componentDidMount() {
         this.props.channelsStore.getChannelsList()
-          .then(() => this.props.subscribersStore.getSubscribersDetailedList());
+          .then(() => this.props.subscribersStore.getSubscribersDetailedList())
+          .then(() => {
+              console.log('Start polling in Home.js componentDidMount');
+              this.pollUpdates();
+          });
+    }
+
+    pollUpdates = () => {
+        // if (!this.props.commonStore.pollingInterval) {
+        //     this.pollingInterval = setInterval(
+        //         () => {
+        //             console.log('pollUpdates');
+        //             this.props.messagesStore.getUpdates(this.props.commonStore.lastUpdateTime)
+        //         },
+        //         5 * 1000
+        //     );
+
+        //     this.props.commonStore.setPollingInterval(this.pollingInterval);
+        // }
+
+
+        this.props.messagesStore.getUpdates(this.props.commonStore.lastUpdateTime)
+            .then(response => {
+                console.log('UPDATE RESPONSE: ', response);
+                this.pollUpdates();
+            });
     }
 
     toggleSidebarActive = () => {
@@ -161,6 +192,8 @@ class Home extends Component {
     render() {
         const { isMobile } = this.props;
 
+        console.log('Home.js render()', this.props.messagesStore.messages);
+
         return (
             <div onClick={this.hideSidebar}>
                 <NavBar toggleSidebar={this.toggleSidebarActive} />
@@ -188,7 +221,13 @@ class Home extends Component {
                                     key={index}
                                     path={'/admin' + route.path}
                                     exact={route.exact}
-                                    component={route.component}
+                                    // component={route.component}
+                                    render={props => React.cloneElement(
+                                        route.component(), {
+                                            ...props,
+                                            pollingInterval: this.pollingInterval
+                                        }
+                                    )}
                                 />
                             ))}
                         </div>
@@ -199,6 +238,22 @@ class Home extends Component {
     }
 };
 
+// const onPollInterval = (props, dispatch) => {
+
+//     console.log('onPollInterval props: ', props);
+//     console.log('onPollInterval dispatch: ', dispatch);
+
+//     if (props.messagesStore && props.commonStore) {
+//         // return dispatch(
+//             return props.messagesStore.getUpdates(props.commonStore.lastUpdateTime)
+//         // );
+
+//         // return 'TRYING TO UPDATE';
+//     }
+
+//     return 'NO UPDATES YET...';
+// }
+
 const ResponsiveHome = props => (
     <MediaQuery maxDeviceWidth={767}>
         {isMobile => (
@@ -207,4 +262,7 @@ const ResponsiveHome = props => (
     </MediaQuery>
 );
 
-export default ResponsiveHome;
+
+export default inject('channelsStore', 'subscribersStore', 'commonStore', 'messagesStore')(
+    /*asyncPoll(5 * 1000, onPollInterval)*/(ResponsiveHome)
+);

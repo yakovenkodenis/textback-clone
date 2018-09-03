@@ -22,16 +22,23 @@ class DialogContainer extends Component {
         } = this.props;
 
         let chat = this.props.messagesStore.messages.find(chat => {
-            console.log('INSIDE CHAT FIND:', chat);
-            console.log(chat.channel_id, chat.subscriber_id);
-            console.log(channel_id, subscriber_id);
+            // console.log('INSIDE CHAT FIND:', chat);
+            // console.log(chat.channel_id, chat.subscriber_id);
+            // console.log(channel_id, subscriber_id);
 
             return chat.channel_id === channel_id && chat.subscriber_id === subscriber_id
         })
         
-        if (!chat) chat = [];
+        if (!chat) {
 
-        console.log('CHAAAT', chat);
+            console.log('DialogContainer.js --> our chat is empty')
+            chat = {
+                messages: []
+            };
+            // return null;
+        }
+
+        // console.log('CHAAAT', chat);
 
         return isMobile
                 ? (
