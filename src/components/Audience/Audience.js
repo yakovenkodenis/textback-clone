@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
-import { withRouter } from 'react-router-dom';
+import { observer, inject } from 'mobx-react';
+import { withRouter, Link } from 'react-router-dom';
 import ReactTable from 'react-table';
 import  Avatar from 'react-avatar';
 
-import { reactTableTextProps } from '../../utils';
+import { toJS } from 'mobx';
+
+import { reactTableTextProps, unixtimeToDate, formatDate } from '../../utils';
 
 
+@inject('subscribersStore', 'channelsStore')
 @withRouter
 @observer
 export default class Audience extends Component {
@@ -18,20 +21,44 @@ export default class Audience extends Component {
 
     render() {
 
-        const data = [
-            ['Наталья Михальченко', 'Подписалась, обратилась в чат', '3 авг. 2018 г. 9:36:25'],
-            ['Сергей Кружков', 'Подписался, обратился в чат', '2 авг. 2018 г. 13:16:55'],
-            ['Полина Артюшенко', 'Подписалась, обратилась в чат', '31 июл. 2018 г. 15:06:11'],
-            ['Диана Якубова', 'Подписалась, обратилась в чат', '29 июл. 2018 г. 11:43:45'],
-            ['Диана Ежова', 'Подписалась, обратилась в чат', '16 июл. 2018 г. 07:33:27'],
-            ['Юлия Евдокименко', 'Подписалась, обратилась в чат', '29 июн. 2018 г. 14:24:55'],
-            ['Наталья Михальченко', 'Подписалась, обратилась в чат', '3 авг. 2018 г. 9:36:25'],
-            ['Сергей Кружков', 'Подписался, обратился в чат', '2 авг. 2018 г. 13:16:55'],
-            ['Полина Артюшенко', 'Подписалась, обратилась в чат', '31 июл. 2018 г. 15:06:11'],
-            ['Диана Якубова', 'Подписалась, обратилась в чат', '29 июл. 2018 г. 11:43:45'],
-            ['Диана Ежова', 'Подписалась, обратилась в чат', '16 июл. 2018 г. 07:33:27'],
-            ['Юлия Евдокименко', 'Подписалась, обратилась в чат', '29 июн. 2018 г. 14:24:55']
-        ];
+        // added_time:1535836275
+        // channel_id:47
+        // channel_type:"Vk"
+        // first_name:"Алексей"
+        // image:"https://pp.userapi.com/c837124/v837124570/d15a/MmMnfoFj_hI.jpg?ava=1"
+        // language_code:null
+        // last_name:"Крючков"
+        // message_preview:{date: 1535836273, owner: false, text: "test"}
+        // status_id:1
+        // subscriber_id:49142570
+        // username:"49142570"
+
+
+        const channels = this.props.channelsStore.channels;
+
+        const data = this.props.subscribersStore.subscribers.map(subscriber => {
+            const name = `${subscriber.first_name} ${subscriber.last_name}`;
+            const avatar = subscriber.image;
+            const lastTimeActive = subscriber.message_preview
+                ? formatDate(unixtimeToDate(subscriber.message_preview.date))
+                : "-";
+
+            const maybeChannel = channels.find(channel =>
+                channel.channel_id === subscriber.channel_id
+            );
+            const channel = maybeChannel ? maybeChannel.first_name : '-';
+            const channelUsername = maybeChannel ? maybeChannel.username : '-';
+            
+            const statusStub = '-';
+
+            const chatUrlId =
+                `${subscriber.first_name.toLowerCase()}-${subscriber.last_name.toLowerCase()}-${subscriber.subscriber_id}`;
+            const dialogUrl = `/admin/dialogs/all/${chatUrlId}`;
+
+            return {
+                name, avatar, lastTimeActive, channel, statusStub, channelUsername, dialogUrl
+            }
+        });
 
         const table = (
             <ReactTable
@@ -40,12 +67,12 @@ export default class Audience extends Component {
                     {
                         id: 'avatar',
                         Header: '',
-                        accessor: () => 'avatar', // needs to be changed to work with real data
+                        accessor: row => row.avatar,
                         sortable: false,
                         filterable: false,
                         Cell: ({ row }) => (
                             <div className="col-12 d-flex justify-content-center">
-                                <Avatar name={row.name} size="50" round={true} />
+                                <Avatar src={row.avatar} name={row.name} size="50" round={true} />
                             </div>
                         ),
                         maxWidth: 100
@@ -53,7 +80,7 @@ export default class Audience extends Component {
                     {
                         id: 'name',
                         Header: 'Имя',
-                        accessor: row => row[0],
+                        accessor: row => row.name,
                         sortable: true,
                         filterable: true,
                         className: 'align-self-center'
@@ -61,7 +88,7 @@ export default class Audience extends Component {
                     {
                         id: 'status',
                         Header: 'Статус',
-                        accessor: row => row[1],
+                        accessor: row => row.statusStub,
                         sortable: true,
                         filterable: true,
                         className: 'align-self-center'
@@ -69,17 +96,15 @@ export default class Audience extends Component {
                     {
                         id: 'lastActive',
                         Header: 'Последняя активность',
-                        accessor: row => row[2],
+                        accessor: row => row.lastTimeActive,
                         className: 'align-self-center'
                     },
                     {
                         id: 'channel',
                         Header: 'Канал',
                         filterMethod: (filter, row) => {
-                            if (filter.value === '1') return row[filter.id] === 'Канал 1';
-                            if (filter.value === '2') return row[filter.id] === 'Канал 2';
-                            if (filter.value === '3') return row[filter.id] === 'Канал 3';
-                            return true;
+                            if (filter.value === 'all') return true;
+                            return filter.value === row._original.channelUsername;
                         },
                         Filter: ({ filter, onChange }) => (
                             <select
@@ -87,13 +112,17 @@ export default class Audience extends Component {
                                 style={{ width: '100%' }}
                                 value={filter ? filter.value : 'all'}
                             >
-                            <option value='all'>Все</option>
-                                <option value='1'>Канал 1</option>
-                                <option value='2'>Канал 2</option>
-                                <option value='3'>Канал 3</option>
+                                <option value='all'>Все</option>
+                                {
+                                    channels.map(channel => (
+                                        <option value={channel.username} key={channel.channel_id}>
+                                            {channel.first_name}
+                                        </option>
+                                    ))
+                                }
                             </select>
                         ),
-                        Cell: ({ row }) => 'Канал 1',
+                        accessor: row => row.channel,
                         className: 'align-self-center'
                     },
                     {
@@ -102,12 +131,14 @@ export default class Audience extends Component {
                         accessor: () => 'goToChat',
                         sortable: false,
                         filterable: false,
-                        Cell: ({ row }) => (
-                            <div className="col-12 d-flex justify-content-center">
-                                <label className="badge badge-success my-auto" style={{cursor: "pointer"}}>
-                                    <i className="mdi mdi-message-text" />
-                                </label>
-                            </div>
+                        Cell: ({ original }) => (
+                            <Link to={original.dialogUrl}>
+                                <div className="col-12 d-flex justify-content-center">
+                                    <label className="badge badge-success my-auto" style={{cursor: "pointer"}}>
+                                        <i className="mdi mdi-message-text" />
+                                    </label>
+                                </div>
+                            </Link>
                         ),
                         className: 'align-self-center',
                         maxWidth: 100
@@ -116,6 +147,14 @@ export default class Audience extends Component {
                 defaultPageSize={10}
                 className="-highlight"
                 filterable
+                defaultFilterMethod={(filter, row) => {
+                    const id = filter.pivotId || filter.id;
+                    return (
+                        row[id] !== undefined
+                            ? String(row[id].toLowerCase()).includes(filter.value.toLowerCase())
+                            : true
+                    );
+                }}
                 {...reactTableTextProps}
             />
         )
