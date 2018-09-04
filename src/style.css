@@ -12993,6 +12993,21 @@
   .badge:empty {
     display: none;
   }
+
+  .badge-sm {
+    display: inline-block;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+  }
+  
+  .badge-sm:empty {
+    display: none;
+  }
   
   .btn .badge {
     position: relative;
@@ -13003,6 +13018,11 @@
     padding-right: 0.6em;
     padding-left: 0.6em;
     border-radius: 10rem;
+  }
+
+  .badge-sm.badge-pill {
+    padding: 0.1em 0.6em;
+    border-radius: 15rem;
   }
   
   .badge-primary {

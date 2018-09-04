@@ -254,6 +254,7 @@ class MessagesStore {
 
                 if (neededSubscriberIndex > -1) {
                     runInAction(() => {
+                        subscribersStore.subscribers[neededSubscriberIndex].unread = true;
                         subscribersStore.subscribers[neededSubscriberIndex].message_preview = {
                             date: message.date,
                             owner: message.owner,
@@ -283,6 +284,18 @@ class MessagesStore {
     @action('Set the "read" status to the chat')
     setReadStatus = async (ChannelId, SubscriberId) => {
         await this.setReadStatusToAPI(ChannelId, SubscriberId);
+
+        const neededSubscriberIndex = subscribersStore.subscribers.findIndex(
+            subscriber =>
+                subscriber.subscriber_id === SubscriberId
+                && subscriber.channel_id === ChannelId
+        );
+
+        if (neededSubscriberIndex > -1) {
+            runInAction(() => {
+                subscribersStore.subscribers[neededSubscriberIndex].unread = false;
+            });
+        }
     }
 }
 

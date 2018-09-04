@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { observer, inject } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { toImage } from 'emojione';
 
 import { datediff, unixtimeToDate } from '../../utils';
 
 
-@inject('channelsStore')
 @withRouter
 @observer
 export default class DialogsListItem extends Component {
@@ -15,9 +14,9 @@ export default class DialogsListItem extends Component {
 
         const {
             name, last_active, bodyPreview,
+            unreadCount, unread,
             path, channel_type,
-            history, match,
-            // channelsStore
+            history, match, isActive
         } = this.props;
 
         const timeAgo = datediff(unixtimeToDate(last_active), new Date());
@@ -27,7 +26,10 @@ export default class DialogsListItem extends Component {
         return (
             <a
                 className="list-group-item list-group-item-action flex-column align-items-start list-group-item-dialogs"
-                style={{cursor: "pointer"}}
+                style={{
+                    cursor: "pointer",
+                    backgroundColor: isActive ? "#e9ecef" : unread ? "#f8f9fa" : "#fff",
+                }}
                 onClick={() => {
                     history.push(`/admin/dialogs/${match.params.currentFilter}/${path}`)
                 }}
@@ -45,12 +47,19 @@ export default class DialogsListItem extends Component {
                     </h5>
                     <small className="text-muted">{timeAgo}</small>
                 </div>
-                <p
-                    className="mb-1"
-                    dangerouslySetInnerHTML={{
-                        __html: toImage(bodyPreview)
-                    }}
-                />
+                <div className="d-flex justify-content-between">
+                    <p
+                        className={`mb-1 ${unread ? "font-weight-bold" : ""}`}
+                        dangerouslySetInnerHTML={{
+                            __html: toImage(bodyPreview)
+                        }}
+                    />
+                    {
+                        unreadCount && unreadCount > 0
+                        ? <div className="badge-sm badge-success badge-pill my-auto">{unreadCount}</div>
+                        : null
+                    }
+                </div>
             </a>
         );
     }

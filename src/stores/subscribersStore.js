@@ -32,6 +32,7 @@ class SubscribersStore {
                             text
                         }
                         status_id
+                        unread --> a custom parameter accessible only on client
                     }, ...]
                 }
             }
@@ -50,13 +51,12 @@ class SubscribersStore {
 
         commonStore.setLastUpdateTime(subscribersData.last_update_time);
 
-        const { subscribers } = subscribersData;
+        let { subscribers } = subscribersData;
 
         runInAction(() => {
-            this.subscribers = subscribers; 
+            this.subscribers = subscribers;
+            this.inProgress = false;
         });
-
-        this.inProgress = false;
     }
 }
 

@@ -64,11 +64,22 @@ class Dialogs extends Component {
             />
         ));
 
-        const dialogsList = match.params.currentFilter === 'all'
+        let dialogsList = match.params.currentFilter === 'all'
             ? subscribers
             : subscribers.filter(subscriber =>
                 subscriber.channel_type.toLowerCase() === match.params.currentFilter
             );
+
+        dialogsList = dialogsList.map(dialog => {
+            const isActive =
+                location.pathname === `/admin/dialogs/${match.params.currentFilter}/${dialog.path}/`
+                || location.pathname === `/admin/dialogs/${match.params.currentFilter}/${dialog.path}`;
+
+            return {
+                ...dialog,
+                isActive
+            }
+        });
 
         let dynamicBreadcrumbRoute = undefined;
 

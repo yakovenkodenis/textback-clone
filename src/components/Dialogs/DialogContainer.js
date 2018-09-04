@@ -21,38 +21,17 @@ class DialogContainer extends Component {
             image
         } = this.props;
 
-        // let chat = this.props.messagesStore.messages.find(chat => {
-        //     // console.log('INSIDE CHAT FIND:', chat);
-        //     // console.log(chat.channel_id, chat.subscriber_id);
-        //     // console.log(channel_id, subscriber_id);
-
-        //     return chat.channel_id === channel_id && chat.subscriber_id === subscriber_id
-        // })
-        
-        // if (!chat) {
-
-        //     console.log('DialogContainer.js --> our chat is empty')
-        //     chat = {
-        //         messages: []
-        //     };
-        //     // return null;
-        // }
-
-        // console.log('CHAAAT', chat);
-
         return isMobile
                 ? (
                     <div className="col-12 p-0">
-                        <MessageBox 
-                            // messages={chat.messages}
+                        <MessageBox
                             channel_id={channel_id} subscriber_id={subscriber_id}
                         />
                     </div>
                 ) : (
                     <React.Fragment>
                         <div className="col-6">
-                            <MessageBox 
-                                // messages={chat.messages}
+                            <MessageBox
                                 channel_id={channel_id} subscriber_id={subscriber_id}
                             />
                         </div>
