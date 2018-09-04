@@ -39,8 +39,6 @@ export default class RightSidebarItem extends Component {
 
         const timeAgo = datediff(unixtimeToDate(message_preview.date), new Date(), true);
 
-        // console.log('RightSidebar Item props: ', this.props);
-
         return (
             <li
                 className={`list ${ this.state.active ? "active" : ""}`}

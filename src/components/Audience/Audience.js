@@ -4,8 +4,6 @@ import { withRouter, Link } from 'react-router-dom';
 import ReactTable from 'react-table';
 import  Avatar from 'react-avatar';
 
-import { toJS } from 'mobx';
-
 import { reactTableTextProps, unixtimeToDate, formatDate } from '../../utils';
 
 
@@ -13,11 +11,6 @@ import { reactTableTextProps, unixtimeToDate, formatDate } from '../../utils';
 @withRouter
 @observer
 export default class Audience extends Component {
-
-    componentDidMount() {
-        // get subscribers list or use already loaded one.
-        // but maybe better to update the list by calling to the api once again.
-    }
 
     render() {
 
@@ -32,7 +25,6 @@ export default class Audience extends Component {
         // status_id:1
         // subscriber_id:49142570
         // username:"49142570"
-
 
         const channels = this.props.channelsStore.channels;
 

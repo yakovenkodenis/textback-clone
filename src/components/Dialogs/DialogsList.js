@@ -6,7 +6,7 @@ import DialogListItem from './DialogListItem';
 import { truncate } from '../../utils';
 
 
-@inject('messagesStore', 'channelsStore', 'subscribersStore')
+@inject('messagesStore')
 @withRouter
 @observer
 export default class DialogsList extends Component {
@@ -27,23 +27,6 @@ export default class DialogsList extends Component {
         });
     }
 
-    componentDidMount() {
-        // const { messages } = this.props.messagesStore;
-
-        // console.log('GETTING MESSAGES!!!');
-
-        // MESSAGE OBJECT EXAMPLE
-        // channel_id: 9
-        // chat_id: 63113727
-        // date: 1535194570
-        // is_attachment: false
-        // message_id: 2259
-        // owner: false
-        // text : "/start"
-        // update_date: null
-        // user_id: 63113727
-    }
-
     componentWillReceiveProps(nextProps) {
         this.setState({
             dialogs: nextProps.dialogs
@@ -51,12 +34,12 @@ export default class DialogsList extends Component {
     }
 
     filterDialogs = e => {
-        const updatedDialogs = this.props.dialogs.filter(dialog =>
-            dialog.name.toLowerCase().search(
+        const updatedDialogs = this.props.dialogs.filter(subscriber =>
+            subscriber.name.toLowerCase().search(
                 e.target.value.toLowerCase()
             ) !== -1
             ||
-            dialog.messages.map(msg => msg.body).join(" ").toLowerCase().search(
+            subscriber.previewText.toLowerCase().search(
                 e.target.value.toLowerCase()
             ) !== -1
         );
@@ -68,20 +51,14 @@ export default class DialogsList extends Component {
 
     render() {
 
-        const dialogs = this.state.dialogs.map((dialog, index) => {
+        const dialogs = this.state.dialogs
+          .slice()
+          .sort((d1, d2) => d1.message_preview.date < d2.message_preview.date)
+          .map((dialog, index) => {
 
             const { name, path, /*messages,*/ channel_type, message_preview } = dialog;
 
-            // console.log('DialogsList.render(): [inside dialogs.map(...)]: ', dialog);
-
             const bodyPreview =
-                // messages && messages.length > 0
-                // ? this.truncate(
-                //     messages[0].text,
-                //     30, // maybe make this parameter dynamic based on screen size???
-                //     true
-                //   )
-                // : 'Сообщений нет';
                 message_preview && (message_preview.text || message_preview.text === "")
                 ? truncate(message_preview.text, 30, true)
                 : 'Сообщений нет';

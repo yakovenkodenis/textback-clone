@@ -14,14 +14,17 @@ export default class DialogMessage extends Component {
             owner,
             text,
             is_attachment,
-            file,
+            files,
             date
         } = this.props;
 
         const messageDate = formatDate(unixtimeToDate(date));
 
-        const isImage = is_attachment && file && file.type === 'photo';
-        const isSticker = is_attachment && file && file.type ==='sticker';
+        // TODO: 
+        // make this to work with multiple images!!!
+        const isImage = is_attachment && files && files[0].type === 'photo';
+
+        const isSticker = is_attachment && files && files[0].type ==='sticker';
 
         const imageStyles = {
             height: '80%',
@@ -48,14 +51,14 @@ export default class DialogMessage extends Component {
                             isSticker
                             ? (
                                 <Image
-                                    webp={file.url}
+                                    webp={files[0].url}
                                     className="image-tile"
                                     style={stickerStyles}
                                 />
                             ) : isImage ? (
                                 <img
-                                    src={file.url}
-                                    alt={file.file_name}
+                                    src={files[0].url}
+                                    alt={files[0].file_name}
                                     className="image-tile"
                                     style={imageStyles}
                                 />

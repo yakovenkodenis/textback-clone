@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observer, inject } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
 
@@ -7,7 +7,7 @@ import MessageBox from './MessageBox';
 import UserProfile from './UserProfile';
 
 
-@inject('messagesStore', 'subscribersStore')
+// @inject('messagesStore', 'subscribersStore')
 @withRouter
 @observer
 class DialogContainer extends Component {
@@ -21,22 +21,22 @@ class DialogContainer extends Component {
             image
         } = this.props;
 
-        let chat = this.props.messagesStore.messages.find(chat => {
-            // console.log('INSIDE CHAT FIND:', chat);
-            // console.log(chat.channel_id, chat.subscriber_id);
-            // console.log(channel_id, subscriber_id);
+        // let chat = this.props.messagesStore.messages.find(chat => {
+        //     // console.log('INSIDE CHAT FIND:', chat);
+        //     // console.log(chat.channel_id, chat.subscriber_id);
+        //     // console.log(channel_id, subscriber_id);
 
-            return chat.channel_id === channel_id && chat.subscriber_id === subscriber_id
-        })
+        //     return chat.channel_id === channel_id && chat.subscriber_id === subscriber_id
+        // })
         
-        if (!chat) {
+        // if (!chat) {
 
-            console.log('DialogContainer.js --> our chat is empty')
-            chat = {
-                messages: []
-            };
-            // return null;
-        }
+        //     console.log('DialogContainer.js --> our chat is empty')
+        //     chat = {
+        //         messages: []
+        //     };
+        //     // return null;
+        // }
 
         // console.log('CHAAAT', chat);
 
@@ -44,7 +44,7 @@ class DialogContainer extends Component {
                 ? (
                     <div className="col-12 p-0">
                         <MessageBox 
-                            messages={chat.messages}
+                            // messages={chat.messages}
                             channel_id={channel_id} subscriber_id={subscriber_id}
                         />
                     </div>
@@ -52,7 +52,7 @@ class DialogContainer extends Component {
                     <React.Fragment>
                         <div className="col-6">
                             <MessageBox 
-                                messages={chat.messages}
+                                // messages={chat.messages}
                                 channel_id={channel_id} subscriber_id={subscriber_id}
                             />
                         </div>

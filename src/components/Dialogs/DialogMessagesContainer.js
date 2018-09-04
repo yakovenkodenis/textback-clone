@@ -28,6 +28,7 @@ export default class DialogMessagesContainer extends Component {
                 viewportHeight: document.documentElement.clientHeight - 250
             });
         }
+        this.props.messagesStore.getMessages(this.props.channel_id, this.props.subscriber_id);
 
         this.scrollSmoothToBottom();
 
@@ -48,37 +49,16 @@ export default class DialogMessagesContainer extends Component {
 
         if (div) {
             $('#timeline-scroll').animate({
-            scrollTop: div.scrollHeight * 2
+            scrollTop: div.scrollHeight * 999
             }, 500);
         }
      }
 
     render() {
 
-        // let chat = this.props.messagesStore.messages.find(chat => {
-        //     // console.log('INSIDE CHAT FIND:', chat);
-        //     // console.log(chat.channel_id, chat.subscriber_id);
-        //     // console.log(channel_id, subscriber_id);
+        this.scrollSmoothToBottom();
 
-        //     return chat.channel_id === this.props.channel_id
-        //            && chat.subscriber_id === this.props.subscriber_id
-        // });
-        
-        // if (!chat) {
-
-        //     console.log('DialogMessagesContainer.js --> our chat is empty')
-        //     chat = {
-        //         messages: []
-        //     };
-        //     // return null;
-        // }
-
-
-        // const messages = chat.messages;
-
-
-        const chats = this.props.messages;
-        const messages = chats ? [...chats].reverse() : [];
+        const messages = this.props.messagesStore.chat.messages;
 
         const dialogItems = messages.map((message, index) => (
             <DialogMessage {...message} key={index} />
@@ -88,12 +68,16 @@ export default class DialogMessagesContainer extends Component {
             <div
                 id="timeline-scroll"
                 className="timeline"
-                style={{overflowY: "scroll", height: this.state.viewportHeight + "px"}}
+                style={{
+                    overflowY: "scroll", height: this.state.viewportHeight + "px"
+                }}
                 ref={this.dialogMessagesContainerRef}
             >
                 {
                     dialogItems.length > 0
                     ? dialogItems
+                    : this.props.messagesStore.inProgress
+                    ? <p className="mx-auto mt-4 text-muted">Загрузка...</p>
                     : <p className="mx-auto mt-4 text-muted">Пусто...</p>
                 }
             </div>

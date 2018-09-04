@@ -26,7 +26,6 @@ const hashtagPlugin = createHashtagPlugin();
 const plugins = [emojiPlugin, hashtagPlugin, mentionPlugin];
 
 const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
-const text = '';
 
 
 const variables = [
@@ -44,6 +43,9 @@ const variables = [
     }
 ];
 
+const text = '';
+let editorState = createEditorStateWithText(text);
+
 
 export default class AdvancedTextEditor extends Component {
 
@@ -54,7 +56,7 @@ export default class AdvancedTextEditor extends Component {
     }
 
     state = {
-        editorState: createEditorStateWithText(text),
+        editorState,
         suggestions: variables
     };
 

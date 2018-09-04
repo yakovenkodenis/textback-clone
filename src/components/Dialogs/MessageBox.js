@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
+import { toJS } from 'mobx';
 
 import DialogMessagesContainer from './DialogMessagesContainer';
 import AdvancedTextEditor from '../TextEditor/AdvancedTextEditor';
 import FileUpload from '../FileUpload/FileUpload';
 
 
-@inject('messagesStore', 'subscribersStore', 'commonStore')
+@inject('messagesStore')
 @withRouter
 @observer
 export default class MessageBox extends Component {
@@ -24,28 +25,6 @@ export default class MessageBox extends Component {
             dropzoneActive: false,
             progress: 0
         };
-    }
-
-    componentWillUnmount() {
-        console.log('MessageBox.js componentWillUnmount');
-
-        // this.props.commonStore.setPollingInterval(undefined);
-    }
-
-    componentDidMount() {
-        console.log('MessageBox.js componentDidMount');
-
-        // if (!this.props.commonStore.pollingInterval) {
-        //     this.pollingInterval = setInterval(
-        //         () => {
-        //             console.log('pollUpdates');
-        //             this.props.messagesStore.getUpdates(this.props.commonStore.lastUpdateTime)
-        //         },
-        //         5 * 1000
-        //     );
-
-        //     this.props.commonStore.setPollingInterval(this.pollingInterval);
-        // }
     }
 
     fakeProgress = () => {
@@ -82,7 +61,9 @@ export default class MessageBox extends Component {
 
         this.props.messagesStore.sendMessage(
             channel_id, subscriber_id, message
-        );
+        ).then(() => {
+            console.log('after sendMessage [messages array]: ', toJS(this.props.messagesStore.chats));
+        });
     }
 
     onDragEnter = () => {
@@ -130,7 +111,7 @@ export default class MessageBox extends Component {
             <React.Fragment>
 
                 <DialogMessagesContainer
-                    messages={this.props.messages}
+                    // messages={this.props.messages}
                     channel_id={this.props.channel_id}
                     subscriber_id={this.props.subscriber_id}
                 />

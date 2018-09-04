@@ -1,7 +1,6 @@
-import { observable, action } from 'mobx';
+import { observable, action, runInAction } from 'mobx';
 
 import agent from '../agent';
-import messagesStore from './messagesStore';
 import commonStore from './commonStore';
 
 
@@ -10,51 +9,54 @@ class SubscribersStore {
     @observable errors = undefined;
     @observable subscribers = [];
 
-    @action getSubscribersDetailedList() {
-        console.log('(subscribersStore.getSubscribersList()) is initiated');
-        this.inProgress = true;
-        this.errors = undefined;
-
-        return agent.Subscribers.getDetailedList()
-            .then(action(response => {
-                console.log('---- getDetailedList --- step 1 [get subscribers]');
-                // console.log('RESPONSE [Subscribers.getDetailedList()]');
-                // console.log(response);
-
-                if (response.success) {
-                    this.subscribers = response.data.subscribers.reverse();
-
-                    commonStore.setLastUpdateTime(response.data.last_update_time);
-
-                } else {
-                    this.subscribers = [];
-                    console.log('---------------------------')
-                    console.log(
-                        'RESPONSE ERROR [Subscribers.getDetailedList()]: ',
-                        response.errors ? response.errors : ""
-                    );
-                    console.log('RESPONSE itself: ', response);
-                    console.log('---------------------------');
+    async fetchSubscribersDetailedList() {
+        /*
+            Response format:
+            {
+                success: true
+                data: {
+                    last_update_time
+                    subscribers: [{
+                        subscriber_id
+                        username
+                        added_time
+                        channel_id
+                        channel_type
+                        first_name
+                        last_name
+                        image
+                        language_code
+                        message_preview: {
+                            date
+                            owner
+                            text
+                        }
+                        status_id
+                    }, ...]
                 }
+            }
+        */
 
-                return this.subscribers;
-            }))
-            .then(action(subscribers => {
+        const response = await agent.Subscribers.getDetailedList();
 
-                console.log('---- getDetailedList --- step 2 [get messages]');
+        return response.success ? response.data : [];
+    }
 
-                // get messages for each subscriber
-                subscribers.forEach(subscriber => {
-                    messagesStore.getMessages(
-                        subscriber.channel_id,
-                        subscriber.subscriber_id
-                    );
-                });
-            }))
-            .catch(action(err => {
-                console.log('ERROR [Subscribers.getDetailedList()]', err);
-            }))
-            .finally(action(() => { this.inProgress = false; }));
+    @action('Get the detailed list of subscribers (with message previews)')
+    getSubscribersDetailedList = async () => {
+        this.inProgress = true;
+
+        const subscribersData = await this.fetchSubscribersDetailedList();
+
+        commonStore.setLastUpdateTime(subscribersData.last_update_time);
+
+        const { subscribers } = subscribersData;
+
+        runInAction(() => {
+            this.subscribers = subscribers; 
+        });
+
+        this.inProgress = false;
     }
 }
 

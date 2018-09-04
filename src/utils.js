@@ -1,3 +1,4 @@
+
 export const reactTableTextProps = {
     previousText: 'Назад',
     nextText: 'Дальше',
@@ -48,8 +49,7 @@ export const datediff = (fromDate, toDate, shorter=false) => {
             minutes: 0,
             seconds: 0
         };
-  
-    if (years < 0) return diffDate;
+
     diffDate.years = years > 0 ? years : 0;
     diffDate.months = months > 0 ? months : 0;
     diffDate.days = days > 0 ? days : 0;
@@ -110,3 +110,17 @@ export const truncate = (msg, n, useWordBoundary) => {
         : subString
     ) + '...';
 };
+
+export const unique = (array, uniqueProp) => {
+    const unique = {};
+    const newArr = [];
+
+    array.forEach(item => {
+        if (!unique[item[uniqueProp]]) {
+            newArr.push(item);
+            unique[item[uniqueProp]] = item;
+        }
+    });
+
+    return newArr;
+}

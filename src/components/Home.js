@@ -27,9 +27,6 @@ import EditProfile from './Profile/EditProfile';
 import RightSideBar from './Dashboard/RightSidebar/RightSideBar';
 
 
-// import asyncPoll from './HOCs/asyncPoll';
-
-
 const routes = [
     {
         path: '/',
@@ -111,8 +108,6 @@ class Home extends Component {
 
     componentWillUnmount(){
         this.unlistenRoutesChange();
-        clearInterval(this.pollingInterval);
-        this.props.commonStore.setPollingInterval(undefined);
     }
 
     componentDidMount() {
@@ -125,24 +120,7 @@ class Home extends Component {
     }
 
     pollUpdates = () => {
-        // if (!this.props.commonStore.pollingInterval) {
-        //     this.pollingInterval = setInterval(
-        //         () => {
-        //             console.log('pollUpdates');
-        //             this.props.messagesStore.getUpdates(this.props.commonStore.lastUpdateTime)
-        //         },
-        //         5 * 1000
-        //     );
-
-        //     this.props.commonStore.setPollingInterval(this.pollingInterval);
-        // }
-
-
-        this.props.messagesStore.getUpdates(this.props.commonStore.lastUpdateTime)
-            .then(response => {
-                console.log('UPDATE RESPONSE: ', response);
-                this.pollUpdates();
-            });
+        this.props.messagesStore.longPollUpdates(this.props.commonStore.lastUpdateTime);
     }
 
     toggleSidebarActive = () => {
@@ -192,7 +170,7 @@ class Home extends Component {
     render() {
         const { isMobile } = this.props;
 
-        console.log('Home.js render()', this.props.messagesStore.messages);
+        // console.log('Home.js render()', this.props.messagesStore.messages);
 
         return (
             <div onClick={this.hideSidebar}>
@@ -221,13 +199,7 @@ class Home extends Component {
                                     key={index}
                                     path={'/admin' + route.path}
                                     exact={route.exact}
-                                    // component={route.component}
-                                    render={props => React.cloneElement(
-                                        route.component(), {
-                                            ...props,
-                                            pollingInterval: this.pollingInterval
-                                        }
-                                    )}
+                                    component={route.component}
                                 />
                             ))}
                         </div>
@@ -238,22 +210,6 @@ class Home extends Component {
     }
 };
 
-// const onPollInterval = (props, dispatch) => {
-
-//     console.log('onPollInterval props: ', props);
-//     console.log('onPollInterval dispatch: ', dispatch);
-
-//     if (props.messagesStore && props.commonStore) {
-//         // return dispatch(
-//             return props.messagesStore.getUpdates(props.commonStore.lastUpdateTime)
-//         // );
-
-//         // return 'TRYING TO UPDATE';
-//     }
-
-//     return 'NO UPDATES YET...';
-// }
-
 const ResponsiveHome = props => (
     <MediaQuery maxDeviceWidth={767}>
         {isMobile => (
@@ -263,6 +219,4 @@ const ResponsiveHome = props => (
 );
 
 
-export default inject('channelsStore', 'subscribersStore', 'commonStore', 'messagesStore')(
-    /*asyncPoll(5 * 1000, onPollInterval)*/(ResponsiveHome)
-);
+export default ResponsiveHome;

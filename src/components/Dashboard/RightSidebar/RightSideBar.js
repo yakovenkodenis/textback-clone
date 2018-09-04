@@ -13,13 +13,13 @@ export default class RightSideBar extends Component {
 
         const { isOpen, close } = this.props;
 
-        // console.log('RIGHT SIDE BAR render():');
         const { subscribers } = this.props.subscribersStore;
-        // console.log(subscribers);
-
         const chats = subscribers ? subscribers : [];
 
-        const items = [...chats].reverse().slice(0, 10).map((chat, index) => (
+        const items = [...chats]
+          .sort((d1, d2) => d1.message_preview.date < d2.message_preview.date)
+          .slice(0, 10)
+          .map((chat, index) => (
           <RightSidebarItem key={index} {...chat} />
         ));
 
