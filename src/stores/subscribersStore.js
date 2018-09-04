@@ -9,6 +9,8 @@ class SubscribersStore {
     @observable errors = undefined;
     @observable subscribers = [];
 
+    @observable unreadCounter = {};
+
     async fetchSubscribersDetailedList() {
         /*
             Response format:

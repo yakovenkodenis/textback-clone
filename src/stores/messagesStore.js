@@ -94,7 +94,7 @@ class MessagesStore {
 
         const newMessages = await this.fetchMessagesFromAPI(
             ChannelId, SubscriberId, offset, limit, old_message
-        );
+        );        
 
         runInAction(() => {
             this.chat.channel_id = ChannelId;
@@ -253,6 +253,12 @@ class MessagesStore {
                 );
 
                 if (neededSubscriberIndex > -1) {
+                    let neededCounter = subscribersStore.unreadCounter[
+                        `${message.channel_id}-${message.user_id}`
+                    ] || 0;
+
+                    neededCounter += 1;
+
                     runInAction(() => {
                         subscribersStore.subscribers[neededSubscriberIndex].unread = true;
                         subscribersStore.subscribers[neededSubscriberIndex].message_preview = {
@@ -260,6 +266,10 @@ class MessagesStore {
                             owner: message.owner,
                             text: message.text
                         }
+
+                        subscribersStore.unreadCounter[
+                            `${message.channel_id}-${message.user_id}`
+                        ] = neededCounter;
                     });
                 }
             });
@@ -294,6 +304,9 @@ class MessagesStore {
         if (neededSubscriberIndex > -1) {
             runInAction(() => {
                 subscribersStore.subscribers[neededSubscriberIndex].unread = false;
+                subscribersStore.unreadCounter[
+                    `${ChannelId}-${SubscriberId}`
+                ] = 0;
             });
         }
     }

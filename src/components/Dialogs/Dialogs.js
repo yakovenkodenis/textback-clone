@@ -75,9 +75,14 @@ class Dialogs extends Component {
                 location.pathname === `/admin/dialogs/${match.params.currentFilter}/${dialog.path}/`
                 || location.pathname === `/admin/dialogs/${match.params.currentFilter}/${dialog.path}`;
 
+            const unreadCount = this.props.subscribersStore.unreadCounter[
+                `${dialog.channel_id}-${dialog.subscriber_id}`
+            ];
+
             return {
                 ...dialog,
-                isActive
+                isActive,
+                unreadCount
             }
         });
 
