@@ -83,8 +83,6 @@ export const datediff = (fromDate, toDate, shorter=false) => {
         return `${diffDate.hours} часов${shorter ? "" : " назад"}`;
     }
 
-    console.log('We are here!!!', diffDate);
-
     return formatDate(fromDate);
 }
 
