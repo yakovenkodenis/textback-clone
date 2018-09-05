@@ -15,7 +15,9 @@ export default class DialogMessagesContainer extends Component {
         super(props, context);
 
         this.state = {
-            viewportHeight: document.documentElement.clientHeight - 250
+            viewportHeight: document.documentElement.clientHeight - 250,
+            selectedMessages: [],
+            afterDeletion: false
         }
 
         this.dialogMessagesContainerRef = React.createRef();
@@ -25,6 +27,7 @@ export default class DialogMessagesContainer extends Component {
         // TODO think about responsiveness and number of messages in the message box
         window.onresize = e => {
             this.setState({
+                ...this.state,
                 viewportHeight: document.documentElement.clientHeight - 250
             });
         }
@@ -52,35 +55,84 @@ export default class DialogMessagesContainer extends Component {
             scrollTop: div.scrollHeight * 999
             }, 500);
         }
-     }
+    }
+
+    onSelectMessage = (message, shouldAdd) => {
+        let selectedMessages = this.state.selectedMessages;
+
+        if (shouldAdd) {
+            selectedMessages = [...selectedMessages, message];
+        } else {
+            selectedMessages = selectedMessages.filter(msg =>
+                msg.message_id !== message.message_id
+            );
+        }
+
+        this.setState({
+            ...this.state,
+            selectedMessages
+        });
+    }
+
+    onDeleteMessages = () => {
+        this.state.selectedMessages.forEach(message => {
+            this.props.messagesStore.deleteMessage(
+                message.channel_id, message.user_id, message.message_id
+            );
+        });
+
+        this.setState({
+            ...this.state,
+            selectedMessages: [],
+            afterDeletion: true
+        });
+    }
 
     render() {
 
-        this.scrollSmoothToBottom();
+        if (this.state.selectedMessages === 0) {
+            this.scrollSmoothToBottom();
+        }
 
         const messages = this.props.messagesStore.chat.messages;
 
         const dialogItems = messages.map((message, index) => (
-            <DialogMessage {...message} key={index} />
+            <DialogMessage
+                {...message}
+                key={index}
+                afterDeletion={this.state.afterDeletion}
+                onSelect={(shouldAdd) => { this.onSelectMessage(message, shouldAdd) }}
+            />
         ));
 
         return (
-            <div
-                id="timeline-scroll"
-                className="timeline"
-                style={{
-                    overflowY: "scroll", height: this.state.viewportHeight + "px"
-                }}
-                ref={this.dialogMessagesContainerRef}
-            >
+            <React.Fragment>
+                <div
+                    id="timeline-scroll"
+                    className="timeline"
+                    style={{
+                        overflowY: "scroll", height: this.state.viewportHeight + "px"
+                    }}
+                    ref={this.dialogMessagesContainerRef}
+                >
+                    {
+                        dialogItems.length > 0
+                        ? dialogItems
+                        : this.props.messagesStore.inProgress
+                        ? <p className="mx-auto mt-4 text-muted">Загрузка...</p>
+                        : <p className="mx-auto mt-4 text-muted">Пусто...</p>
+                    }
+                </div>
                 {
-                    dialogItems.length > 0
-                    ? dialogItems
-                    : this.props.messagesStore.inProgress
-                    ? <p className="mx-auto mt-4 text-muted">Загрузка...</p>
-                    : <p className="mx-auto mt-4 text-muted">Пусто...</p>
+                    this.state.selectedMessages.length > 0 &&
+                    <button
+                        className="btn btn-md btn-inverse-info btn-fw mb-2"
+                        onClick={this.onDeleteMessages}
+                    >
+                        {`Удалить ${this.state.selectedMessages.length} сообщений`}
+                    </button>
                 }
-            </div>
+            </React.Fragment>
         );
     }
 }

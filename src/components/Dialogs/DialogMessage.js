@@ -29,6 +29,8 @@ export default class DialogMessage extends Component {
     }
 
     onSelect = e => {
+        this.props.onSelect(!this.state.selected);
+
         this.setState({
             ...this.state,
             selected: !this.state.selected
@@ -42,7 +44,8 @@ export default class DialogMessage extends Component {
             text,
             is_attachment,
             files,
-            date
+            date,
+            afterDeletion
         } = this.props;
 
         const messageDate = formatDate(unixtimeToDate(date));
@@ -75,6 +78,10 @@ export default class DialogMessage extends Component {
               transform: 'scale(0.65, 0.65)'
           }
 
+          let timelinePanelStyles = {};
+          if (isSticker) timelinePanelStyles = {...timelinePanelStyles, boxShadow: "none"};
+          if (afterDeletion) timelinePanelStyles = {...timelinePanelStyles, background: "#fff"};
+
         return (
             <div
                 className={
@@ -106,7 +113,7 @@ export default class DialogMessage extends Component {
                 }
                 <div
                     className={`timeline-panel ${this.state.selected ? "background-selected" : ""}`}
-                    style={isSticker ? {boxShadow: "none"} : null}
+                    style={timelinePanelStyles}
                 >
                     <div className="timeline-body">
                         {

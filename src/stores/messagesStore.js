@@ -179,6 +179,60 @@ class MessagesStore {
         });
     }
 
+    async deleteMessageFromAPI(ChannelId, SubscriberId, MessageId) {
+        /*
+            Response format:
+            {
+                success: true
+                data: {}
+            }
+        */
+       const response = await agent.Messages.deleteMessage(ChannelId, SubscriberId, MessageId);
+       return response.success ? response.data : null;
+    }
+
+    @action('Delete the message')
+    deleteMessage = async (ChannelId, SubscriberId, MessageId) => {
+        /*
+            Algorithm:
+                1. Delete the message from the current chat (from @this.chat.messages).
+                2. Update all the message previews (dialogs list and right side bar).
+                3. Perform the request for deletion.
+                4. TODO: in case of deletion errors from server, put the deleted message back.
+        */
+
+        runInAction(() => {
+            this.inProgress = true;
+
+            this.chat.messages.replace(
+                this.chat.messages.filter(message =>
+                    message.message_id !== MessageId
+                )
+            );
+        });
+
+        const neededSubscriberIndex = subscribersStore.subscribers.findIndex(
+            subscriber =>
+                subscriber.subscriber_id === SubscriberId
+                && subscriber.channel_id === ChannelId
+        );
+
+        runInAction.bind(this, () => {            
+            subscribersStore.subscribers[neededSubscriberIndex].message_preview = {
+                date: this.chat.messages[this.chat.messages.length - 1].date,
+                owner: this.chat.messages[this.chat.messages.length - 1].owner,
+                text: this.chat.messages[this.chat.messages.length - 1].text
+            }
+        });
+
+        const response = await this.deleteMessageFromAPI(ChannelId, SubscriberId, MessageId);
+        console.log('DELETION RESPONSE: ', response);
+
+        runInAction(() => {
+            this.inProgress = false;
+        });
+    }
+
 
     async fetchUpdates(lastUpdateTime) {
         /*

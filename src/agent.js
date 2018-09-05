@@ -246,7 +246,12 @@ const Messages = {
 
     editMessage: () => undefined,
 
-    deleteMessage: () => undefined,
+    deleteMessage: (ChannelId, SubscriberId, MessageId) =>
+        requests.post('/', {
+            "Controller": "Message",
+            "Action": "DeleteMessage",
+            ChannelId, SubscriberId, MessageId
+        }),
 
     getUpdates: unixTimestamp =>
         requests.post('/', {
