@@ -8,6 +8,33 @@ import { unixtimeToDate, formatDate, linkify } from '../../utils';
 
 @withRouter
 export default class DialogMessage extends Component {
+
+    state = {
+        hover: false,
+        selected: false
+    }
+
+    hover = e => {
+        this.setState({
+            ...this.state,
+            hover: true
+        });
+    }
+
+    unhover = e => {
+        this.setState({
+            ...this.state,
+            hover: false
+        });
+    }
+
+    onSelect = e => {
+        this.setState({
+            ...this.state,
+            selected: !this.state.selected
+        });
+    }
+
     render() {
 
         const {
@@ -20,11 +47,9 @@ export default class DialogMessage extends Component {
 
         const messageDate = formatDate(unixtimeToDate(date));
 
-        // TODO: 
-        // make this to work with multiple images!!!
-        const isImage = is_attachment && files && files[0].type === 'photo';
+        const isImage = is_attachment && files && files.length > 0 && files[0].type === 'photo';
 
-        const isSticker = is_attachment && files && files[0].type ==='sticker';
+        const isSticker = is_attachment && files && files.length > 0 && files[0].type ==='sticker';
 
         const imageStyles = {
             height: '80%',
@@ -38,12 +63,49 @@ export default class DialogMessage extends Component {
             objectFit: 'obtain'
         };
 
+        const styles = owner
+          ? {
+              paddingLeft: '0px'
+          } : {
+              paddingRight: '0px'
+          };
+
+          const btnStyles = {
+              opacity: this.state.hover ? 0.7 : 0.2,
+              transform: 'scale(0.65, 0.65)'
+          }
+
         return (
-            <div className={
-                `timeline-wrapper ${owner? 'timeline-inverted' : ''} timeline-wrapper-success`
-            }>
+            <div
+                className={
+                    `timeline-wrapper 
+                     ${owner ? 'timeline-inverted' : ''} 
+                     timeline-wrapper-success d-flex
+                    `
+                }
+                style={{
+                    ...styles,
+                    cursor: 'pointer'
+                }}
+                onMouseEnter={this.hover}
+                onMouseLeave={this.unhover}
+                onClick={this.onSelect}
+            >
+                {owner &&
+                    <button
+                        className={
+                            `
+                                btn btn-sm btn-outline-secondary btn-rounded btn-icon my-auto
+                                ${this.state.hover ? "btn-outline-secondary-hover" : ""}
+                            `
+                        }
+                        style={btnStyles}
+                    >
+                        <i className="mdi mdi-check text-info"></i>
+                    </button>
+                }
                 <div
-                    className="timeline-panel"
+                    className={`timeline-panel ${this.state.selected ? "background-selected" : ""}`}
                     style={isSticker ? {boxShadow: "none"} : null}
                 >
                     <div className="timeline-body">
@@ -78,6 +140,19 @@ export default class DialogMessage extends Component {
                         </span>
                     </div>
                 </div>
+                {!owner &&
+                    <button
+                        className={
+                            `
+                                btn btn-sm btn-outline-secondary btn-rounded btn-icon my-auto ml-5
+                                ${this.state.hover ? "btn-outline-secondary-hover" : ""}
+                            `
+                        }
+                        style={btnStyles}
+                    >
+                        <i className="mdi mdi-check text-info"></i>
+                    </button>
+                }
             </div>
         )
     }

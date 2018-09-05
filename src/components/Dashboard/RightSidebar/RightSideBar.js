@@ -19,9 +19,14 @@ export default class RightSideBar extends Component {
         const items = [...chats]
           .sort((d1, d2) => d1.message_preview.date < d2.message_preview.date)
           .slice(0, 10)
-          .map((chat, index) => (
-          <RightSidebarItem key={index} {...chat} />
-        ));
+          .map((chat, index) => {
+            const unreadCount = this.props.subscribersStore.unreadCounter[
+                `${chat.channel_id}-${chat.subscriber_id}`
+            ];
+
+            return (
+              <RightSidebarItem key={index} {...chat} unreadCount={unreadCount} />
+          )});
 
         return (
           <div id="right-sidebar" className={`settings-panel ${isOpen ? "open" : ""}`}>

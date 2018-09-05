@@ -30,7 +30,8 @@ export default class RightSidebarItem extends Component {
             message_preview,
             image, subscriber_id,
             first_name, last_name,
-            channel_type
+            channel_type,
+            unread, unreadCount
         } = this.props;
 
         const name = `${first_name} ${last_name}`;
@@ -56,9 +57,15 @@ export default class RightSidebarItem extends Component {
                 </div>
                 <div className="info">
                     <p>{name}</p>
-                    <p>{truncate(message_preview.text, 35, true)}</p>
+                    <p className={`${unread ? "font-weight-bold" : ""}`}>
+                        {truncate(message_preview.text, 35, true)}
+                    </p>
                 </div>
-                <div className="badge badge-success badge-pill my-auto mx-2">1</div>
+                {
+                    unreadCount && unreadCount > 0
+                    ? <div className="badge badge-success badge-pill my-auto mx-2">{unreadCount}</div>
+                    : null
+                }
                 <small className="text-muted my-auto">{timeAgo}</small>
             </li>
         );

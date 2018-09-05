@@ -19484,6 +19484,16 @@
     background: linear-gradient(to right, #e7ebf0, #868e96);
     color: #ffffff;
   }
+
+  .background-selected {
+    background: #d8d8d8 !important;
+  }
+
+  .timeline-wrapper .btn-outline-secondary:hover,
+  .timeline-wrapper .btn-outline-secondary:hover,
+  .btn-outline-secondary-hover {
+    background: #d8d8d8 !important;
+  }
   
   .btn-inverse-success {
     background-color: rgba(27, 207, 180, 0.2);
@@ -23094,4 +23104,4 @@ progress {
 /* create-react-app hacks */
 .DraftEditor-root {
   min-height: 80px !important;
-} 
+}
