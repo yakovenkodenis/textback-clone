@@ -237,11 +237,11 @@ const Messages = {
             offset, limit, old_message
         }),
 
-    sendMessage: (ChannelId, SubscriberId, Text) =>
+    sendMessage: (ChannelId, SubscriberId, Text, Keyboard=[]) =>
         requests.post('/', {
             "Controller": "Message",
             "Action": "SendMessage",
-            ChannelId, SubscriberId, Text
+            ChannelId, SubscriberId, Text, Keyboard
         }),
 
     editMessage: () => undefined,

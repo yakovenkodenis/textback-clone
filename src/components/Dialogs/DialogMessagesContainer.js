@@ -58,6 +58,9 @@ export default class DialogMessagesContainer extends Component {
             this.props.messagesStore.chat.messages.length === 0
             || previousRoute !== this.props.location.pathname
         ) {
+
+            console.log('WE ARE LOADING NEW MESSAGES!!!')
+
             this.loadMessages()
               .then(() => {
                   nextTick(() => {
@@ -123,9 +126,9 @@ export default class DialogMessagesContainer extends Component {
         const div = this.dialogMessagesContainerRef.current
 
         if (div) {
-            $('#timeline-scroll').animate({
+            $('#timeline-scroll.timeline').animate({
             scrollTop: div.scrollHeight * 999
-            }, 0);
+            }, 1);
         }
     }
 
@@ -170,7 +173,7 @@ export default class DialogMessagesContainer extends Component {
 
         const messages = this.props.messagesStore.chat.messages;
 
-        const dialogItems = messages.map((message, index) => (
+        const dialogItems = messages.map((message) => (
             <DialogMessage
                 {...message}
                 key={message.message_id}

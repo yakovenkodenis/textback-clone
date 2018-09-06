@@ -63,7 +63,11 @@ class MessagesStore {
                     owner
                     text
                     update_date
-                    user_id
+                    user_id,
+                    keyboard?: [{
+                        text
+                        url
+                    }, ...]
                 ]
             }
         */
@@ -109,8 +113,8 @@ class MessagesStore {
     }
 
 
-    async sendMessageToAPI(ChannelId, SubscriberId, Text) {
-        const response = await agent.Messages.sendMessage(ChannelId, SubscriberId, Text);
+    async sendMessageToAPI(ChannelId, SubscriberId, Text, Keyboard) {
+        const response = await agent.Messages.sendMessage(ChannelId, SubscriberId, Text, Keyboard);
 
         /*
             Response format:
@@ -128,7 +132,7 @@ class MessagesStore {
     }
 
     @action('Send message to API')
-    sendMessage = async (ChannelId, SubscriberId, Text) => {
+    sendMessage = async (ChannelId, SubscriberId, Text, Keyboard=[]) => {
         /*
             Algorithm:
                 1. Send a message to API
@@ -152,11 +156,12 @@ class MessagesStore {
                 user_id: SubscriberId,
                 text: Text,
                 is_only_on_client: true,
-                message_id: shortid.generate()
+                message_id: shortid.generate(),
+                keyboard: Keyboard
             });
         });
 
-        const sentMessageData = await this.sendMessageToAPI(ChannelId, SubscriberId, Text);
+        const sentMessageData = await this.sendMessageToAPI(ChannelId, SubscriberId, Text, Keyboard);
 
         const onlyOnClientMessageIndex = this.chat.messages.findIndex(message =>
             message.is_only_on_client

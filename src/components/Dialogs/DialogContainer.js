@@ -25,14 +25,14 @@ class DialogContainer extends Component {
                 ? (
                     <div className="col-12 p-0">
                         <MessageBox
-                            channel_id={channel_id} subscriber_id={subscriber_id}
+                            channel_id={channel_id} subscriber_id={subscriber_id} isMobile={isMobile}
                         />
                     </div>
                 ) : (
                     <React.Fragment>
                         <div className="col-6">
                             <MessageBox
-                                channel_id={channel_id} subscriber_id={subscriber_id}
+                                channel_id={channel_id} subscriber_id={subscriber_id} isMobile={isMobile}
                             />
                         </div>
         
