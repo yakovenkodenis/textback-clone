@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import shortid from 'shortid';
 
 
 export default class DroppedFilesList extends Component {
@@ -7,7 +8,7 @@ export default class DroppedFilesList extends Component {
         const label = file =>
             `${file.name} of size ${file.size} and type ${file.type}`;
 
-        return files.map(file => <li key={file.name}>{label(file)}</li>)
+        return files.map(file => <li key={shortid.generate()}>{label(file)}</li>)
     }
 
     render() {

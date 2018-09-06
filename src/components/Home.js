@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Route, withRouter } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
+import shortid from 'shortid';
 
 import { Default } from './Responsive';
 
@@ -194,9 +195,9 @@ class Home extends Component {
                                 padding: isMobile ? "0.25rem 0.25rem" : "1.25rem 2.25rem"
                             }}
                         >
-                            {routes.map((route, index) => (
+                            {routes.map((route) => (
                                 <Route
-                                    key={index}
+                                    key={shortid.generate()}
                                     path={'/admin' + route.path}
                                     exact={route.exact}
                                     component={route.component}

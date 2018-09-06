@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { ContentState, EditorState } from 'draft-js';
 import $ from 'jquery';
+import shortid from 'shortid';
 
 import AdvancedTextEditor from '../../TextEditor/AdvancedTextEditor';
 import FileUpload from '../../FileUpload/FileUpload';
@@ -405,7 +406,7 @@ export default class MessageComposerForm extends Component {
                                 
                                 {this.state.messages.slice(1).map((msg, index) => (
                                     <button
-                                        key={index}
+                                        key={shortid.generate()}
                                         className={`btn btn-block btn-outline-success btn-icon-text btn-newsletter-composer ${isMobile ? "w-100" : ""}`}
                                         type="button"
                                         onClick={(e) => this.handleAddMessageBtnClick(e, msg.messageId)}

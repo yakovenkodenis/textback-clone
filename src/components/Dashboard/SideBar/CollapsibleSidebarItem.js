@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { Link, withRouter } from 'react-router-dom';
+import shortid from 'shortid';
 
 
 @withRouter
@@ -30,8 +31,8 @@ export default class CollapsibleSidebarItem extends Component {
 
         const isActive = routes.some(el => new RegExp(el.route).test(location.pathname));
 
-        const subItems = routes.map((route, index) => (
-            <li className='nav-item' key={index}>
+        const subItems = routes.map((route) => (
+            <li className='nav-item' key={shortid.generate()}>
                 <Link to={route.route} className='nav-link'>
                     {route.name}
                 </Link>

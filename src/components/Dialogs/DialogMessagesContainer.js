@@ -3,8 +3,22 @@ import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import $ from 'jquery';
 
-import DialogMessage from './DialogMessage';
+// import VisibilitySensor from 'react-visibility-sensor'; for infinite scroll
 
+import DialogMessage from './DialogMessage';
+import { nextTick } from '../../utils';
+
+
+
+const scrollToTopPosition = (topPosition, parent, delay) => {
+    $(parent).animate({
+        scrollTop: topPosition
+    }, delay);
+}
+
+const getTopPosition = el => $(el).offset().top;
+
+let previousRoute = "";
 
 @inject('messagesStore')
 @withRouter
@@ -15,12 +29,20 @@ export default class DialogMessagesContainer extends Component {
         super(props, context);
 
         this.state = {
-            viewportHeight: document.documentElement.clientHeight - 250,
+            viewportHeight: document.documentElement.clientHeight - 400,
             selectedMessages: [],
-            afterDeletion: false
+            afterDeletion: false,
+            loadingPrevious: false,
+            allowedToLoadPrevious: false,
+            offset: 0,   // for pagination
+            limit: 25,    // for pagination
         }
 
         this.dialogMessagesContainerRef = React.createRef();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        previousRoute = this.props.location.pathname;
     }
 
     componentDidMount() {
@@ -31,9 +53,20 @@ export default class DialogMessagesContainer extends Component {
                 viewportHeight: document.documentElement.clientHeight - 250
             });
         }
-        this.props.messagesStore.getMessages(this.props.channel_id, this.props.subscriber_id);
 
-        this.scrollSmoothToBottom();
+        if (
+            this.props.messagesStore.chat.messages.length === 0
+            || previousRoute !== this.props.location.pathname
+        ) {
+            this.loadMessages()
+              .then(() => {
+                  nextTick(() => {
+                      this.scrollSmoothToBottom();
+                  });
+              });
+        } else {
+            this.scrollSmoothToBottom();
+        }
 
         this.props.messagesStore.setReadStatus(
             this.props.channel_id, this.props.subscriber_id
@@ -47,13 +80,52 @@ export default class DialogMessagesContainer extends Component {
         window.onresize = undefined;
     }
 
+    loadMessages = () => {
+        return this.props.messagesStore.getMessages(
+            this.props.channel_id, this.props.subscriber_id /* offset and limit from state */
+        ); /* .then( ... update the state (limits offsets etc) on load   ) */
+    }
+
+    // this function is for usage with VisibilitySensor and infinite scroll (with offsets and limits)
+    loadPrevious = isVisible => {
+        if (!isVisible || !this.state.allowedToLoadPrevious || this.state.loadingPrevious) return;
+
+        const firstMessage = document.querySelectorAll('#timeline-scroll .timeline-wrapper')[0];
+        const oldFirstMessageTopPosition = getTopPosition(firstMessage);
+
+        this.setState({
+            ...this.state,
+            loadingPrevious: true
+        });
+
+        return this.loadMessages()
+            .then(() => {
+                nextTick(() => {
+                    const messages = document.querySelector('#timeline-scroll');
+                    const newFirstMessageTopPosition = getTopPosition(firstMessage);
+                    const delay = 0;
+
+                    if (firstMessage) {
+                        scrollToTopPosition(
+                            newFirstMessageTopPosition - oldFirstMessageTopPosition, messages, delay
+                        );
+                    }
+
+                    this.setState({
+                        ...this.state,
+                        loadingPrevious: false
+                    });
+                });
+            });
+    }
+
     scrollSmoothToBottom = () => {
         const div = this.dialogMessagesContainerRef.current
 
         if (div) {
             $('#timeline-scroll').animate({
             scrollTop: div.scrollHeight * 999
-            }, 500);
+            }, 0);
         }
     }
 
@@ -89,9 +161,11 @@ export default class DialogMessagesContainer extends Component {
     }
 
     render() {
+        // let scrollHeight = this.dialogMessagesContainerRef.current.scrollHeight;
 
         if (this.state.selectedMessages === 0) {
             this.scrollSmoothToBottom();
+            // scrollHeight = this.state.scrollHeight;
         }
 
         const messages = this.props.messagesStore.chat.messages;
@@ -99,7 +173,7 @@ export default class DialogMessagesContainer extends Component {
         const dialogItems = messages.map((message, index) => (
             <DialogMessage
                 {...message}
-                key={index}
+                key={message.message_id}
                 afterDeletion={this.state.afterDeletion}
                 onSelect={(shouldAdd) => { this.onSelectMessage(message, shouldAdd) }}
             />

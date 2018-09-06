@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
+import shortid from 'shortid';
 
 import DialogListItem from './DialogListItem';
 import { truncate } from '../../utils';
@@ -54,7 +55,7 @@ export default class DialogsList extends Component {
         const dialogs = this.state.dialogs   // <-- dialogs is an array of subscribers here
           .slice()
           .sort((d1, d2) => d1.message_preview.date < d2.message_preview.date)
-          .map((dialog, index) => {
+          .map(dialog => {
 
             const {
                 name, path, channel_type,
@@ -73,7 +74,7 @@ export default class DialogsList extends Component {
                 unreadCount, unread, isActive
             }
 
-            return <DialogListItem key={index} {...props} />;
+            return <DialogListItem key={shortid.generate()} {...props} />;
         });
 
         return (

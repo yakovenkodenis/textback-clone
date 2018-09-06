@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { observer, inject } from 'mobx-react';
+import shortid from 'shortid';
 
 import RightSidebarItem from './RightSidebarItem';
 
@@ -19,13 +20,13 @@ export default class RightSideBar extends Component {
         const items = [...chats]
           .sort((d1, d2) => d1.message_preview.date < d2.message_preview.date)
           .slice(0, 10)
-          .map((chat, index) => {
+          .map((chat) => {
             const unreadCount = this.props.subscribersStore.unreadCounter[
                 `${chat.channel_id}-${chat.subscriber_id}`
             ];
 
             return (
-              <RightSidebarItem key={index} {...chat} unreadCount={unreadCount} />
+              <RightSidebarItem key={shortid.generate()} {...chat} unreadCount={unreadCount} />
           )});
 
         return (

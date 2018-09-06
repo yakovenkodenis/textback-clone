@@ -1,4 +1,5 @@
 import { observable, action, runInAction } from 'mobx';
+import shortid from 'shortid';
 
 import agent from '../agent';
 import commonStore from './commonStore';
@@ -99,7 +100,10 @@ class MessagesStore {
         runInAction(() => {
             this.chat.channel_id = ChannelId;
             this.chat.user_id = SubscriberId;
-            this.chat.messages = newMessages.reverse();
+            this.chat.messages = newMessages.reverse().map(message => ({
+                ...message,
+                // message_id: shortid.generate()
+            }));
             this.inProgress = false;
         });
     }
@@ -147,7 +151,8 @@ class MessagesStore {
                 update_date: null,
                 user_id: SubscriberId,
                 text: Text,
-                is_only_on_client: true
+                is_only_on_client: true,
+                message_id: shortid.generate()
             });
         });
 

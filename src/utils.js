@@ -124,3 +124,33 @@ export const unique = (array, uniqueProp) => {
 
     return newArr;
 }
+
+export const nextTick = (function () {
+    const canSetImmediate = typeof window !== 'undefined'
+    && window.setImmediate;
+    const canPost = typeof window !== 'undefined'
+    && window.postMessage && window.addEventListener;
+    if (canSetImmediate) {
+        return function (f) { return window.setImmediate(f) };
+    }
+    if (canPost) {
+        const queue = [];
+        window.addEventListener('message', function (ev) {
+            const source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
+                ev.stopPropagation();
+                if (queue.length > 0) {
+                    const fn = queue.shift();
+                    fn();
+                }
+            }
+        }, true);
+        return function nextTick(fn) {
+            queue.push(fn);
+            window.postMessage('process-tick', '*');
+        };
+    }
+    return function nextTick(fn) {
+        setTimeout(fn, 0);
+    };
+})();

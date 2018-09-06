@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import MediaQuery from 'react-responsive';
 import $ from 'jquery';
+import shortid from 'shortid';
 
 
 class Messages extends Component {
@@ -33,8 +34,8 @@ class Messages extends Component {
 
     render() {
 
-        const rows = this.state.messages.map((message, index) => (
-            <tr key={index}>
+        const rows = this.state.messages.map((message) => (
+            <tr key={shortid.generate()}>
                 <td><u>{message.time}</u></td>
 
                 <td className="d-flex justify-content-start">

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter, Link } from 'react-router-dom';
+import shortid from 'shortid';
 
 import { routes } from './Settings';
 
@@ -18,8 +19,8 @@ export default class RootSettings extends Component {
                             <br/><br/>
 
                             <ul className="gradient-bullet-list mt-4">
-                                {routes.slice(1).map((route, index) => (
-                                    <li key={index}>
+                                {routes.slice(1).map((route) => (
+                                    <li key={shortid.generate()}>
                                         <Link to={`/admin/settings${route.path}`}>
                                             {route.name}
                                         </Link>

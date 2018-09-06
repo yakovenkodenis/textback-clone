@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
-import { toJS } from 'mobx';
+// import { toJS } from 'mobx';
+import $ from 'jquery';
 
 import DialogMessagesContainer from './DialogMessagesContainer';
 import AdvancedTextEditor from '../TextEditor/AdvancedTextEditor';
@@ -36,6 +37,12 @@ export default class MessageBox extends Component {
         }, 700);
     }
 
+    scrollSmoothToBottom = () => {
+        $('#timeline-scroll').animate({
+        scrollTop: 9999
+        }, 0);
+    }
+
     onFileInputChange = e => {
         this.setState({
             ...this.state,
@@ -62,7 +69,8 @@ export default class MessageBox extends Component {
         this.props.messagesStore.sendMessage(
             channel_id, subscriber_id, message
         ).then(() => {
-            console.log('after sendMessage [messages array]: ', toJS(this.props.messagesStore.chats));
+            // console.log('after sendMessage [messages array]: ', toJS(this.props.messagesStore.chats));
+            this.scrollSmoothToBottom();
         });
     }
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter, Route } from 'react-router-dom';
+import shortid from 'shortid';
 
 import AccountSettings from './AccountSettings';
 import ChannelsSettings from './ChannelsSettings';
@@ -51,9 +52,9 @@ export default class Settings extends Component {
         // const neededPage = location.pathname.split('/settings/')[1];
 
         
-        const Routes = routes.map((route, index) => (
+        const Routes = routes.map((route) => (
             <Route
-                key={index}
+                key={shortid.generate()}
                 path={'/admin/settings' + route.path}
                 exact={route.exact}
                 component={route.component}

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter, Route, Link } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
+import shortid from 'shortid';
 
 import DialogsList from './DialogsList';
 import DialogContainer from './DialogContainer';
@@ -52,7 +53,7 @@ class Dialogs extends Component {
 
         const dialogRoutes = subscribers.map((subscriber, index) => (
             <Route 
-                key={index}
+                key={shortid.generate()}
                 path={`/admin/dialogs/${match.params.currentFilter}/${subscriber.path}`}
                 exact={true}
                 component={
