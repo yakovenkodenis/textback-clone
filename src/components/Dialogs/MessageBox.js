@@ -367,11 +367,17 @@ export default class MessageBox extends Component {
                     </div>
 
                     <button 
-                        className={`btn btn-light btn-icon-text ${isMobile ? "mb-1 w-100" : "mx-1"}`}
+                        className={`btn btn-light btn-icon-text ${isMobile ? "mb-1 w-100" : ""}`}
                         type="button"
                         onClick={this.openModal}
                     >
                         <i className="mdi mdi-plus btn-icon-prepend mx-auto" />
+                        {
+                            this.state.buttons.length > 0 &&
+                            <div className="badge badge-outline-info badge-pill ml-1">
+                                {this.state.buttons.length}
+                            </div>
+                        }
                     </button>
                 </div>
             

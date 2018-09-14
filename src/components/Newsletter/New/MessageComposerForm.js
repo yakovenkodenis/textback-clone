@@ -516,6 +516,11 @@ export default class MessageComposerForm extends Component {
                         >
                             <i className="mdi mdi-plus btn-icon-prepend" />
                             Добавить кнопки
+                            { this.getCurrentlyActiveMessage().message.buttons.length > 0 &&
+                                <div className="badge badge-outline-info badge-pill ml-1">
+                                    {this.getCurrentlyActiveMessage().message.buttons.length}
+                                </div>
+                            }
                         </button>
 
                         <button 
