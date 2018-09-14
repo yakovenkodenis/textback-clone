@@ -23,7 +23,7 @@ let previousRoute = "";
 @inject('messagesStore')
 @withRouter
 @observer
-export default class DialogMessagesContainer extends Component {
+class DialogMessagesContainer extends Component {
 
     constructor(props, context) {
         super(props, context);
@@ -200,6 +200,7 @@ export default class DialogMessagesContainer extends Component {
                         ? <p className="mx-auto mt-4 text-muted">Загрузка...</p>
                         : <p className="mx-auto mt-4 text-muted">Пусто...</p>
                     }
+                    <div ref={this.props.forwardedRef} />
                 </div>
                 {
                     this.state.selectedMessages.length > 0 &&
@@ -214,3 +215,7 @@ export default class DialogMessagesContainer extends Component {
         );
     }
 }
+
+export default React.forwardRef(
+    (props, ref) => <DialogMessagesContainer {...props} forwardedRef={ref}/>
+);

@@ -3,8 +3,8 @@ import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import shortid from 'shortid';
 import { Tooltip } from 'react-lightweight-tooltip';
+import HotKey from 'react-shortcut';
 // import { toJS } from 'mobx';
-import $ from 'jquery';
 
 import agent from '../../agent';
 import DialogMessagesContainer from './DialogMessagesContainer';
@@ -23,6 +23,7 @@ export default class MessageBox extends Component {
 
         this.textEditorRef = React.createRef();
         this.dropzoneRef = React.createRef();
+        this.dialogMessagesContainerRef = React.createRef();
 
         this.state = {
             files: [],
@@ -35,19 +36,10 @@ export default class MessageBox extends Component {
         };
     }
 
-    fakeProgress = () => {
-        setTimeout(() => {
-            this.setState({
-                ...this.state,
-                progress: this.state.progress + 1
-            })
-        }, 700);
-    }
-
     scrollSmoothToBottom = () => {
-        $('#timeline-scroll').animate({
-        scrollTop: 9999
-        }, 0);
+        if (this.dialogMessagesContainerRef.current) {
+            this.dialogMessagesContainerRef.current.scrollIntoView({ behavior: 'smooth'});
+        }
     }
 
     onFileInputChange = e => {
@@ -87,13 +79,20 @@ export default class MessageBox extends Component {
         this.props.messagesStore.sendMessage(
             channel_id, subscriber_id, message, keyboard, photosObj
         ).then(() => {
-            this.scrollSmoothToBottom();
             this.setState({
                 ...this.state,
                 buttons: [],
                 files: []
+            }, () => {
+                this.scrollSmoothToBottom();
             });
         });
+    }
+
+    handleSendMessageShortCut = (keys, e) => {
+        if (this.state.message || this.state.files.length > 0 || this.state.buttons.length > 0) {
+            this.sendMessage(new Event('click'));
+        }
     }
 
     closeModal = () => {
@@ -224,7 +223,11 @@ export default class MessageBox extends Component {
 
         return (
             <React.Fragment>
-
+            <HotKey
+                keys={['shift', 'enter']}
+                simultaneous
+                onKeysCoincide={this.handleSendMessageShortCut}
+            />
             <AddButtonsModal
                 isOpen={this.state.isModalOpen}
                 close={this.closeModal}
@@ -284,6 +287,7 @@ export default class MessageBox extends Component {
             <DialogMessagesContainer
                 channel_id={this.props.channel_id}
                 subscriber_id={this.props.subscriber_id}
+                ref={this.dialogMessagesContainerRef}
             />
             <br/>
 

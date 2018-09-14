@@ -136,7 +136,9 @@ class MessagesStore {
     }
 
     @action('Send message to API')
-    sendMessage = async (ChannelId, SubscriberId, Text, Keyboard=[], photosObj={}) => {
+    sendMessage = async (
+        ChannelId, SubscriberId, Text, Keyboard=[], photosObj={}
+    ) => {
         /*
             Algorithm:
                 1. Send a message to API

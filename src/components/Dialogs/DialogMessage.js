@@ -56,7 +56,7 @@ export default class DialogMessage extends Component {
         const isImage = is_attachment && files && files.length > 0 && files[0].type === 'photo';
         const isSticker = is_attachment && files && files.length > 0 && files[0].type ==='sticker';
         const isPNGsticker = isSticker && files[0].url && files[0].url.endsWith(".png");
-        const hasKeyboard = keyboard && keyboard.constructor === Array;
+        const hasKeyboard = keyboard && keyboard.constructor === Array && keyboard.length > 0;
 
         const imageStyles = {
             height: '80%',
