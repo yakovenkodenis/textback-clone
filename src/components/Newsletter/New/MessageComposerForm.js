@@ -4,10 +4,12 @@ import { withRouter } from 'react-router-dom';
 import { ContentState, EditorState } from 'draft-js';
 import $ from 'jquery';
 import shortid from 'shortid';
+import { Tooltip } from 'react-lightweight-tooltip';
 
 import AdvancedTextEditor from '../../TextEditor/AdvancedTextEditor';
 import FileUpload from '../../FileUpload/FileUpload';
 import AddButtonsModal from './AddButtonsModal';
+import agent from '../../../agent';
 
 
 
@@ -153,7 +155,7 @@ export default class MessageComposerForm extends Component {
             message.messageId === activeMessageId
         ) || messages[0];
         
-        console.log('found activeMessage: ', activeMessage.message);
+        console.log('found activeMessage: ', activeMessage);
 
         return activeMessage;
     }
@@ -250,15 +252,76 @@ export default class MessageComposerForm extends Component {
         });
     }
 
-    onFilesDrop = (acceptedFiles, rejectedFiles) => {
+    onFilesDrop = (acceptedFiles) => {
         console.log('onDrop');
         console.log(acceptedFiles);
 
-        // set attachments to activeMessageId in the state and make dropzone inactive
+        const { messages, activeMessageId } = this.state;
+        const neededMessageIndex = messages.findIndex(message =>
+            message.messageId === activeMessageId
+        ) || 0;
+
+        const neededMessageAttachments = [
+            ...messages[neededMessageIndex].messageAttachments,
+            ...acceptedFiles
+        ];
+
+        messages[neededMessageIndex].messageAttachments = neededMessageAttachments;
 
         this.setState({
             ...this.state,
+            messages,
             dropzoneActive: false
+        });
+
+        const promises = neededMessageAttachments.map((file, index) => {
+
+            const trackProgress = e => {
+                neededMessageAttachments[index].progress = e.percent;
+                messages[neededMessageIndex].messageAttachments = neededMessageAttachments;
+    
+                this.setState({
+                    ...this.state,
+                    messages
+                });
+            }
+
+            console.log('The file that I send: ', file);
+            const formData = new FormData();
+            formData.append('photo', file);
+
+            return agent.Files.upload(formData, trackProgress);
+        });
+
+
+        Promise.all(promises).then((ids) => {
+            const attachments = neededMessageAttachments.map((file, index) => {
+                file.id = ids[index].data.file_id;
+                file.progress = 0;
+                return file;
+            });
+
+            messages[neededMessageIndex].messageAttachments = attachments;
+
+            this.setState({
+                ...this.state,
+                messages
+            });
+        });
+    }
+
+    deleteAttachedFile = file => {
+        const { messages, activeMessageId } = this.state;
+        const neededMessageIndex = messages.findIndex(message =>
+            message.messageId === activeMessageId
+        ) || 0;
+
+        messages[neededMessageIndex].messageAttachments =
+            messages[neededMessageIndex].messageAttachments.filter(f => f.id !== file.id);
+
+        this.setState({
+            ...this.state,
+            messages
         });
     }
 
@@ -290,9 +353,6 @@ export default class MessageComposerForm extends Component {
         const { isMobile } = this.props;
 
         const activeButtons = this.getCurrentlyActiveMessage().message.buttons || [];
-
-
-
 
 
         return (
@@ -471,6 +531,64 @@ export default class MessageComposerForm extends Component {
                         </button>
 
                     </div>
+
+                    <ul className="list-arrow">
+                    {
+                        this.getCurrentlyActiveMessage().messageAttachments.map((file, index) => (
+                            file && file.progress !== 100 && file.progress !== 0
+                            ? (
+                            <div className="progress progress-md" key={index}>
+                                <div
+                                    className="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                                    role="progressbar"
+                                    aria-valuenow={file.progress} aria-valuemin="0" aria-valuemax="100"
+                                    style={{width: `${file.progress}%`}}
+                                />
+                            </div>
+                            ) : (
+                                <Tooltip
+                                    key={index}
+                                    content={
+                                        <img src={file.preview} alt={file.name} style={{
+                                            maxHeight: '15rem'
+                                        }}/>
+                                    }
+                                    styles={{
+                                        tooltip: {
+                                            background: 'transparent'
+                                        },
+                                        wrapper: {
+                                            display: 'block'
+                                        },
+                                        content: {
+                                            background: 'transparent'
+                                        },
+                                        arrow: {
+                                            borderTop: '5px solid transparent'
+                                        }
+                                    }}
+                                >
+                                    <li
+                                        id={`hover-image-${file.id}`}
+                                        className="text-success" key={index}
+                                    >
+                                        {file.name}
+                                        <span
+                                            aria-hidden="true"
+                                            className="float-right" 
+                                            style={{
+                                                cursor: 'pointer'
+                                            }}
+                                            onClick={() => { this.deleteAttachedFile(file) }}
+                                        >
+                                            ×
+                                        </span>
+                                    </li>
+                                </Tooltip>
+                            )
+                        ))
+                    }
+                    </ul>
 
                 </div>
 

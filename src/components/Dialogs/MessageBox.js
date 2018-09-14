@@ -386,6 +386,7 @@ export default class MessageBox extends Component {
                     </div>
                     ) : (
                         <Tooltip
+                            key={index}
                             content={
                                 <img src={file.preview} alt={file.name} style={{
                                     maxHeight: '15rem'
