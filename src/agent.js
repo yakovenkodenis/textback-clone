@@ -67,8 +67,17 @@ const requests = {
             .post(`${PROXY}${API_ROOT}${url}`, body)
             .use(tokenPlugin)
             .end(handleErrors)
-            .then(responseBody)
+            .then(responseBody),
 
+    uploadFile: (url, file, onProgress) =>
+        superagent
+            .post(`${PROXY}${API_ROOT}${url}`)
+            .send(file)
+            .on('progress', e => {
+                onProgress(e);
+            })
+            .end(handleErrors)
+            .then(responseBody)
 };
 
 const Auth = {
@@ -237,11 +246,11 @@ const Messages = {
             offset, limit, old_message
         }),
 
-    sendMessage: (ChannelId, SubscriberId, Text, Keyboard=[]) =>
+    sendMessage: (ChannelId, SubscriberId, Text, Keyboard=[], Photo=[]) =>
         requests.post('/', {
             "Controller": "Message",
             "Action": "SendMessage",
-            ChannelId, SubscriberId, Text, Keyboard
+            ChannelId, SubscriberId, Text, Keyboard, Photo
         }),
 
     editMessage: () => undefined,
@@ -268,6 +277,15 @@ const Messages = {
         })
 }
 
+const Files = {
+    upload: (file, callback) =>
+        requests.uploadFile(
+            `/upload?token=${commonStore.token}`,
+            file,
+            callback
+        )
+}
+
 const Profile = {
 
 };
@@ -279,5 +297,6 @@ export default {
     Profile,
     Subscribers,
     Channels,
-    Messages
+    Messages,
+    Files
 };

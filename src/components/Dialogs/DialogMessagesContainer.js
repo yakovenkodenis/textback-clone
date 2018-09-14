@@ -71,12 +71,14 @@ export default class DialogMessagesContainer extends Component {
             this.scrollSmoothToBottom();
         }
 
-        this.props.messagesStore.setReadStatus(
-            this.props.channel_id, this.props.subscriber_id
-        ).then(() => {
-            // call the state function passed from DialogsList???
-            // make a reaction call ??
-        });
+        setTimeout(() => {
+            this.props.messagesStore.setReadStatus(
+                this.props.channel_id, this.props.subscriber_id
+            ).then(() => {
+                // call the state function passed from DialogsList???
+                // make a reaction call ??
+            });
+        }, 1000);
     }
 
     componentWillUnmount() {
@@ -168,15 +170,14 @@ export default class DialogMessagesContainer extends Component {
 
         if (this.state.selectedMessages === 0) {
             this.scrollSmoothToBottom();
-            // scrollHeight = this.state.scrollHeight;
         }
 
         const messages = this.props.messagesStore.chat.messages;
 
-        const dialogItems = messages.map((message) => (
+        const dialogItems = messages.map((message, index) => (
             <DialogMessage
                 {...message}
-                key={message.message_id}
+                key={message.message_id + "" + index}
                 afterDeletion={this.state.afterDeletion}
                 onSelect={(shouldAdd) => { this.onSelectMessage(message, shouldAdd) }}
             />

@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import shortid from 'shortid';
+import { Tooltip } from 'react-lightweight-tooltip';
 // import { toJS } from 'mobx';
 import $ from 'jquery';
 
+import agent from '../../agent';
 import DialogMessagesContainer from './DialogMessagesContainer';
 import AdvancedTextEditor from '../TextEditor/AdvancedTextEditor';
 import FileUpload from '../FileUpload/FileUpload';
@@ -28,7 +30,8 @@ export default class MessageBox extends Component {
             dropzoneActive: false,
             progress: 0,
             isModalOpen: false,
-            buttons: []
+            buttons: [],
+            sendButtonActive: true
         };
     }
 
@@ -75,14 +78,20 @@ export default class MessageBox extends Component {
             url: button.url
         }));
 
+        const photos = this.state.files.filter(file => file.id);
+        const photosObj = {
+            Photo: photos.map(file => parseInt(file.id, 10)),
+            previews: photos.map(file => file.preview)
+        }
+
         this.props.messagesStore.sendMessage(
-            channel_id, subscriber_id, message, keyboard
+            channel_id, subscriber_id, message, keyboard, photosObj
         ).then(() => {
-            // console.log('after sendMessage [messages array]: ', toJS(this.props.messagesStore.chats));
             this.scrollSmoothToBottom();
             this.setState({
                 ...this.state,
-                buttons: []
+                buttons: [],
+                files: []
             });
         });
     }
@@ -156,12 +165,50 @@ export default class MessageBox extends Component {
 
         this.setState({
             ...this.state,
-            dropzoneActive: false
+            dropzoneActive: false,
+            files: [...this.state.files, ...acceptedFiles],
+            sendButtonActive: false
         });
 
-        for(let i = 0; i < 100; ++i) {
-            this.fakeProgress();
-        }
+        const promises = this.state.files.map((file, index) => {
+
+            const trackProgress = e => {
+                const files = this.state.files;
+                files[index].progress = e.percent;
+                this.setState({
+                    ...this.state,
+                    files
+                });
+            }
+
+            console.log('The file that I send: ', file);
+            const formData = new FormData();
+            formData.append('photo', file);
+
+            return agent.Files.upload(formData, trackProgress);
+        });
+
+        Promise.all(promises).then((ids) => {
+            const files = this.state.files.map((file, index) => {
+                file.id = ids[index].data.file_id;
+                file.progress = 0;
+                return file;
+            });
+            this.setState({
+                ...this.state,
+                files,
+                sendButtonActive: true
+            });
+        });
+    }
+
+    deleteAttachedFile = file => {
+        const files = this.state.files.filter(f => f.id !== file.id);
+
+        this.setState({
+            ...this.state,
+            files
+        });
     }
 
     render() {
@@ -286,6 +333,7 @@ export default class MessageBox extends Component {
                         className="btn btn-gradient-primary mr-2"
                         type="submit"
                         onClick={this.sendMessage}
+                        disabled={!this.state.sendButtonActive}
                     >
                         Отправить
                     </button>
@@ -315,22 +363,70 @@ export default class MessageBox extends Component {
                     </div>
 
                     <button 
-                        className={`btn btn-light btn-icon-text ${isMobile ? "mb-1 w-100" : "mr-1"}`}
+                        className={`btn btn-light btn-icon-text ${isMobile ? "mb-1 w-100" : "mx-1"}`}
                         type="button"
                         onClick={this.openModal}
                     >
                         <i className="mdi mdi-plus btn-icon-prepend mx-auto" />
                     </button>
                 </div>
-
-            <div className="progress progress-md">
-                <div
-                    className="progress-bar bg-success progress-bar-striped progress-bar-animated"
-                    role="progressbar"
-                    aria-valuenow={this.state.progress} aria-valuemin="0" aria-valuemax="100"
-                    style={{width: `${this.state.progress}%`}}
-                />
-            </div>
+            
+            <ul className="list-arrow">
+            {
+                this.state.files.map((file, index) => (
+                    file && file.progress !== 100 && file.progress !== 0
+                    ? (
+                    <div className="progress progress-md" key={index}>
+                        <div
+                            className="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                            role="progressbar"
+                            aria-valuenow={file.progress} aria-valuemin="0" aria-valuemax="100"
+                            style={{width: `${file.progress}%`}}
+                        />
+                    </div>
+                    ) : (
+                        <Tooltip
+                            content={
+                                <img src={file.preview} alt={file.name} style={{
+                                    maxHeight: '15rem'
+                                }}/>
+                            }
+                            styles={{
+                                tooltip: {
+                                    background: 'transparent'
+                                },
+                                wrapper: {
+                                    display: 'block'
+                                },
+                                content: {
+                                    background: 'transparent'
+                                },
+                                arrow: {
+                                    borderTop: '5px solid transparent'
+                                }
+                            }}
+                        >
+                            <li
+                                id={`hover-image-${file.id}`}
+                                className="text-success" key={index}
+                            >
+                                {file.name}
+                                <span
+                                    aria-hidden="true"
+                                    className="float-right" 
+                                    style={{
+                                        cursor: 'pointer'
+                                    }}
+                                    onClick={() => { this.deleteAttachedFile(file) }}
+                                >
+                                    ×
+                                </span>
+                            </li>
+                        </Tooltip>
+                    )
+                ))
+            }
+            </ul>
             </React.Fragment>
         );
     }

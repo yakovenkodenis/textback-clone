@@ -29,12 +29,14 @@ export default class DialogMessage extends Component {
     }
 
     onSelect = e => {
-        this.props.onSelect(!this.state.selected);
+        if (e.target.tagName && e.target.tagName.toLowerCase() !== 'a') {
+            this.props.onSelect(!this.state.selected);
 
-        this.setState({
-            ...this.state,
-            selected: !this.state.selected
-        });
+            this.setState({
+                ...this.state,
+                selected: !this.state.selected
+            });
+        }
     }
 
     render() {
@@ -45,14 +47,16 @@ export default class DialogMessage extends Component {
             is_attachment,
             files,
             date,
-            afterDeletion
+            afterDeletion,
+            keyboard
         } = this.props;
 
         const messageDate = formatDate(unixtimeToDate(date));
 
         const isImage = is_attachment && files && files.length > 0 && files[0].type === 'photo';
-
         const isSticker = is_attachment && files && files.length > 0 && files[0].type ==='sticker';
+        const isPNGsticker = isSticker && files[0].url && files[0].url.endsWith(".png");
+        const hasKeyboard = keyboard && keyboard.constructor === Array;
 
         const imageStyles = {
             height: '80%',
@@ -73,14 +77,69 @@ export default class DialogMessage extends Component {
               paddingRight: '0px'
           };
 
-          const btnStyles = {
-              opacity: this.state.hover ? 0.7 : 0.2,
-              transform: 'scale(0.65, 0.65)'
-          }
+        const btnStyles = {
+            opacity: this.state.hover ? 0.7 : 0.2,
+            transform: 'scale(0.65, 0.65)'
+        }
 
-          let timelinePanelStyles = {};
-          if (isSticker) timelinePanelStyles = {...timelinePanelStyles, boxShadow: "none"};
-          if (afterDeletion) timelinePanelStyles = {...timelinePanelStyles, background: "#fff"};
+        let timelinePanelStyles = {};
+        if (isSticker) timelinePanelStyles = {...timelinePanelStyles, boxShadow: "none"};
+        if (afterDeletion) timelinePanelStyles = {...timelinePanelStyles, background: "#fff"};
+
+
+        let messageContent = (
+            isPNGsticker
+            ? (
+                <img
+                    src={files[0].url}
+                    alt={files[0].file_name + " png-sticker"}
+                    className="image-tile"
+                    style={stickerStyles}
+                />
+            ) : isSticker
+            ? (
+                <Image
+                    webp={files[0].url}
+                    className="image-tile"
+                    style={stickerStyles}
+                />
+            ) : isImage ? ( 
+                files.map((file, index) =>
+                    <img
+                        src={file.url}
+                        alt={file.file_name}
+                        className="image-tile my-1"
+                        style={imageStyles}
+                        key={index}
+                    />
+                )
+            ) : (
+                <React.Fragment>
+                <p
+                    className="convert-emoji"
+                    dangerouslySetInnerHTML={{
+                        __html: toImage(linkify(text))
+                    }}
+                />
+                { hasKeyboard
+                    && (
+                        <div className="d-flex justify-content-center my-2">
+                            {keyboard.map((button, index) => (
+                                <a
+                                href={button.url}
+                                className="btn btn-inverse-primary btn-fw mx-2"
+                                target="_blank"
+                                key={index}
+                            >
+                                {button.text}
+                            </a>
+                            ))}
+                        </div>
+                    )
+                }
+                </React.Fragment>
+            )
+        )
 
         return (
             <div
@@ -116,30 +175,7 @@ export default class DialogMessage extends Component {
                     style={timelinePanelStyles}
                 >
                     <div className="timeline-body">
-                        {
-                            isSticker
-                            ? (
-                                <Image
-                                    webp={files[0].url}
-                                    className="image-tile"
-                                    style={stickerStyles}
-                                />
-                            ) : isImage ? (
-                                <img
-                                    src={files[0].url}
-                                    alt={files[0].file_name}
-                                    className="image-tile"
-                                    style={imageStyles}
-                                />
-                            ) : (
-                                <p
-                                    className="convert-emoji"
-                                    dangerouslySetInnerHTML={{
-                                        __html: toImage(linkify(text))
-                                    }}
-                                />
-                            )
-                        }
+                        {messageContent}
                     </div>
                     <div className="timeline-footer d-flex align-items-right">
                         <span className="ml-auto text-muted">

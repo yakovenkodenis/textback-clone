@@ -6,6 +6,8 @@ import commonStore from './commonStore';
 import subscribersStore from './subscribersStore';
 
 
+// const salt = shortid.generate();
+
 class MessagesStore {
     @observable inProgress = false;
     @observable errors = undefined;
@@ -106,15 +108,17 @@ class MessagesStore {
             this.chat.user_id = SubscriberId;
             this.chat.messages = newMessages.reverse().map(message => ({
                 ...message,
-                // message_id: shortid.generate()
+                // message_id: message.message_id + salt
             }));
             this.inProgress = false;
         });
     }
 
 
-    async sendMessageToAPI(ChannelId, SubscriberId, Text, Keyboard) {
-        const response = await agent.Messages.sendMessage(ChannelId, SubscriberId, Text, Keyboard);
+    async sendMessageToAPI(ChannelId, SubscriberId, Text, Keyboard, Photo) {
+        const response = await agent.Messages.sendMessage(
+            ChannelId, SubscriberId, Text, Keyboard, Photo
+        );
 
         /*
             Response format:
@@ -132,7 +136,7 @@ class MessagesStore {
     }
 
     @action('Send message to API')
-    sendMessage = async (ChannelId, SubscriberId, Text, Keyboard=[]) => {
+    sendMessage = async (ChannelId, SubscriberId, Text, Keyboard=[], photosObj={}) => {
         /*
             Algorithm:
                 1. Send a message to API
@@ -143,10 +147,12 @@ class MessagesStore {
                    Check and sync with the server will be done later while long polling.
         */
 
+        const { Photo, previews } = photosObj;
+
         runInAction(() => {
             this.inProgress = true;
 
-            this.chat.messages.push({
+            let messageObj = {
                 channel_id: ChannelId,
                 date: new Date().getTime() / 1000,
                 is_attachment: false,
@@ -158,10 +164,27 @@ class MessagesStore {
                 is_only_on_client: true,
                 message_id: shortid.generate(),
                 keyboard: Keyboard
-            });
+            };
+
+            if (previews) {
+                messageObj = {
+                    ...messageObj,
+                    is_attachment: true,
+                    files: previews.map(preview => ({
+                        type: "photo",
+                        url: preview
+                    }))
+                }
+            }
+
+            console.log('messagesStore.js [messageObj]: ', messageObj);
+
+            this.chat.messages.push(messageObj);
         });
 
-        const sentMessageData = await this.sendMessageToAPI(ChannelId, SubscriberId, Text, Keyboard);
+        const sentMessageData = await this.sendMessageToAPI(
+            ChannelId, SubscriberId, Text, Keyboard, Photo
+        );
 
         const onlyOnClientMessageIndex = this.chat.messages.findIndex(message =>
             message.is_only_on_client
