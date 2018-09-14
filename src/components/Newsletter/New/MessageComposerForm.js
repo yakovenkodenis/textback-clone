@@ -488,7 +488,7 @@ export default class MessageComposerForm extends Component {
                     }
                     
                     <button 
-                        className="btn btn-light btn-icon-text"
+                        className="btn btn-light btn-icon-text mt-2"
                         type="button"
                         onClick={this.onAddMessage}
                     >
