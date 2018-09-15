@@ -78,7 +78,7 @@ class DialogMessagesContainer extends Component {
                 // call the state function passed from DialogsList???
                 // make a reaction call ??
             });
-        }, 1000);
+        }, 2000);
     }
 
     componentWillUnmount() {
@@ -174,10 +174,10 @@ class DialogMessagesContainer extends Component {
 
         const messages = this.props.messagesStore.chat.messages;
 
-        const dialogItems = messages.map((message, index) => (
+        const dialogItems = messages.map((message) => (
             <DialogMessage
                 {...message}
-                key={message.message_id + "" + index}
+                key={message.message_id + "" + (new Date()).getTime()}
                 afterDeletion={this.state.afterDeletion}
                 onSelect={(shouldAdd) => { this.onSelectMessage(message, shouldAdd) }}
             />

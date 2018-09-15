@@ -5,6 +5,7 @@ import ReactTable from 'react-table';
 import  Avatar from 'react-avatar';
 
 import { reactTableTextProps, unixtimeToDate, formatDate } from '../../utils';
+import Filters from './Filters';
 
 
 @inject('subscribersStore', 'channelsStore')
@@ -160,6 +161,8 @@ export default class Audience extends Component {
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
                             <div className="card-body">
+                                <Filters />
+                                <br />
                                 {table}
                             </div>
                         </div>

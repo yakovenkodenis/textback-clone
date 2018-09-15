@@ -34,7 +34,7 @@ class SubscribersStore {
                             text
                         }
                         status_id
-                        unread --> a custom parameter accessible only on client
+                        unread_count
                     }, ...]
                 }
             }

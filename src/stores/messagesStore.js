@@ -1,4 +1,4 @@
-import { observable, action, runInAction } from 'mobx';
+import { observable, action, runInAction, toJS } from 'mobx';
 import shortid from 'shortid';
 
 import agent from '../agent';
@@ -101,7 +101,11 @@ class MessagesStore {
 
         const newMessages = await this.fetchMessagesFromAPI(
             ChannelId, SubscriberId, offset, limit, old_message
-        );        
+        );
+        
+        const neededSubscriberIndex = subscribersStore.subscribers.findIndex(subscriber =>
+            subscriber.channel_id === ChannelId && subscriber.subscriber_id === SubscriberId
+        );
 
         runInAction(() => {
             this.chat.channel_id = ChannelId;
@@ -110,6 +114,12 @@ class MessagesStore {
                 ...message,
                 // message_id: message.message_id + salt
             }));
+
+            if (neededSubscriberIndex > -1) {
+                subscribersStore.unreadCounter[`${ChannelId}-${SubscriberId}`] =
+                    subscribersStore.subscribers[neededSubscriberIndex].unread_count;
+            }
+
             this.inProgress = false;
         });
     }
@@ -200,7 +210,14 @@ class MessagesStore {
                     const onlyOnClientMessage = this.chat.messages[onlyOnClientMessageIndex];
                     onlyOnClientMessage.message_id = sentMessageData.message_id;
                     onlyOnClientMessage.text = sentMessageData.text;
+                    onlyOnClientMessage.is_only_on_client = false;
                     this.chat.messages[onlyOnClientMessageIndex] = onlyOnClientMessage;
+
+                    console.log(
+                        'messagesStore.js [onlyOnClientMessage]: ',
+                        toJS(this.chat.messages[onlyOnClientMessageIndex])
+                    );
+
                 } else {
                     this.chat.messages.replace(
                         this.chat.messages.filter(message => message.is_only_on_client)
@@ -254,9 +271,9 @@ class MessagesStore {
 
         runInAction.bind(this, () => {            
             subscribersStore.subscribers[neededSubscriberIndex].message_preview = {
-                date: this.chat.messages[this.chat.messages.length - 1].date,
-                owner: this.chat.messages[this.chat.messages.length - 1].owner,
-                text: this.chat.messages[this.chat.messages.length - 1].text
+                date: this.chat.messages[0].date, // or use this.chat.messages.length ???
+                owner: this.chat.messages[0].owner,
+                text: this.chat.messages[0].text
             }
         });
 
