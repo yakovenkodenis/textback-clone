@@ -6,11 +6,11 @@ import CollapsibleSidebarItem from './CollapsibleSidebarItem';
 import SidebarItem from './SidebarItem';
 
 
-@inject('userStore')
+@inject('userStore', 'subscribersStore')
 @withRouter
 @observer
 export default class NavBar extends Component {
-
+  
     render() {
 
         const { isActive } = this.props;
@@ -21,7 +21,9 @@ export default class NavBar extends Component {
           ? window.localStorage.getItem('user').split("@")[0]
           : "";
 
-        // console.log('USER EMAIL: ', email);
+        const allUnread = Object.values(this.props.subscribersStore.unreadCounter)
+          .reduce((sum, count) => sum + count, 0);
+  
 
         return (
             <nav className={`sidebar sidebar-offcanvas ${isActive ? "active" : ""}`} id="sidebar">
@@ -46,7 +48,7 @@ export default class NavBar extends Component {
               </li>
 
               <CollapsibleSidebarItem
-                itemName='Диалоги'
+                itemName={`Диалоги${allUnread > 0 ? `  (${allUnread})` : ""}`}
                 iconClassName='mdi-forum'
                 routes={[
                   {
