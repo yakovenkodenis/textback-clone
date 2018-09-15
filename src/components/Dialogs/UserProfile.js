@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import Avatar from 'react-avatar';
+import TagsContainer from './TagsContainer';
 
 
 @withRouter
@@ -9,29 +10,31 @@ import Avatar from 'react-avatar';
 export default class UserProfile extends Component {
 
     render() {
+
+        const {
+            subscriber_id,
+            subscriberId,
+            channelId,
+            name,
+            image
+        } = this.props;
+
         return (
             <React.Fragment>
                 <div className="border-bottom text-center pb-4">
                         <Avatar
-                            vkontakteId={this.props.subscriber_id}
-                            name={this.props.name}
+                            vkontakteId={subscriber_id}
+                            name={name}
                             size="100"
                             round={true}
                             className="mb-2"
-                            src={this.props.image}    
+                            src={image}    
                         />
-                    <h4>{this.props.name}</h4>
+                    <h4>{name}</h4>
                 </div>
-                <div className="border-bottom py-4">
-                    <p>Теги пользователя</p>
-                    <div>
-                        <label className="badge badge-outline-dark badge-margin-3">Chalk</label>
-                        <label className="badge badge-outline-dark badge-margin-3">Lettering</label>
-                        <label className="badge badge-outline-dark badge-margin-3">Web Design</label>
-                        <label className="badge badge-outline-dark badge-margin-3">Graphic Design</label>
-                        <label className="badge badge-outline-dark badge-margin-3">Data Analysis</label>
-                    </div>
-                </div>
+
+                <TagsContainer subscriberId={subscriberId} channelId={channelId}/>
+
                 <div className="py-4">
                     <p className="clearfix">
                         <span className="float-left">Статус</span>

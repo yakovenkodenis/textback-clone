@@ -39,6 +39,7 @@ class DialogContainer extends Component {
                         <div className="col-3">
                             <UserProfile name={name} image={image}
                                 subscriber_id={channel_type === "Vk" ? subscriber_id+"" : null}
+                                channelId={channel_id} subscriberId={subscriber_id}
                             />
                         </div>
                     </React.Fragment>
