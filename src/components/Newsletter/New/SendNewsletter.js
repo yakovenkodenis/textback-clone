@@ -22,6 +22,7 @@ export default class SendNewsletter extends Component {
                 <button
                     className={`btn btn-light btn-icon-text ${isMobile ? "w-100 mt-2" : "ml-1"}`}
                     type="button"
+                    onClick={this.props.saveNewsletter}
                 >
                     Сохранить
                 </button>

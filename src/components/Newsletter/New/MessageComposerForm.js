@@ -4,8 +4,8 @@ import { withRouter } from 'react-router-dom';
 import { ContentState, EditorState } from 'draft-js';
 import $ from 'jquery';
 import shortid from 'shortid';
-import Tooltip from '../../UiHelpers/Tooltip';
 
+import Tooltip from '../../UiHelpers/Tooltip';
 import AdvancedTextEditor from '../../TextEditor/AdvancedTextEditor';
 import FileUpload from '../../FileUpload/FileUpload';
 import AddButtonsModal from './AddButtonsModal';
@@ -45,6 +45,10 @@ export default class MessageComposerForm extends Component {
 
     componentDidMount() {
         $('[data-toggle="tooltip"]').tooltip(); // initiate tooltips
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        this.props.updateNewsletter(this.state.messages);
     }
 
     setTextEditorCurrentValue = value => {
@@ -127,9 +131,9 @@ export default class MessageComposerForm extends Component {
         );
         const index = maybeIndex ? maybeIndex : 0;
 
-        console.log('FOUND INDEX ', index);
-        console.log('ACTIVE INDEX ', this.state.activeMessageId);
-        console.log('FOR ARRAY: ', newMessages);
+        // console.log('FOUND INDEX ', index);
+        // console.log('ACTIVE INDEX ', this.state.activeMessageId);
+        // console.log('FOR ARRAY: ', newMessages);
 
         if (index === -1) {
             this.setMessageActive(this.state.messages[0].messageId);
@@ -145,17 +149,17 @@ export default class MessageComposerForm extends Component {
     }
 
     getCurrentlyActiveMessage = () => {
-        console.log('getCurrentlyActiveMessage');
+        // console.log('getCurrentlyActiveMessage');
         const { messages, activeMessageId } = this.state;
 
-        console.log('Messages (state): ', messages);
-        console.log('activeMessageId (state): ', activeMessageId);
+        // console.log('Messages (state): ', messages);
+        // console.log('activeMessageId (state): ', activeMessageId);
 
         const activeMessage = messages.find(message =>
             message.messageId === activeMessageId
         ) || messages[0];
         
-        console.log('found activeMessage: ', activeMessage);
+        // console.log('found activeMessage: ', activeMessage);
 
         return activeMessage;
     }

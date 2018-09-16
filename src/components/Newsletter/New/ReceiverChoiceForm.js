@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
+import Select from 'react-select';
+import makeAnimated from 'react-select/lib/animated';
 
 
 @inject('channelsStore', 'subscribersStore')
@@ -8,10 +10,52 @@ import { withRouter } from 'react-router-dom';
 @observer
 export default class ReceiverChoiceForm extends Component {
 
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = {
+            receivers: "subscribers",
+            channels: 'ALL'
+        }
+    }
+
+    componentDidMount() {
+        this.props.updateReceiver({
+            ...this.state,
+            channels: ['ALL']
+        });
+    }
+
+    handleSelectChannels = channels => {
+        const allChannels = channels.some(channel => channel.value === 'ALL');
+
+        this.setState({
+            ...this.state,
+            channels: allChannels || !channels.length ? 'ALL' : channels.map(channel => channel.value)
+        }, () => {
+            this.props.updateReceiver(this.state);
+        });
+    }
+
+    handleSelectReceivers = e => {
+        this.setState({
+            ...this.state,
+            receivers: e.target.value
+        }, () => {
+            this.props.updateReceiver(this.state);
+        });
+    }
+
     render() {
 
-        const { channels } = this.props.channelsStore;
+        let { channels } = this.props.channelsStore;
         const { isMobile } = this.props;
+
+        channels = channels && channels.constructor === Array
+         ? channels.map(channel => ({
+            value: channel.channel_id.toString(), label: channel.first_name
+         }))
+         : [];
 
         return (
             <form className={`${isMobile ? "" : "d-flex justify-content-left"}`}>
@@ -19,7 +63,10 @@ export default class ReceiverChoiceForm extends Component {
                     <label htmlFor="selectReceiver">
                         Получатели
                     </label>
-                    <select id="selectReceiver" className="form-control">
+                    <select
+                        id="selectReceiver" className="form-control"
+                        onChange={this.handleSelectReceivers} value={this.state.receivers}
+                    >
                         <option value="subscribers">Подписчики</option>
                         <option value="fromChat">Обратились в чат</option>
                         <option value="everyone">Все</option>
@@ -39,20 +86,16 @@ export default class ReceiverChoiceForm extends Component {
                     <label htmlFor="allChannels">
                         Каналы
                     </label>
-                    <select id="allChannels" className="form-control">
-                        <option value="all">Все каналы</option>
-                        {
-                            channels && channels.constructor === Array
-                            ? channels.map(channel => (
-                                <option
-                                    key={channel.channel_id}
-                                    value={JSON.stringify(channel)}
-                                >
-                                    {channel.first_name}
-                                </option>
-                            )) : null
-                        }
-                    </select>
+                    <Select
+                        closeMenuOnSelect={false}
+                        components={makeAnimated()}
+                        isMulti
+                        defaultValue={[{value: 'ALL', label: 'Все каналы'}]}
+                        options={[{value: 'ALL', label: 'Все каналы'}, ...channels]}
+                        placeholder="Каналы"
+                        onChange={this.handleSelectChannels}
+                        noOptionsMessage={() => "Нет каналов"}
+                    />
                 </div>
             </form>
         );

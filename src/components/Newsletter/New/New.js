@@ -14,6 +14,38 @@ import SendNewsletter from './SendNewsletter';
 @observer
 class New extends Component {
 
+    state = {
+        receiver: {},
+        newsletter: []
+    }
+
+    updateNewsletter = newsletter => {
+        this.setState({
+            ...this.state,
+            newsletter
+        }, () => {
+            console.log('NEWSLETTER OBJECT: ', this.state);
+        });
+    }
+
+    updateReceiver = receiver => {
+        this.setState({
+            ...this.state,
+            receiver
+        }, () => {
+            console.log('NEWSLETTER OBJECT: ', this.state);
+        });
+    }
+
+    sendNewsletter = () => {
+        // save as a draft and send
+    }
+
+    saveNewsletter = () => {
+        // save as a draft
+        console.log(this.state);
+    }
+
     render() {
 
         const { isMobile } = this.props;
@@ -24,13 +56,23 @@ class New extends Component {
 
                 <div className="row">
                     <CardWrapper title="Выберите получателя">
-                        <ReceiverChoiceForm isMobile={isMobile} />
+                        <ReceiverChoiceForm
+                            isMobile={isMobile}
+                            updateReceiver={this.updateReceiver}
+                        />
                     </CardWrapper>
 
-                    <MessageComposerForm isMobile={isMobile} />
+                    <MessageComposerForm
+                        isMobile={isMobile}
+                        updateNewsletter={this.updateNewsletter}
+                    />
 
                     <CardWrapper title="Отправьте рассылку">
-                        <SendNewsletter isMobile={isMobile} />
+                        <SendNewsletter
+                            isMobile={isMobile}
+                            saveNewsletter={this.saveNewsletter}
+                            sendNewsletter={this.sendNewsletter}
+                        />
                     </CardWrapper>
                 </div>
             </React.Fragment>
