@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import shortid from 'shortid';
-import { Tooltip } from 'react-lightweight-tooltip';
+import Tooltip from '../UiHelpers/Tooltip';
 import HotKey from 'react-shortcut';
 // import { toJS } from 'mobx';
 

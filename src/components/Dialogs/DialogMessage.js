@@ -124,11 +124,11 @@ export default Watch(class DialogMessage extends Component {
                 />
                 { hasKeyboard
                     && (
-                        <div className="d-flex justify-content-center my-2">
+                        <div className="d-flex justify-content-center my-2 flex-wrap">
                             {keyboard.map((button, index) => (
                                 <a
                                 href={button.url}
-                                className="btn btn-inverse-primary btn-fw mx-2"
+                                className="btn btn-inverse-primary btn-fw m-2"
                                 target="_blank"
                                 key={index}
                             >

@@ -265,6 +265,8 @@ class DialogMessagesContainer extends Component {
     }
 }
 
-export default ScrollContainer(React.forwardRef(
+DialogMessagesContainer = ScrollContainer(DialogMessagesContainer);
+
+export default React.forwardRef(
     (props, ref) => <DialogMessagesContainer {...props} forwardedRef={ref}/>
-));
+);

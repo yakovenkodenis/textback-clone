@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { ContentState, EditorState } from 'draft-js';
 import $ from 'jquery';
 import shortid from 'shortid';
-import { Tooltip } from 'react-lightweight-tooltip';
+import Tooltip from '../../UiHelpers/Tooltip';
 
 import AdvancedTextEditor from '../../TextEditor/AdvancedTextEditor';
 import FileUpload from '../../FileUpload/FileUpload';
