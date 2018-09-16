@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AsyncSelect from 'react-select/lib/Async';
 import makeAnimated from 'react-select/lib/animated';
+import diff from 'object-diff';
 
 import agent from '../../agent';
 
@@ -8,9 +9,23 @@ import agent from '../../agent';
 export default class Filters extends Component {
 
     state = {
-        filters: [],
-        hasTags: [],
-        hasNoTags: []
+        AndTags: false,
+        InTags: [],
+        NotInTags: []
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const difference = diff(prevState, this.state);
+
+        if (Object.keys(difference).length) {
+            let { InTags, NotInTags, AndTags } = this.state;
+
+            InTags = InTags.map(tag => parseInt(tag.value, 10));
+            NotInTags = NotInTags.map(tag => parseInt(tag.value, 10));
+
+            console.log('INITIATE LOADING WITH DATA: ', this.state);
+            this.props.getSubscribersList({ InTags, NotInTags, AndTags });
+        }
     }
 
     loadTags = () => {
@@ -26,20 +41,26 @@ export default class Filters extends Component {
         });
     }
 
-    handleSelectChangeForHasTags = (tags) => {
-        
+    handleSelectChangeForInTags = (tags) => {
         this.setState({
             ...this.state,
-            hasTags: tags
+            InTags: tags
         });
     }
 
-    handleSelectChangeForHasNoTags = (tags) => {
+    handleSelectChangeForNotInTags = (tags) => {
         
         this.setState({
             ...this.state,
-            hasNoTags: tags
+            NotInTags: tags
         });
+    }
+
+    handleAndTagsChange = e => {
+        this.setState({
+            ...this.state,
+            AndTags: e.target.value === 'ALL'
+        })
     }
 
     render() {
@@ -62,7 +83,7 @@ export default class Filters extends Component {
                             placeholder="Присвоен тег"
                             loadingMessage={() => "Загрузка..."}
                             loadOptions={this.loadTags}
-                            onChange={this.handleSelectChangeForHasTags}
+                            onChange={this.handleSelectChangeForInTags}
                             noOptionsMessage={() => "Нет тегов"}
                         />
                         <br/>
@@ -76,7 +97,7 @@ export default class Filters extends Component {
                             placeholder="Не присвоен тег"
                             loadingMessage={() => "Загрузка..."}
                             loadOptions={this.loadTags}
-                            onChange={this.handleSelectChangeForHasNoTags}
+                            onChange={this.handleSelectChangeForNotInTags}
                             noOptionsMessage={() => "Нет тегов"}
                         />
                     </div>
@@ -85,7 +106,10 @@ export default class Filters extends Component {
                             <label htmlFor="logical-and" className="form-check-label">
                                 Соответствие одновременно всем критериям
                                 <input
+                                    defaultChecked
+                                    onChange={this.handleAndTagsChange}
                                     type="radio"
+                                    value="ALL"
                                     name="logical-filter"
                                     id="logical-and"
                                     className="form-check-input"/>
@@ -97,9 +121,11 @@ export default class Filters extends Component {
                             <label htmlFor="logical-or" className="form-check-label">
                                 Соответствие хотя бы одному из критериев
                                 <input
+                                    onChange={this.handleAndTagsChange}
                                     type="radio"
                                     name="logical-filter"
                                     id="logical-or"
+                                    value="OR"
                                     className="form-check-input"/>
                                 <i className="input-helper" />
                             </label>

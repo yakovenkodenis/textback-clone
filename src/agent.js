@@ -144,10 +144,11 @@ const Subscribers = {
             StatusId, SubscriberId, ChannelId
         }),
 
-    getList: () =>
+    getList: (filter = { InTags: null, NotInTags: null, AndTags: null }) =>
         requests.post('/', {
             "Controller": "Subscriber",
-            "Action": "GetList"
+            "Action": "GetList",
+            ...filter
         }),
 
     getDetailedList: () =>

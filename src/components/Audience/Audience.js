@@ -5,6 +5,7 @@ import ReactTable from 'react-table';
 import  Avatar from 'react-avatar';
 
 import { reactTableTextProps, unixtimeToDate, formatDate } from '../../utils';
+import agent from '../../agent';
 import Filters from './Filters';
 
 
@@ -13,23 +14,23 @@ import Filters from './Filters';
 @observer
 export default class Audience extends Component {
 
-    render() {
+    constructor(props, context) {
+        super(props, context);
 
-        // added_time:1535836275
-        // channel_id:47
-        // channel_type:"Vk"
-        // first_name:"Алексей"
-        // image:"https://pp.userapi.com/c837124/v837124570/d15a/MmMnfoFj_hI.jpg?ava=1"
-        // language_code:null
-        // last_name:"Крючков"
-        // message_preview:{date: 1535836273, owner: false, text: "test"}
-        // status_id:1
-        // subscriber_id:49142570
-        // username:"49142570"
+        this.state = {
+            data: [],
+            loading: false
+        }
+    }
 
+    componentDidMount() {
+        this.getSubscribersList();
+    }
+
+    formatData = subscribers => {
         const channels = this.props.channelsStore.channels;
 
-        const data = this.props.subscribersStore.subscribers.map(subscriber => {
+        return subscribers.map(subscriber => {
             const name = `${subscriber.first_name} ${subscriber.last_name}`;
             const avatar = subscriber.image;
             const lastTimeActive = subscriber.message_preview
@@ -52,10 +53,45 @@ export default class Audience extends Component {
                 name, avatar, lastTimeActive, channel, statusStub, channelUsername, dialogUrl
             }
         });
+    }
+
+    getSubscribersList = (filter = { InTags: null, NotInTags: null, AndTags: null }) => {
+        this.setState({
+            ...this.state,
+            loading: true
+        });
+        agent.Subscribers.getList(Object.values(filter).some(Boolean) ? filter : {})
+         .then(response => {
+            console.log('RESPONSE: ', response);
+            if (response.success) {
+                console.log('FILTERED RESPONSE: ', response.data)
+                this.setState({
+                    data: this.formatData(response.data),
+                    loading: false
+                });
+            }
+        });
+    }
+
+    render() {
+
+        // added_time:1535836275
+        // channel_id:47
+        // channel_type:"Vk"
+        // first_name:"Алексей"
+        // image:"https://pp.userapi.com/c837124/v837124570/d15a/MmMnfoFj_hI.jpg?ava=1"
+        // language_code:null
+        // last_name:"Крючков"
+        // message_preview:{date: 1535836273, owner: false, text: "test"}
+        // status_id:1
+        // subscriber_id:49142570
+        // username:"49142570"
+
+        const channels = this.props.channelsStore.channels;
 
         const table = (
             <ReactTable
-                data={data}
+                data={this.state.data}
                 columns={[
                     {
                         id: 'avatar',
@@ -140,6 +176,8 @@ export default class Audience extends Component {
                 defaultPageSize={10}
                 className="-highlight"
                 filterable
+                loading={this.state.loading}
+                loadingText="Загрузка..."
                 defaultFilterMethod={(filter, row) => {
                     const id = filter.pivotId || filter.id;
                     return (
@@ -161,7 +199,7 @@ export default class Audience extends Component {
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
                             <div className="card-body">
-                                <Filters />
+                                <Filters getSubscribersList={this.getSubscribersList} />
                                 <br />
                                 {table}
                             </div>
