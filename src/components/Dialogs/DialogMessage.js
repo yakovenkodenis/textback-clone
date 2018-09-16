@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { toImage } from 'emojione';
 import Image from 'react-image-webp';
 import { withRouter } from 'react-router-dom';
+import { Watch } from 'scrollmonitor-react';
 
 import { unixtimeToDate, formatDate, linkify } from '../../utils';
 
 
 @withRouter
-export default class DialogMessage extends Component {
+export default Watch(class DialogMessage extends Component {
 
     state = {
         hover: false,
@@ -143,6 +144,7 @@ export default class DialogMessage extends Component {
 
         return (
             <div
+                data-id={this.props.id}
                 className={
                     `timeline-wrapper 
                      ${owner ? 'timeline-inverted' : ''} 
@@ -199,4 +201,4 @@ export default class DialogMessage extends Component {
             </div>
         )
     }
-}
+});

@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import $ from 'jquery';
-
-// import VisibilitySensor from 'react-visibility-sensor'; for infinite scroll
+import { ScrollContainer } from 'scrollmonitor-react';
 
 import DialogMessage from './DialogMessage';
 import { nextTick } from '../../utils';
@@ -33,9 +32,9 @@ class DialogMessagesContainer extends Component {
             selectedMessages: [],
             afterDeletion: false,
             loadingPrevious: false,
-            allowedToLoadPrevious: false,
+            allowedToLoadPrevious: true,
             offset: 0,   // for pagination
-            limit: 25,    // for pagination
+            limit: 50,    // for pagination
         }
 
         this.dialogMessagesContainerRef = React.createRef();
@@ -59,7 +58,7 @@ class DialogMessagesContainer extends Component {
             || previousRoute !== this.props.location.pathname
         ) {
 
-            console.log('WE ARE LOADING NEW MESSAGES!!!')
+            console.log('DialogMessagesContainer.js [componentDidMount]: WE ARE LOADING NEW MESSAGES!!!')
 
             this.loadMessages()
               .then(() => {
@@ -85,9 +84,56 @@ class DialogMessagesContainer extends Component {
         window.onresize = undefined;
     }
 
+    elementVisibleInViewport = watcher => {
+        const { watchItem, isInViewport } = watcher;
+
+        if (
+            isInViewport && watchItem.attributes['data-id'].value < 5
+        ) {
+
+            if (this.state.allowedToLoadPrevious && !this.state.loadingPrevious) {
+                console.group('Infinite Scroll');
+                console.log('Coming to the end, should try to load more stuff!!!');
+                console.log('Current offset is: ', this.state.offset);
+                console.log('Setting next offset to: ', this.state.offset + this.state.limit);
+                console.groupEnd();
+
+                this.setState({
+                    ...this.state,
+                    loadingPrevious: true,
+                    allowedToLoadPrevious: false,
+                    offset: this.state.offset + this.state.limit
+                });
+            }
+
+            // if loading is not currently performed and loading is allowed,
+            // we should fire a loadMessages (or better loadPrevious) function with
+            // newOffset = this.state.offset + this.state.limit 
+            // and then this.setState({ offset: newOffset, isLoading: false }).
+            // When loading begins, allowedLoadingPrevious should become false and
+            // get true only after the loading finishes.
+            // New messages should be appended to the beggining of the existing
+            // messagesStore.messages array. data-id attributes for new messages
+            // should be updated properly so that this function works as it should.
+            // Maybe it is better to use message.id as a data-id attribute instead of map index?
+            // However, we don't know the size of the ids across all the chats and we won't be
+            // able to track them properly. So, we better use indexes of map, but we'll
+            // need to check how the array gets re-rendered every time it is appended with new data.
+
+
+            // Sometime after loading (when promise gets resolved):
+            // this.setState({
+            //     ...this.state,
+            //     loadingPrevious: false,
+            //     allowedToLoadPrevious: true
+            // });
+        }
+    }
+
     loadMessages = () => {
         return this.props.messagesStore.getMessages(
-            this.props.channel_id, this.props.subscriber_id /* offset and limit from state */
+            this.props.channel_id, this.props.subscriber_id,
+            this.state.offset, this.state.limit /* offset and limit from state */
         ); /* .then( ... update the state (limits offsets etc) on load   ) */
     }
 
@@ -174,12 +220,15 @@ class DialogMessagesContainer extends Component {
 
         const messages = this.props.messagesStore.chat.messages;
 
-        const dialogItems = messages.map((message) => (
+        const dialogItems = messages.map((message, index) => (
             <DialogMessage
                 {...message}
-                key={message.message_id + "" + (new Date()).getTime()}
+                id={index}
+                key={message.message_id + "-" + index}
                 afterDeletion={this.state.afterDeletion}
                 onSelect={(shouldAdd) => { this.onSelectMessage(message, shouldAdd) }}
+                stateChange={this.elementVisibleInViewport}
+                scrollContainer={this.props.scrollContainer}
             />
         ));
 
@@ -216,6 +265,6 @@ class DialogMessagesContainer extends Component {
     }
 }
 
-export default React.forwardRef(
+export default ScrollContainer(React.forwardRef(
     (props, ref) => <DialogMessagesContainer {...props} forwardedRef={ref}/>
-);
+));

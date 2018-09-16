@@ -13,7 +13,26 @@ import agent from '../../agent';
 export default class TagsContainer extends Component {
 
     state = {
-        tags: []
+        tags: [],
+        isFirstTime: true
+    }
+
+    componentDidMount() {
+        agent.Subscribers.getInfo(this.props.channelId, this.props.subscriberId)
+        .then(response => {
+            if (response.success && response.data.tags && this.state.isFirstTime) {
+                this.setState({
+                    ...this.state,
+                    isFirstTime: false,
+                    tags: [
+                        ...response.data.tags.map(
+                            tag => ({ value: tag.tag_id.toString(), label: tag.description })
+                        ),
+                        ...this.state.tags
+                    ]
+                });
+            }
+        });
     }
 
     loadTags = () => {
@@ -58,9 +77,11 @@ export default class TagsContainer extends Component {
     }
 
     removeTag = (oldTags, newTags) => {
-        const diff = [...new Set(
-            [...new Set(oldTags)].filter(x => !new Set(newTags).has(x))
-        )][0];
+        // const diff = [...new Set(
+        //     [...new Set(oldTags)].filter(x => !new Set(newTags).has(x))
+        // )][0];
+
+        const diff = [...new Set(oldTags)].filter(x => !new Set(newTags).has(x))[0];
 
         const tagId = diff.value;
 
@@ -94,6 +115,7 @@ export default class TagsContainer extends Component {
     }
 
     render() {
+
         return (
             <div className="border-bottom py-4">
                 <p>Теги пользователя</p>
@@ -102,6 +124,7 @@ export default class TagsContainer extends Component {
                         isMulti
                         cacheOptions
                         defaultOptions
+                        value={this.state.tags}
                         loadOptions={this.loadTags}
                         onChange={this.handleChange}
                         closeMenuOnSelect={false}

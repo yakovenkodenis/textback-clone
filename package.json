@@ -91,6 +91,7 @@
     "react-visibility-sensor": "^4.0.0",
     "resolve": "1.6.0",
     "sanitize-html": "^1.18.4",
+    "scrollmonitor-react": "^2.4.1",
     "shortid": "^2.2.13",
     "style-loader": "0.19.0",
     "superagent": "^3.8.3",
