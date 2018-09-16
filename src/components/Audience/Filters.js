@@ -13,41 +13,21 @@ export default class Filters extends Component {
         hasNoTags: []
     }
 
-    fakeLoadOptions1 = () => {
-        agent.Tags.getTagsList().then(response => {
-            console.log('TAAGS');
-            console.log(response);
-            console.log('------------------');
+    loadTags = () => {
+        return new Promise(resolve => {
+            agent.Tags.getTagsList()
+            .then(tags => {
+                if (tags.success) {
+                    resolve(tags.data.map(tag => ({
+                        label: tag.description, value: tag.tag_id.toString()
+                    })));
+                } else resolve([]);
+            });
         });
-
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve([
-                    { value: 'tag1', label: 'Супер семинар 1' },
-                    { value: 'tag2', label: 'Супер семинар 2' },
-                    { value: 'tag3', label: 'Так себе семинар 3' },
-                    { value: 'tag4', label: 'Ускоренный семинар' },
-                    { value: 'tag5', label: 'Удлиннённый семинар' }
-                ]);
-            }, 4000)
-        })
-    }
-
-    fakeLoadOptions2 = () => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve([
-                    { value: 'tag1', label: 'Супер семинар 1' },
-                    { value: 'tag2', label: 'Супер семинар 2' },
-                    { value: 'tag3', label: 'Так себе семинар 3' },
-                    { value: 'tag4', label: 'Ускоренный семинар' },
-                    { value: 'tag5', label: 'Удлиннённый семинар' }
-                ]);
-            }, 4000)
-        })
     }
 
     handleSelectChangeForHasTags = (tags) => {
+        
         this.setState({
             ...this.state,
             hasTags: tags
@@ -55,6 +35,7 @@ export default class Filters extends Component {
     }
 
     handleSelectChangeForHasNoTags = (tags) => {
+        
         this.setState({
             ...this.state,
             hasNoTags: tags
@@ -80,7 +61,7 @@ export default class Filters extends Component {
                             defaultOptions
                             placeholder="Присвоен тег"
                             loadingMessage={() => "Загрузка..."}
-                            loadOptions={this.fakeLoadOptions1}
+                            loadOptions={this.loadTags}
                             onChange={this.handleSelectChangeForHasTags}
                             noOptionsMessage={() => "Нет тегов"}
                         />
@@ -94,7 +75,7 @@ export default class Filters extends Component {
                             defaultOptions
                             placeholder="Не присвоен тег"
                             loadingMessage={() => "Загрузка..."}
-                            loadOptions={this.fakeLoadOptions2}
+                            loadOptions={this.loadTags}
                             onChange={this.handleSelectChangeForHasNoTags}
                             noOptionsMessage={() => "Нет тегов"}
                         />
