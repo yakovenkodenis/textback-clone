@@ -7,6 +7,8 @@ import AccountSettings from './AccountSettings';
 import ChannelsSettings from './ChannelsSettings';
 import GeneralSettings from './GeneralSettings';
 import SubscriptionSettings from './SubscriptionSettings';
+import WidgetSettings from './WidgetSettings';
+import NewWidget from './Widgets/New';
 import RootSettings from './RootSettings';
 
 
@@ -40,6 +42,18 @@ export const routes = [
         name: 'Настройки подписки',
         exact: true,
         component: () => <SubscriptionSettings />
+    },
+    {
+        path: '/widgets',
+        name: 'Настройки виджетов',
+        exact: true,
+        component: () => <WidgetSettings />
+    },
+    {
+        path: '/widgets/new',
+        name: 'Создать виджет',
+        exact: true,
+        component: () => <NewWidget />
     }
 ];
 

@@ -48,7 +48,9 @@ export default class MessageComposerForm extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        this.props.updateNewsletter(this.state.messages);
+        if (this.props.updateNewsletter) {
+            this.props.updateNewsletter(this.state.messages);
+        }
     }
 
     setTextEditorCurrentValue = value => {
@@ -361,7 +363,7 @@ export default class MessageComposerForm extends Component {
 
         return (
 <FileUpload
-    className="col-md-12 grid-margin stretch-card"
+    className={`${!this.props.isForWidget ? "col-md-12 grid-margin stretch-card" : "grid-margin stretch-card"}`}
     onDrop={this.onFilesDrop}
     disableClick
     onDragEnter={this.onDragEnter}
@@ -386,7 +388,9 @@ export default class MessageComposerForm extends Component {
             >Перетащите файлы сюда</div>
         }
         <div className="card-body">
-            <h4 className="card-title text-primary">Напишите сообщение</h4>
+            <h4 className="text-primary">
+                {this.props.title ? this.props.title : "Напишите сообщение"}
+            </h4>
             <br/>
 
             <AddButtonsModal
@@ -601,18 +605,20 @@ export default class MessageComposerForm extends Component {
 
                 </div>
 
-                <div className={`${isMobile ? "col-md-3 px-0" : "col-md-3"}`}>
-                    <h4 className="card-title text-success">Проверка перед отправкой</h4>
-                    <p className="card-description">Отправьте сообщение себе</p>
-                    <button
-                        className={`btn btn-light btn-icon-text ${isMobile ? "w-100" : ""}`}
-                        type="button"
-                        onClick={this.logFinalJSONobjectToConsole}
-                    >
-                        <i className="mdi mdi-send btn-icon-prepend" />
-                        Отправить себе
-                    </button>
-                </div>
+                { !this.props.isForWidget &&
+                    <div className={`${isMobile ? "col-md-3 px-0" : "col-md-3"}`}>
+                        <h4 className="card-title text-success">Проверка перед отправкой</h4>
+                        <p className="card-description">Отправьте сообщение себе</p>
+                        <button
+                            className={`btn btn-light btn-icon-text ${isMobile ? "w-100" : ""}`}
+                            type="button"
+                            onClick={this.logFinalJSONobjectToConsole}
+                        >
+                            <i className="mdi mdi-send btn-icon-prepend" />
+                            Отправить себе
+                        </button>
+                    </div>
+                }
             </form>
         </div>
     </div>

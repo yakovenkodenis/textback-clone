@@ -108,6 +108,10 @@ export default class NavBar extends Component {
                     route: '/admin/settings/account'
                   },
                   {
+                    name: 'Виджеты',
+                    route: '/admin/settings/widgets'
+                  },
+                  {
                     name: 'Каналы',
                     route: '/admin/settings/channels'
                   },
