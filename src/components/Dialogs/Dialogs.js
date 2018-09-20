@@ -103,7 +103,15 @@ class Dialogs extends Component {
                     filter, currentDialog
                 ] = necessaryRoutePartArr[necessaryRoutePartArr.length - 1].split('/');
 
-                dynamicBreadcrumbRoute = currentDialog;
+                if (currentDialog) {
+                    const dynamicBreadcrumbNameArr = currentDialog.split('-');
+                    dynamicBreadcrumbNameArr.splice(-1);
+    
+                    // dynamicBreadcrumbRoute = currentDialog;
+                    dynamicBreadcrumbRoute = dynamicBreadcrumbNameArr
+                        .map(e => e[0].toUpperCase() + e.slice(1))
+                        .join(" ");
+                }
                 console.log(filter, dynamicBreadcrumbRoute);
             }
         }

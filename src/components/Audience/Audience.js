@@ -3,6 +3,7 @@ import { observer, inject } from 'mobx-react';
 import { withRouter, Link } from 'react-router-dom';
 import ReactTable from 'react-table';
 import  Avatar from 'react-avatar';
+import MediaQuery from 'react-responsive';
 
 import { reactTableTextProps, unixtimeToDate, formatDate } from '../../utils';
 import agent from '../../agent';
@@ -12,7 +13,7 @@ import Filters from './Filters';
 @inject('subscribersStore', 'channelsStore')
 @withRouter
 @observer
-export default class Audience extends Component {
+class Audience extends Component {
 
     constructor(props, context) {
         super(props, context);
@@ -188,7 +189,9 @@ export default class Audience extends Component {
                 }}
                 {...reactTableTextProps}
             />
-        )
+        );
+
+        const { isMobile } = this.props;
 
         return (
             <React.Fragment>
@@ -198,8 +201,11 @@ export default class Audience extends Component {
                 <div className="row">
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
-                            <div className="card-body">
-                                <Filters getSubscribersList={this.getSubscribersList} />
+                            <div className={`card-body ${isMobile ? "px-0" : ""}`}>
+                                <Filters
+                                    getSubscribersList={this.getSubscribersList}
+                                    isMobile={isMobile}
+                                />
                                 <br />
                                 {table}
                             </div>
@@ -211,3 +217,12 @@ export default class Audience extends Component {
     }
 }
 
+const ResponsiveAudience = props => (
+    <MediaQuery maxDeviceWidth={767}>
+        {isMobile => (
+            <Audience isMobile={isMobile} {...props} />
+        )}
+    </MediaQuery>
+);
+
+export default ResponsiveAudience;

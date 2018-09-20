@@ -64,6 +64,8 @@ export default class Filters extends Component {
     }
 
     render() {
+        const { isMobile } = this.props;
+
         return (
             <React.Fragment>
                 <p className="h5">
@@ -71,8 +73,8 @@ export default class Filters extends Component {
                     Фильтр
                 </p>
 
-                <div className="filters row">
-                    <div className="col-6">
+                <div className={`filters row ${isMobile ? "px-4" : ""}`}>
+                    <div className={`${isMobile ? "col-12" : "col-6"}`}>
                         <p>Присвоен тег: </p>
                         <AsyncSelect
                             closeMenuOnSelect={false}
@@ -101,7 +103,7 @@ export default class Filters extends Component {
                             noOptionsMessage={() => "Нет тегов"}
                         />
                     </div>
-                    <form className="align-items-center pt-5 mt-3">
+                    <form className={`align-items-center ${isMobile ? "" : "pt-5"} mt-3`}>
                         <div className="form-check ml-2">
                             <label htmlFor="logical-and" className="form-check-label">
                                 Соответствие одновременно всем критериям

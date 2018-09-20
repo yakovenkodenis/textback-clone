@@ -64,6 +64,12 @@ class DialogMessagesContainer extends Component {
               .then(() => {
                   nextTick(() => {
                       this.scrollSmoothToBottom();
+
+                      if (this.props.isMobile) {
+                          setTimeout(() => {
+                              this.scrollSmoothToBottom();
+                          }, 2000);
+                      }
                   });
               });
         } else {

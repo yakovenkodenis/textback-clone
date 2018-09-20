@@ -150,8 +150,8 @@ export const nextTick = (function () {
             window.postMessage('process-tick', '*');
         };
     }
-    return function nextTick(fn) {
-        setTimeout(fn, 0);
+    return function nextTick(fn, tickLength = 0) {
+        setTimeout(fn, tickLength);
     };
 })();
 
