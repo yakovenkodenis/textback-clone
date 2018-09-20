@@ -17,7 +17,9 @@ export default class General extends Component {
     state = {
         pagesLinks: [],
         widgetCodeValue: '',
-        widgetCodeCopied: false
+        widgetCodeCopied: false,
+        tags: [],
+        message: []
     }
 
     componentDidMount() {
@@ -47,6 +49,17 @@ export default class General extends Component {
          });
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.onStateChange) {
+            this.props.onStateChange({
+                pagesLinks: this.state.pagesLinks.filter(link => link.isUsed),
+                widgetCode: this.getWidgetCode(),
+                tags: this.state.tags.map(tag => parseInt(tag.value, 10)),
+                message: this.state.message
+            });
+        }
+    }
+
     loadTags = () => {
         return new Promise(resolve => {
             agent.Tags.getTagsList()
@@ -61,7 +74,31 @@ export default class General extends Component {
     }
 
     handleSelectChangeForInTags = (tags) => {
-        return;
+        this.setState({
+            ...this.state,
+            tags
+        });
+    }
+
+    getMessageState = message => {
+        this.setState({
+            ...this.state,
+            message
+        });
+    }
+
+    onPageLinkChange = (e, pageLink) => {
+        const pagesLinks = this.state.pagesLinks;
+        pagesLinks.forEach(link => {
+            if (link.pageLink === pageLink.pageLink && link.baseLink === pageLink.baseLink) {
+                link.isUsed = !link.isUsed;
+            }
+        });
+
+        this.setState({
+            ...this.state,
+            pagesLinks
+        });
     }
 
     generatePagesLinksRows = (links) => {
@@ -76,6 +113,7 @@ export default class General extends Component {
                                 type="checkbox"
                                 className="form-check-input"
                                 defaultChecked={link.isUsed}
+                                onChange={e => this.onPageLinkChange(e, link)}
                             />
                             <i className="input-helper"></i>
                         </label>
@@ -172,7 +210,7 @@ export default class General extends Component {
                     <h4 className="text-primary">Теги, навешиваемые после успешной подписки</h4>
                     <br/>
                     <AsyncSelect
-                        styles={{container: base => ({...base, zIndex: 9999})}}
+                        styles={{container: base => ({...base, zIndex: 999})}}
                         closeMenuOnSelect={false}
                         components={makeAnimated()}
                         isMulti
@@ -191,6 +229,7 @@ export default class General extends Component {
                 title="Сообщение после успешной подписки"
                 isMobile={isMobile}
                 isForWidget={true}
+                onStateChange={this.getMessageState}
             />
 
             <div className="grid-margin stretch-card">
@@ -207,6 +246,7 @@ export default class General extends Component {
                             <button
                                 className={`btn btn-outline-success btn-icon-text ${isMobile ? "w-100 mb-1" : "ml-1"}`}
                                 type="button"
+                                onClick={this.props.saveWidget}
                             >
                                 Сохранить
                             </button>

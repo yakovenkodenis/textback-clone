@@ -24,7 +24,7 @@ class New extends Component {
             ...this.state,
             newsletter
         }, () => {
-            console.log('NEWSLETTER OBJECT: ', this.state);
+            // console.log('NEWSLETTER OBJECT: ', this.state);
         });
     }
 
@@ -33,7 +33,7 @@ class New extends Component {
             ...this.state,
             receiver
         }, () => {
-            console.log('NEWSLETTER OBJECT: ', this.state);
+            // console.log('NEWSLETTER OBJECT: ', this.state);
         });
     }
 
@@ -64,7 +64,7 @@ class New extends Component {
 
                     <MessageComposerForm
                         isMobile={isMobile}
-                        updateNewsletter={this.updateNewsletter}
+                        onStateChange={this.updateNewsletter}
                     />
 
                     <CardWrapper title="Отправьте рассылку">

@@ -48,8 +48,8 @@ export default class MessageComposerForm extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.updateNewsletter) {
-            this.props.updateNewsletter(this.state.messages);
+        if (this.props.onStateChange) {
+            this.props.onStateChange(this.state.messages);
         }
     }
 

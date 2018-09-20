@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
 
 import General from './General';
@@ -11,6 +11,21 @@ import Appearance from './Appearance';
 @observer
 class New extends Component {
 
+    state = {
+        widgetConfig: {}
+    }
+
+    updateWidgetConfig = widgetConfig => {
+        this.setState({
+            ...this.state,
+            widgetConfig
+        });
+    }
+
+    saveWidget = (e) => {
+        console.log('WIDGET CONFIG: ', this.state.widgetConfig);
+    }
+
     render() {
 
         const { isMobile } = this.props;
@@ -18,6 +33,16 @@ class New extends Component {
         return (
             <div className="row">
                 <div className="col-12 grid-margin">
+                    <nav aria-label="breadcrumb">
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item">
+                                <Link to='/admin/settings/widgets'>Виджеты</Link>
+                            </li>
+                            <li className="breadcrumb-item active">
+                                Создать виджет
+                            </li>
+                        </ol>
+                    </nav>
                     <div className="card">
                         <div className="card-body">
                             <h4 className="card-title">Создание виджета</h4>
@@ -52,7 +77,11 @@ class New extends Component {
                                     role="tabpanel"
                                     aria-labelledby="general-tab"
                                 >
-                                    <General isMobile={isMobile} />
+                                    <General
+                                        isMobile={isMobile}
+                                        onStateChange={this.updateWidgetConfig}
+                                        saveWidget={this.saveWidget}
+                                    />
                                 </div>
                                 <div
                                     className="tab-pane"
