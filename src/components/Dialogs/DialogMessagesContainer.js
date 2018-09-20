@@ -174,8 +174,9 @@ class DialogMessagesContainer extends Component {
         const div = this.dialogMessagesContainerRef.current
 
         if (div) {
+            console.log('Scrolling to bottom in DialogMessagesContainer');
             $('#timeline-scroll.timeline').animate({
-            scrollTop: div.scrollHeight * 999
+                scrollTop: div.scrollHeight * 999
             }, 1);
         }
     }
@@ -238,7 +239,10 @@ class DialogMessagesContainer extends Component {
                     id="timeline-scroll"
                     className="timeline"
                     style={{
-                        overflowY: "scroll", height: this.state.viewportHeight + "px"
+                        overflowY: "scroll",
+                        height: this.props.isMobile
+                                ? (this.state.viewportHeight * 2.5) + "px"
+                                : this.state.viewportHeight + "px"
                     }}
                     ref={this.dialogMessagesContainerRef}
                 >
@@ -251,10 +255,22 @@ class DialogMessagesContainer extends Component {
                     }
                     <div ref={this.props.forwardedRef} />
                 </div>
+                <button
+                    onClick={this.scrollSmoothToBottom}
+                    className="btn btn-icon btn-rounded btn-inverse-info"
+                    style={{
+                        position: 'absolute',
+                        zIndex: 999,
+                        opacity: 0.6,
+                        margin: '-3rem 2rem 0 1rem'
+                    }}
+                >
+                    <i className="mdi mdi-arrow-down" />
+                </button>
                 {
                     this.state.selectedMessages.length > 0 &&
                     <button
-                        className="btn btn-md btn-inverse-info btn-fw mb-2"
+                        className={`btn btn-md btn-inverse-info btn-fw mb-2 ${this.props.isMobile ? "ml-1" : ""}`}
                         onClick={this.onDeleteMessages}
                     >
                         {`Удалить ${this.state.selectedMessages.length} сообщений`}

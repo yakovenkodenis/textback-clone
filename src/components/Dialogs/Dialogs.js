@@ -112,7 +112,7 @@ class Dialogs extends Component {
             <div className="row dialogs-page">
                 <div className={`col-12 grid-margin ${isMobile ? "p-0" : /*make more dynamic?*/ "p-0"}`}>
                     <div className="card">
-                        <div className="card-body">
+                        <div className={`card-body ${isMobile ? "pt-1" : ""}`}>
 
                         <Default>
                             <h4 className="card-title">Диалоги</h4>

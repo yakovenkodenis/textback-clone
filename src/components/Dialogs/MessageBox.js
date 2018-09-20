@@ -288,11 +288,12 @@ export default class MessageBox extends Component {
                 channel_id={this.props.channel_id}
                 subscriber_id={this.props.subscriber_id}
                 ref={this.dialogMessagesContainerRef}
+                isMobile={isMobile}
             />
             <br/>
 
             <FileUpload
-                className="ignore"
+                className="ignore px-1"
                 onDrop={this.onFilesDrop}
                 disableClick
                 onDragEnter={this.onDragEnter}
@@ -331,10 +332,13 @@ export default class MessageBox extends Component {
                     </div>
                 </FileUpload>
 
-                <div className="form-group d-flex justify-content-between" style={{zIndex: 0}}>
+                <div
+                    className={`form-group d-flex justify-content-between ${isMobile ? "flex-wrap" : ""}`}
+                    style={{zIndex: 0}}
+                >
 
                     <button
-                        className="btn btn-gradient-primary mr-2"
+                        className={`btn btn-gradient-primary ${isMobile ? "w-100 mb-1" : "mr-2"}`}
                         type="submit"
                         onClick={this.sendMessage}
                         disabled={!this.state.sendButtonActive}
@@ -354,9 +358,11 @@ export default class MessageBox extends Component {
                             type="text"
                             style={{display: 'none'}}
                         />
-                        <span className="input-group-append">
+                        <span
+                            className={`input-group-append ${isMobile ? "w-100 mx-auto my-1" : ""}`}
+                        >
                             <button
-                                className="file-upload-browse btn btn-light btn-icon-text"
+                                className={`file-upload-browse btn btn-light btn-icon-text ${isMobile ? "w-100" : ""}`}
                                 type="button"
                                 onClick={() => { this.dropzoneRef.current.open(); }}
                             >
@@ -367,7 +373,7 @@ export default class MessageBox extends Component {
                     </div>
 
                     <button 
-                        className={`btn btn-light btn-icon-text ${isMobile ? "mb-1 w-100" : ""}`}
+                        className={`btn btn-light btn-icon-text ${isMobile ? "my-1 w-100" : ""}`}
                         type="button"
                         onClick={this.openModal}
                     >
