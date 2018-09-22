@@ -19,7 +19,8 @@ export default class General extends Component {
         widgetCodeValue: '',
         widgetCodeCopied: false,
         tags: [],
-        message: []
+        message: [],
+        widgetName: 'Новый виджет'
     }
 
     componentDidMount() {
@@ -53,9 +54,9 @@ export default class General extends Component {
         if (this.props.onStateChange) {
             this.props.onStateChange({
                 pagesLinks: this.state.pagesLinks.filter(link => link.isUsed),
-                widgetCode: this.getWidgetCode(),
                 tags: this.state.tags.map(tag => parseInt(tag.value, 10)),
-                message: this.state.message
+                message: this.state.message,
+                widgetName: this.state.widgetName
             });
         }
     }
@@ -77,6 +78,13 @@ export default class General extends Component {
         this.setState({
             ...this.state,
             tags
+        });
+    }
+
+    onWidgetNameChange = e => {
+        this.setState({
+            ...this.state,
+            widgetName: e.target.value
         });
     }
 
@@ -124,9 +132,8 @@ export default class General extends Component {
     }
 
     getWidgetCode = () => {
-        return `<script src="//unpckg.com/@zangerange/notification-widget@latest/build/index.js"></script>\n`
-            + `<zg-notification-widget widget-id="6kh134i6jh123k6jh1kj5235">\n`
-            + `</zg-notification-widget>`;
+        return `<script src="//unpckg.com/@zangerange/notification-widget@latest/build/index.js"></script>`
+            + `<notification-widget></notification-widget>`;
     }
 
     render() {
@@ -143,7 +150,19 @@ export default class General extends Component {
             <React.Fragment>
 
             <div className="card">
-                <div className="card-body">
+                <div className="card-body pt-1">
+
+                    <div className="form-group">
+                        <input
+                            type="text"
+                            placeholder="Название виджета"
+                            className="form-control form-control-lg"
+                            id="widgetName"
+                            value={this.state.widgetName}
+                            onChange={this.onWidgetNameChange}
+                        />
+                    </div>
+                    <br/>
                     <p className="card-description">
                         Скопируйте код виджета и установите на сайт перед закрывающим тегом <span className="font-weight-bold">{"</body>"}</span> на всех страницах, где он должен отображаться.
                     </p>
@@ -190,7 +209,7 @@ export default class General extends Component {
             </div>
 
             <div className="card">
-                <div className="card-body col-6">
+                <div className="card-body col-6 pt-1">
                     <h4 className="text-primary">Ссылки на ваши страницы</h4>
                     <table className="table table-hover">
                         <thead><tr>
@@ -206,7 +225,7 @@ export default class General extends Component {
             </div>
 
             <div className="card">
-                <div className="card-body pb-0">
+                <div className="card-body pb-0 pt-1">
                     <h4 className="text-primary">Теги, навешиваемые после успешной подписки</h4>
                     <br/>
                     <AsyncSelect
@@ -239,7 +258,6 @@ export default class General extends Component {
                             <Link
                                 to='/admin/settings/widgets'
                                 className={`btn btn-light btn-icon-text ${isMobile ? "w-100 mt-2" : "mr-1"}`}
-                                type="button"
                             >
                                 Назад
                             </Link>

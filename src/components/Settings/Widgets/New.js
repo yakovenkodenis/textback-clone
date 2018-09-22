@@ -89,7 +89,7 @@ class New extends Component {
                                     role="tabpanel"
                                     aria-labelledby="look-tab"
                                 >
-                                    <Appearance isMobile={isMobile} />
+                                    <Appearance isMobile={isMobile} links={this.state.widgetConfig.pagesLinks} />
                                 </div>
                             </div>
                         </div>
