@@ -4,6 +4,9 @@ import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 
+import agent from '../../../agent';
+import SubscribersListModal from './SubscribersListModal';
+
 
 @inject('channelsStore', 'subscribersStore')
 @withRouter
@@ -15,7 +18,10 @@ export default class ReceiverChoiceForm extends Component {
 
         this.state = {
             receivers: "subscribers",
-            channels: 'ALL'
+            channels: 'ALL',
+            subscribers: [],
+            loading: false,
+            isSubscriberModalOpen: false
         }
     }
 
@@ -23,6 +29,87 @@ export default class ReceiverChoiceForm extends Component {
         this.props.updateReceiver({
             ...this.state,
             channels: ['ALL']
+        });
+        this.updateSubscribersList();
+    }
+
+    updateSubscribersList() {
+        this.getSubscribersList();
+    }
+
+    getSubscribersList = (filter = { InTags: null, NotInTags: null, AndTags: null }) => {
+        this.setState({
+            ...this.state,
+            loading: true,
+            subscribers: []
+        });
+
+        return agent.Subscribers.getList(Object.values(filter).some(Boolean) ? filter : {})
+         .then(response => {
+            if (response.success) {
+                this.setState({
+                    ...this.state,
+                    subscribers: this.formatData(response.data),
+                    loading: false
+                });
+            }
+        });
+    }
+
+    formatData = subscribers => {
+        return subscribers.map(subscriber => {
+            const name = `${subscriber.first_name} ${subscriber.last_name}`;
+            const avatar = subscriber.image;
+            const id = subscriber.subscriber_id;
+            const channelType = subscriber.channel_type;
+            const isSelected = true;
+
+            return {
+                id, name, avatar, channelType, isSelected
+            }
+        });
+    }
+
+    filterSubscribers = (subscriber) => {
+        const { subscribers } = this.state;
+
+
+        for (let i = 0; i < subscribers.length; ++i) {
+            if (subscribers[i].id === subscriber.id) {
+                subscribers[i].isSelected = !subscribers[i].isSelected;
+            }
+        }
+
+        this.setState({
+            ...this.state,
+            subscribers
+        });
+    }
+
+    toggleSelectAllSubscribers = (e) => {
+        const { subscribers } = this.state;
+
+        subscribers.forEach(subscriber => {
+            subscriber.isSelected = Boolean(e.target.checked);
+        });
+
+        this.setState({
+            ...this.state,
+            subscribers
+        });
+    }
+
+    openSubscribersModal = () => {
+        this.setState({
+            ...this.state,
+            isSubscriberModalOpen: true
+        });
+    }
+
+    closeSubscribersModal = () => {
+        this.setState({
+            ...this.state,
+            isSubscriberModalOpen: false
         });
     }
 
@@ -34,6 +121,7 @@ export default class ReceiverChoiceForm extends Component {
             channels: allChannels || !channels.length ? 'ALL' : channels.map(channel => channel.value)
         }, () => {
             this.props.updateReceiver(this.state);
+            this.updateSubscribersList();
         });
     }
 
@@ -43,6 +131,7 @@ export default class ReceiverChoiceForm extends Component {
             receivers: e.target.value
         }, () => {
             this.props.updateReceiver(this.state);
+            this.updateSubscribersList();
         });
     }
 
@@ -58,6 +147,7 @@ export default class ReceiverChoiceForm extends Component {
          : [];
 
         return (
+        <React.Fragment>
             <form className={`${isMobile ? "" : "d-flex justify-content-left"}`}>
                 <div className={`form-group ${isMobile ? "" : "mr-5"}`}>
                     <label htmlFor="selectReceiver">
@@ -97,7 +187,31 @@ export default class ReceiverChoiceForm extends Component {
                         noOptionsMessage={() => "Нет каналов"}
                     />
                 </div>
+                <div className={`form-group ${isMobile ? "" : "mx-5"}`}>
+                    <button
+                        type="button"
+                        className="btn btn-link btn-fw"
+                        onClick={this.openSubscribersModal}
+                    >
+                        {
+                            this.state.loading
+                            ? 'Загрузка...'
+                            : this.state.subscribers
+                            ? this.state.subscribers.filter(s => s.isSelected).length + ' получателей'
+                            : '-'
+                        }
+                    </button>
+                </div>
             </form>
+            <SubscribersListModal
+                isOpen={this.state.isSubscriberModalOpen}
+                close={this.closeSubscribersModal}
+                subscribers={this.state.subscribers}
+                onSelect={this.filterSubscribers}
+                isMobile={isMobile}
+                toggleSelectAll={this.toggleSelectAllSubscribers}
+            />
+        </React.Fragment>
         );
     }
 }

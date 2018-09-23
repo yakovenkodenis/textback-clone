@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter, Link } from 'react-router-dom';
 import ReactTable from 'react-table';
-import  Avatar from 'react-avatar';
+import Avatar from 'react-avatar';
 import MediaQuery from 'react-responsive';
 
 import { reactTableTextProps, unixtimeToDate, formatDate } from '../../utils';

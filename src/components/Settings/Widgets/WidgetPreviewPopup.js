@@ -45,8 +45,7 @@ export default class WidgetPreviewPopup extends Component {
                 id="notification-widget-dialog___modal-popup-id"
                 className={`${isModal ? "" : "hover-border test-preview"} notification-widget-dialog___modal-popup`}
                 style={{
-                    display: isModal ? this.state.displayModal : 'block',
-                    // border: isModal ? 'none' : '1px solid #555'
+                    display: isModal ? this.state.displayModal : 'block'
                 }}
             >
 
