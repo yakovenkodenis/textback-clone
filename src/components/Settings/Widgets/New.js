@@ -11,19 +11,33 @@ import Appearance from './Appearance';
 @observer
 class New extends Component {
 
-    state = {
-        widgetConfig: {}
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = {
+            pagesLinks: []
+        };
+
+        this.widgetConfig = {};
     }
 
-    updateWidgetConfig = widgetConfig => {
+    saveLinks = links => {
+        console.log('New.js, new links: ', links);
         this.setState({
             ...this.state,
-            widgetConfig
+            pagesLinks: links
         });
     }
 
+    saveConfig = (name, config) => {
+        this.widgetConfig = {
+            ...this.widgetConfig,
+            [name]: config
+        };
+    }
+
     saveWidget = (e) => {
-        console.log('WIDGET CONFIG: ', this.state.widgetConfig);
+        console.log('WIDGET CONFIG: ', this.widgetConfig);
     }
 
     render() {
@@ -44,7 +58,7 @@ class New extends Component {
                         </ol>
                     </nav>
                     <div className="card">
-                        <div className="card-body">
+                        <div className="card-body pb-0">
                             <h4 className="card-title">Создание виджета</h4>
                             <ul className="nav nav-tabs" role="tablist">
                                 <li className="nav-item">
@@ -70,7 +84,7 @@ class New extends Component {
                                     </a>
                                 </li>
                             </ul>
-                            <div className="tab-content">
+                            <div className="tab-content mb-0 pb-0">
                                 <div
                                     className="tab-pane active show"
                                     id="general-1"
@@ -79,8 +93,8 @@ class New extends Component {
                                 >
                                     <General
                                         isMobile={isMobile}
-                                        onStateChange={this.updateWidgetConfig}
-                                        saveWidget={this.saveWidget}
+                                        saveLinks={this.saveLinks}
+                                        saveWidget={config => { this.saveConfig('general', config); }}
                                     />
                                 </div>
                                 <div
@@ -89,9 +103,36 @@ class New extends Component {
                                     role="tabpanel"
                                     aria-labelledby="look-tab"
                                 >
-                                    <Appearance isMobile={isMobile} links={this.state.widgetConfig.pagesLinks} />
+                                    <Appearance
+                                        isMobile={isMobile}
+                                        links={this.state.pagesLinks}
+                                        saveWidget={config => { this.saveConfig('appearance', config); }}
+                                    />
                                 </div>
                             </div>
+
+                            <div className="grid-margin stretch-card mt-2">
+                                <div className="card">
+                                    <div className="card-body py-0">
+                                        <div className="flex justify-content-left">
+                                            <Link
+                                                to='/admin/settings/widgets'
+                                                className={`btn btn-light btn-icon-text ${isMobile ? "w-100 mt-2" : "mr-1"}`}
+                                            >
+                                                Назад
+                                            </Link>
+                                            <button
+                                                className={`btn btn-outline-success btn-icon-text ${isMobile ? "w-100 mb-1" : "ml-1"}`}
+                                                type="button"
+                                                onClick={this.saveWidget}
+                                            >
+                                                Сохранить
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

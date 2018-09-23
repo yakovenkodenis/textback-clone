@@ -218,3 +218,7 @@
     line-height: inherit;
     -webkit-font-smoothing: antialiased;
 }
+
+.hover-border:hover {
+    border: 1px solid #555;
+}

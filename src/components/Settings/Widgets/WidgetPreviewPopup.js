@@ -6,11 +6,6 @@ import './previewWidgetStyles.css';
 @observer
 export default class WidgetPreviewPopup extends Component {
 
-    // color: '',
-    // openAfterSeconds: 0,
-    // widgetDescription: '',
-    // widgetHeader: ''
-
     state = {
         displayModal: 'none'
     };
@@ -48,10 +43,10 @@ export default class WidgetPreviewPopup extends Component {
         return (
             <div
                 id="notification-widget-dialog___modal-popup-id"
-                className={`${isModal ? "" : "test-preview"} notification-widget-dialog___modal-popup`}
+                className={`${isModal ? "" : "hover-border test-preview"} notification-widget-dialog___modal-popup`}
                 style={{
                     display: isModal ? this.state.displayModal : 'block',
-                    border: isModal ? 'none' : '1px solid #555'
+                    // border: isModal ? 'none' : '1px solid #555'
                 }}
             >
 

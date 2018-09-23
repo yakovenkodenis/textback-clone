@@ -19,6 +19,19 @@ export default class Appearance extends Component {
         isPreviewModalOpen: false
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.saveWidget) {
+            this.props.saveWidget({
+                headerColor: this.state.headerColor,
+                headerTextColor: this.state.headerTextColor,
+                descriptionTextColor: this.state.descriptionTextColor,
+                openAfterSeconds: this.state.openAfterSeconds,
+                widgetDescription: this.state.widgetDescription,
+                widgetHeader: this.state.widgetHeader
+            });
+        }
+    }
+
     onColorChange = (color, element) => {
         this.setState({
             ...this.state,
@@ -32,10 +45,6 @@ export default class Appearance extends Component {
             ...this.state,
             openAfterSeconds: e.target.value
         });
-    }
-
-    onWidgetDescriptionChange = e => {
-
     }
 
     onValueChange = (e, name) => {
@@ -90,7 +99,7 @@ export default class Appearance extends Component {
                                         '#0693E3', '#ABB8C3', '#EB144C', '#F78DA7', '#FFFFFF',
                                         '#B66DFF'
                                     ]}
-                                    color={this.state.color}
+                                    color={this.state.headerColor}
                                     onChangeComplete={color => { this.onColorChange(color, 'headerColor'); }}
                                 />
                             </div>
@@ -104,7 +113,7 @@ export default class Appearance extends Component {
                                         '#0693E3', '#ABB8C3', '#EB144C', '#888888', '#FFFFFF',
                                         '#B66DFF'
                                     ]}
-                                    color={this.state.color}
+                                    color={this.state.headerTextColor}
                                     onChangeComplete={color => { this.onColorChange(color, 'headerTextColor'); }}
                                 />
                             </div>
@@ -131,7 +140,7 @@ export default class Appearance extends Component {
                                         '#0693E3', '#ABB8C3', '#EB144C', '#888888', '#FFFFFF',
                                         '#B66DFF'
                                     ]}
-                                    color={this.state.color}
+                                    color={this.state.descriptionTextColor}
                                     onChangeComplete={color => { this.onColorChange(color, 'descriptionTextColor'); }}
                                 />
                             </div>

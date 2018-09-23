@@ -363,7 +363,7 @@ export default class MessageComposerForm extends Component {
 
         return (
 <FileUpload
-    className={`${!this.props.isForWidget ? "col-md-12 grid-margin stretch-card" : "grid-margin stretch-card"}`}
+    className={`${this.props.disablePaddingBottom ? "" : "grid-margin"} ${!this.props.isForWidget ? "col-md-12 stretch-card" : "stretch-card"} ${this.props.disableMarginBottom ? "mt-0" : ""}`}
     onDrop={this.onFilesDrop}
     disableClick
     onDragEnter={this.onDragEnter}
@@ -387,7 +387,7 @@ export default class MessageComposerForm extends Component {
                 }}
             >Перетащите файлы сюда</div>
         }
-        <div className="card-body">
+        <div className={`card-body ${this.props.disablePaddingBottom ? "pb-0" : ""}`}>
             <h4 className="text-primary">
                 {this.props.title ? this.props.title : "Напишите сообщение"}
             </h4>

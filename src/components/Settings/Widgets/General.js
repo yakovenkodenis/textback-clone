@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import AsyncSelect from 'react-select/lib/Async';
 import makeAnimated from 'react-select/lib/animated';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -51,8 +51,8 @@ export default class General extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.onStateChange) {
-            this.props.onStateChange({
+        if (this.props.saveWidget) {
+            this.props.saveWidget({
                 pagesLinks: this.state.pagesLinks.filter(link => link.isUsed),
                 tags: this.state.tags.map(tag => parseInt(tag.value, 10)),
                 message: this.state.message,
@@ -106,6 +106,10 @@ export default class General extends Component {
         this.setState({
             ...this.state,
             pagesLinks
+        }, () => {
+            if (this.props.saveLinks) {
+                this.props.saveLinks(this.state.pagesLinks.filter(link => link.isUsed));
+            }
         });
     }
 
@@ -249,29 +253,9 @@ export default class General extends Component {
                 isMobile={isMobile}
                 isForWidget={true}
                 onStateChange={this.getMessageState}
+                disableMarginBottom
+                disablePaddingBottom
             />
-
-            <div className="grid-margin stretch-card">
-                <div className="card">
-                    <div className="card-body py-0">
-                        <div className="flex justify-content-left">
-                            <Link
-                                to='/admin/settings/widgets'
-                                className={`btn btn-light btn-icon-text ${isMobile ? "w-100 mt-2" : "mr-1"}`}
-                            >
-                                Назад
-                            </Link>
-                            <button
-                                className={`btn btn-outline-success btn-icon-text ${isMobile ? "w-100 mb-1" : "ml-1"}`}
-                                type="button"
-                                onClick={this.props.saveWidget}
-                            >
-                                Сохранить
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
             </React.Fragment>
         )
     }
