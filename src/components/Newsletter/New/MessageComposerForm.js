@@ -123,6 +123,7 @@ export default class MessageComposerForm extends Component {
     }
 
     handleAddMessageBtnClick = (e, messageId) => {
+        console.log(e.target.tagName);
         if (e.target.tagName === 'I') {
             this.removeMessage(messageId)
         } else {

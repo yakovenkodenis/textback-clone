@@ -6,6 +6,7 @@ import makeAnimated from 'react-select/lib/animated';
 
 import agent from '../../../agent';
 import SubscribersListModal from './SubscribersListModal';
+import Filters from '../../Audience/Filters';
 
 
 @inject('channelsStore', 'subscribersStore')
@@ -207,6 +208,11 @@ export default class ReceiverChoiceForm extends Component {
                     </button>
                 </div>
             </form>
+            <Filters
+                getSubscribersList={this.getSubscribersList}
+                isMobile={isMobile}
+                withoutTitle={true}
+            />
             <SubscribersListModal
                 isOpen={this.state.isSubscriberModalOpen}
                 close={this.closeSubscribersModal}

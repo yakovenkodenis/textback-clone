@@ -68,11 +68,13 @@ export default class Filters extends Component {
 
         return (
             <React.Fragment>
-                <p className="h5">
-                    <span className="mdi mdi-filter" />
-                    Фильтр
-                </p>
-
+                {
+                    !this.props.withoutTitle &&
+                    <p className="h5">
+                        <span className="mdi mdi-filter" />
+                            Фильтр
+                    </p>
+                }
                 <div className={`filters row ${isMobile ? "px-4" : ""}`}>
                     <div className={`${isMobile ? "col-12" : "col-6"}`}>
                         <p>Присвоен тег: </p>
