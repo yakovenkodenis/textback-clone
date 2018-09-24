@@ -26,15 +26,13 @@ export default class ReceiverChoiceForm extends Component {
     }
 
     componentDidMount() {
-        this.props.updateReceiver({
-            ...this.state,
-            channels: ['ALL']
-        });
         this.updateSubscribersList();
     }
 
     updateSubscribersList() {
-        this.getSubscribersList();
+        this.getSubscribersList().then(() => {
+            this.props.updateReceiver(this.formatSubscrubersListForAPI(this.state.subscribers));
+        });
     }
 
     getSubscribersList = (filter = { InTags: null, NotInTags: null, AndTags: null }) => {
@@ -62,12 +60,18 @@ export default class ReceiverChoiceForm extends Component {
             const avatar = subscriber.image;
             const id = subscriber.subscriber_id;
             const channelType = subscriber.channel_type;
+            const channel_id = subscriber.channel_id;
             const isSelected = true;
 
             return {
-                id, name, avatar, channelType, isSelected
+                id, channel_id, name, avatar, channelType, isSelected
             }
         });
+    }
+
+    formatSubscrubersListForAPI = subscribers => {
+        return subscribers.map(
+            ({ id, channel_id }) => ({ subscriber_id: id, channel_id }));
     }
 
     filterSubscribers = (subscriber) => {
@@ -120,7 +124,7 @@ export default class ReceiverChoiceForm extends Component {
             ...this.state,
             channels: allChannels || !channels.length ? 'ALL' : channels.map(channel => channel.value)
         }, () => {
-            this.props.updateReceiver(this.state);
+            this.props.updateReceiver(this.formatSubscrubersListForAPI(this.state.subscribers));
             this.updateSubscribersList();
         });
     }
@@ -130,7 +134,7 @@ export default class ReceiverChoiceForm extends Component {
             ...this.state,
             receivers: e.target.value
         }, () => {
-            this.props.updateReceiver(this.state);
+            this.props.updateReceiver(this.formatSubscrubersListForAPI(this.state.subscribers));
             this.updateSubscribersList();
         });
     }

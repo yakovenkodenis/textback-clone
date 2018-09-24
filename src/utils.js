@@ -184,3 +184,42 @@ export const copyTextToClipboard = text => {
         });
     }
 }
+
+
+export const formatMEssagesObjectToNeededFormForAPI = (messagesObj) => {
+    for (let i = 0; i < messagesObj.length; ++i) {
+        for (let j = 0; j < messagesObj[i].message.buttons.length; ++j) {
+            const button = messagesObj[i].message.buttons[j];
+
+            if (button.remove_tags && button.remove_tags.constructor === Array) {
+                messagesObj[i].message.buttons[j].remove_tags =
+                    button.remove_tags.map(tag => parseInt(tag.value, 10));
+            }
+
+            if (button.add_tags && button.add_tags.constructor === Array) {
+                messagesObj[i].message.buttons[j].add_tags =
+                    button.add_tags.map(tag => parseInt(tag.value, 10));
+            }
+
+            Object.defineProperty(
+                messagesObj[i].message.buttons[j],
+                'name',
+                Object.getOwnPropertyDescriptor(messagesObj[i].message.buttons[j], 'buttonName')
+            );
+            delete messagesObj[i].message.buttons[j]['buttonName'];
+        }
+    }
+
+    return messagesObj;
+}
+
+export const renameObjectProperty = (obj, oldKey, newKey) => {
+    Object.defineProperty(
+        obj,
+        newKey,
+        Object.getOwnPropertyDescriptor(obj, oldKey)
+    );
+    delete obj[oldKey];
+
+    return obj;
+}

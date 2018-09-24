@@ -15,7 +15,7 @@ import SendNewsletter from './SendNewsletter';
 class New extends Component {
 
     state = {
-        receiver: {},
+        receivers: [],
         newsletter: []
     }
 
@@ -28,10 +28,10 @@ class New extends Component {
         });
     }
 
-    updateReceiver = receiver => {
+    updateReceiver = receivers => {
         this.setState({
             ...this.state,
-            receiver
+            receivers
         }, () => {
             // console.log('NEWSLETTER OBJECT: ', this.state);
         });

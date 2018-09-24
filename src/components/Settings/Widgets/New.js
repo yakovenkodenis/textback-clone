@@ -5,6 +5,7 @@ import MediaQuery from 'react-responsive';
 
 import General from './General';
 import Appearance from './Appearance';
+import { formatMEssagesObjectToNeededFormForAPI } from '../../../utils';
 
 
 @withRouter
@@ -37,6 +38,8 @@ class New extends Component {
     }
 
     saveWidget = (e) => {
+        const message = formatMEssagesObjectToNeededFormForAPI(this.widgetConfig.general.message);
+        this.widgetConfig.general.message = message;
         console.log('WIDGET CONFIG: ', this.widgetConfig);
     }
 

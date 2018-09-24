@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
-import shortid from 'shortid';
 import Tooltip from '../UiHelpers/Tooltip';
 import HotKey from 'react-shortcut';
-// import { toJS } from 'mobx';
 
 import agent from '../../agent';
+import { renameObjectProperty } from '../../utils';
 import DialogMessagesContainer from './DialogMessagesContainer';
 import AdvancedTextEditor from '../TextEditor/AdvancedTextEditor';
 import FileUpload from '../FileUpload/FileUpload';
-import AddButtonsModal from '../Newsletter/New/AddButtonsModal';
+import AddButtonsModalDialog from '../Newsletter/New/AddButtonsModalDialog';
 
 
 @inject('messagesStore')
@@ -65,10 +64,10 @@ export default class MessageBox extends Component {
         const editor = this.textEditorRef.current;
         editor.setEditorCurrentValue('');
 
-        const keyboard = this.state.buttons.map(button => ({
-            text: button.name,
-            url: button.url
-        }));
+        const keyboard = this.state.buttons.map(button => {
+            renameObjectProperty(button, 'buttonName', 'name');
+            return button;
+        });
 
         const photos = this.state.files.filter(file => file.id);
         const photosObj = {
@@ -109,14 +108,25 @@ export default class MessageBox extends Component {
         });
     }
 
-    onAddButton = e => {
+    onAddButton = (button) => {
+        const activeButtons = this.state.buttons || [];
+
+        let createNew = activeButtons.findIndex(
+            btn => btn.id === button.id
+        ) === -1;
+
+        if (createNew) {
+            activeButtons.push(button);
+        } else {
+            const neededButtonIndex = activeButtons.findIndex(btn =>
+                button.id === btn.id
+            );
+            activeButtons[neededButtonIndex > -1 ? neededButtonIndex : 0] = button;
+        }
+
         this.setState({
             ...this.state,
-            buttons: [...this.state.buttons, {
-                id: shortid.generate(),
-                name: 'Кнопка ' + (this.state.buttons.length + 1),
-                url: 'https://google.com'
-            }]
+            buttons: activeButtons
         });
     }
 
@@ -124,19 +134,6 @@ export default class MessageBox extends Component {
         this.setState({
             ...this.state,
             buttons: this.state.buttons.filter(button => button.id !== buttonId)
-        });
-    }
-
-    setButtonData = (e, buttonId, attribute) => {
-        const buttons = this.state.buttons;
-
-        let neededButtonIndex = buttons.findIndex(button => button.id === buttonId);
-        neededButtonIndex = neededButtonIndex > -1 ? neededButtonIndex : 0;
-        buttons[neededButtonIndex][attribute] = e.target.value;
-
-        this.setState({
-            ...this.state,
-            buttons
         });
     }
 
@@ -228,62 +225,6 @@ export default class MessageBox extends Component {
                 simultaneous
                 onKeysCoincide={this.handleSendMessageShortCut}
             />
-            <AddButtonsModal
-                isOpen={this.state.isModalOpen}
-                close={this.closeModal}
-                isMobile={isMobile}
-            >
-                <form className="">
-                    {
-                        this.state.buttons.map(button => (
-                            <div className="form-group border" key={button.id}>
-                                <label name="text" htmlFor={button.name} className="col-form-label float-left">
-                                    Текст
-                                </label>
-                                <button
-                                    className="close float-right"
-                                    type="button"
-                                    data-dismiss="modal"
-                                    data-toggle="tooltip"
-                                    data-placement="top"
-                                    data-original-title="Удалить кнопку"
-                                    aria-label="Close"
-                                    style={{cursor: 'pointer'}}
-                                    onClick={e => { this.onDeleteButton(e, button.id) }}
-                                >
-                                    <i className="mdi mdi-delete-forever" />
-                                </button>
-                                <input
-                                    data-id={button.id}
-                                    type="text" className="form-control" id={button.name}
-                                    onChange={e => { this.setButtonData(e, button.id, "name")}}
-                                    value={button.name}
-                                    placeholder="Текст, который будет на кнопке" 
-                                />
-                                <label name="url" htmlFor={button.url} className="col-form-label">
-                                    Ссылка
-                                </label>
-                                <input 
-                                    data-id={button.id}
-                                    type="text" className="form-control" id={button.url}
-                                    value={button.url}    
-                                    onChange={e => { this.setButtonData(e, button.id, "url")}}
-                                    placeholder="Ссылка кнопки"
-                                />
-                                <br/>
-                            </div>
-                        ))
-                    }
-                    <button
-                        className={`btn btn-block btn-outline-success btn-icon-text btn-newsletter-composer ${isMobile ? "w-100" : ""}`}
-                        type="button"
-                        onClick={this.onAddButton}
-                    >
-                        Добавить
-                    </button>
-                </form>
-            </AddButtonsModal>
-
             <DialogMessagesContainer
                 channel_id={this.props.channel_id}
                 subscriber_id={this.props.subscriber_id}
@@ -444,6 +385,15 @@ export default class MessageBox extends Component {
                 ))
             }
             </ul>
+            <AddButtonsModalDialog
+                isOpen={this.state.isModalOpen}
+                close={this.closeModal}
+                isMobile={isMobile}
+                activeButtons={this.state.buttons}
+                messages={[{ message: { messageText: this.state.message }, messageId: 0 }]}
+                addButton={this.onAddButton}
+                deleteButton={this.onDeleteButton}
+            />
             </React.Fragment>
         );
     }

@@ -10,6 +10,7 @@ import AdvancedTextEditor from '../../TextEditor/AdvancedTextEditor';
 import FileUpload from '../../FileUpload/FileUpload';
 import agent from '../../../agent';
 import AddButtonsModalDialog from './AddButtonsModalDialog';
+import { formatMEssagesObjectToNeededFormForAPI } from '../../../utils';
 
 
 
@@ -134,10 +135,6 @@ export default class MessageComposerForm extends Component {
         );
         const index = maybeIndex ? maybeIndex : 0;
 
-        // console.log('FOUND INDEX ', index);
-        // console.log('ACTIVE INDEX ', this.state.activeMessageId);
-        // console.log('FOR ARRAY: ', newMessages);
-
         if (index === -1) {
             this.setMessageActive(this.state.messages[0].messageId);
             return;
@@ -152,17 +149,11 @@ export default class MessageComposerForm extends Component {
     }
 
     getCurrentlyActiveMessage = () => {
-        // console.log('getCurrentlyActiveMessage');
         const { messages, activeMessageId } = this.state;
-
-        // console.log('Messages (state): ', messages);
-        // console.log('activeMessageId (state): ', activeMessageId);
 
         const activeMessage = messages.find(message =>
             message.messageId === activeMessageId
         ) || messages[0];
-        
-        // console.log('found activeMessage: ', activeMessage);
 
         return activeMessage;
     }
@@ -177,11 +168,6 @@ export default class MessageComposerForm extends Component {
         if (createNew) {
             activeButtons.push(button);
         } else {
-
-            console.group('Button updating');
-            console.log(button);
-            console.groupEnd();
-
             const neededButtonIndex = activeButtons.findIndex(btn =>
                 button.id === btn.id
             );
@@ -225,38 +211,9 @@ export default class MessageComposerForm extends Component {
         });
     }
 
-    // buttonName --> name
-    // tags: [{value: 1, label: ''},...] --> [value, value, value]
-    formatMEssagesObjectToNeededFormForAPI = (messagesObj) => {
-        for (let i = 0; i < messagesObj.length; ++i) {
-            for (let j = 0; j < messagesObj[i].message.buttons.length; ++j) {
-                const button = messagesObj[i].message.buttons[j];
-
-                if (button.removeTags && button.removeTags.constructor === Array) {
-                    messagesObj[i].message.buttons[j].removeTags =
-                        button.removeTags.map(tag => parseInt(tag.value, 10));
-                }
-
-                if (button.addTags && button.addTags.constructor === Array) {
-                    messagesObj[i].message.buttons[j].removeTags =
-                        button.addTags.map(tag => parseInt(tag.value, 10));
-                }
-
-                Object.defineProperty(
-                    messagesObj[i].message.buttons[j],
-                    'name',
-                    Object.getOwnPropertyDescriptor(messagesObj[i].message.buttons[j], 'buttonName')
-                );
-                delete messagesObj[i].message.buttons[j]['buttonName'];
-            }
-        }
-
-        return messagesObj;
-    }
-
     logFinalJSONobjectToConsole = () => {
         console.log('Newsletter object:');
-        const messagesObj = this.formatMEssagesObjectToNeededFormForAPI(this.state.messages);
+        const messagesObj = formatMEssagesObjectToNeededFormForAPI(this.state.messages);
         console.log(messagesObj);
     }
 
