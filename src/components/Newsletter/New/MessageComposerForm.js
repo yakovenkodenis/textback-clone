@@ -34,13 +34,15 @@ export default class MessageComposerForm extends Component {
                     buttons: [] // [{name, url, id}, ...]
                 },
                 messageAttachments: [],
-                messageId: 0
+                messageId: 0,
+                title: ''
             }],
             activeMessageId: 0,
             currentMessage: '',
             droppedFiles: [],
             dropzoneActive: false,
-            isAddButtonsModalDialogOpen: false
+            isAddButtonsModalDialogOpen: false,
+            currentlyActiveMessageTitle: ''
         };
     }
 
@@ -80,7 +82,8 @@ export default class MessageComposerForm extends Component {
                     buttons: []
                 },
                 messageAttachments: [],
-                messageId: newId
+                messageId: newId,
+                title: ''
             }],
             dropzoneActive: false
         });
@@ -204,6 +207,20 @@ export default class MessageComposerForm extends Component {
         messages[
             neededMessageIndex > -1 ? neededMessageIndex : 0
         ].message.buttons = newActiveButtons;
+
+        this.setState({
+            ...this.state,
+            messages
+        });
+    }
+
+    onMessageTitleChange = e => {
+        const { messages } = this.state;
+        const message = this.getCurrentlyActiveMessage();
+        message.title = e.target.value;
+
+        const messageIndex = messages.findIndex(msg => msg.messageId === message.messageId);
+        messages[messageIndex > -1 ? messageIndex : 0] = message;
 
         this.setState({
             ...this.state,
@@ -377,7 +394,11 @@ export default class MessageComposerForm extends Component {
                         }}
                     >
                         <i className="mdi mdi-comment-plus-outline btn-icon-prepend" />
-                        Начальное сообщение
+                        {
+                            this.state.messages[0].title && this.state.messages[0].title !== ''
+                            ? this.state.messages[0].title
+                            : "Начальное сообщение"
+                        }
                     </button>
                     <br/><br/>
                     {
@@ -399,7 +420,11 @@ export default class MessageComposerForm extends Component {
                                             color: this.state.activeMessageId === msg.messageId ? '#fff' : '#1bcfb4'
                                         }}
                                     >
-                                        {`Новое сообщение #${index+1}`}
+                                        {
+                                            msg.title !== ''
+                                            ? msg.title
+                                            : `Новое сообщение #${index+1}`
+                                        }
                                         <i
                                             type="remove"
                                             className="mdi mdi-close float-right"
@@ -427,6 +452,18 @@ export default class MessageComposerForm extends Component {
                         minHeight: '100px'
                     }}
                 >
+
+                    <div className="form-group">
+                        <input
+                            type="text"
+                            placeholder="Название сообщения"
+                            className="form-control form-control-lg"
+                            id="inputNewsletterTitle"
+                            value={this.getCurrentlyActiveMessage().title}
+                            onChange={this.onMessageTitleChange}
+                        />
+                    </div>
+
                     <AdvancedTextEditor
                         ref={this.textEditorRef}
                         handleInputChange={this.onMessageChange}

@@ -6,7 +6,7 @@ import MediaQuery from 'react-responsive';
 import MessageComposerForm from './MessageComposerForm';
 import ReceiverChoiceForm from './ReceiverChoiceForm';
 import PageHeader from './PageHeader';
-import CardWrapper from '../../CardWrapper';
+import CardWrapper from './CardWrapper';
 import SendNewsletter from './SendNewsletter';
 
 
@@ -16,15 +16,14 @@ class New extends Component {
 
     state = {
         receivers: [],
-        newsletter: []
+        newsletter: [],
+        title: 'Новая рассылка'
     }
 
     updateNewsletter = newsletter => {
         this.setState({
             ...this.state,
             newsletter
-        }, () => {
-            // console.log('NEWSLETTER OBJECT: ', this.state);
         });
     }
 
@@ -32,8 +31,13 @@ class New extends Component {
         this.setState({
             ...this.state,
             receivers
-        }, () => {
-            // console.log('NEWSLETTER OBJECT: ', this.state);
+        });
+    }
+
+    onNewsletterTitleChange = e => {
+        this.setState({
+            ...this.state,
+            title: e.target.value
         });
     }
 
@@ -55,6 +59,19 @@ class New extends Component {
                 <PageHeader isMobile={isMobile} />
 
                 <div className="row">
+                    <CardWrapper title="Дайте название рассылке">
+                        <div className="form-group">
+                            <input
+                                type="text"
+                                placeholder="Название рассылки"
+                                className="form-control form-control-lg"
+                                id="inputNewsletterTitle"
+                                value={this.state.title}
+                                onChange={this.onNewsletterTitleChange}
+                            />
+                        </div>
+                    </CardWrapper>
+
                     <CardWrapper title="Выберите получателя">
                         <ReceiverChoiceForm
                             isMobile={isMobile}

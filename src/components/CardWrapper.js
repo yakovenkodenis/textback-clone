@@ -10,7 +10,7 @@ const CardWrapper = ({ title, children, isCardBody, isMobile }) =>
             ? {children}
             : (
                 <div className="card-body">
-                    <h4 className="card-title text-primary">{title}</h4>
+                    <h4 className="text-primary">{title}</h4>
                     <br/>
                     {children}
                 </div>
