@@ -30,7 +30,7 @@ class New extends Component {
     updateReceiver = receivers => {
         this.setState({
             ...this.state,
-            receivers
+            receivers: receivers
         });
     }
 
@@ -41,13 +41,25 @@ class New extends Component {
         });
     }
 
+    formatSubscribersListForAPI = subscribers => {
+        return subscribers.map(
+            ({ id, channel_id }) => ({ subscriber_id: id, channel_id }));
+    }
+
     sendNewsletter = () => {
         // save as a draft and send
     }
 
     saveNewsletter = () => {
+        const receivers = this.state.receivers
+            .filter(s => s.isSelected)
+            .map(({ id, channel_id }) => ({ subscriber_id: id, channel_id }));
+        
+        const finalConfig = this.state;
+        finalConfig.receivers = receivers;
+
         // save as a draft
-        console.log(this.state);
+        console.log(finalConfig);
     }
 
     render() {

@@ -31,9 +31,7 @@ export default class ReceiverChoiceForm extends Component {
     }
 
     updateSubscribersList() {
-        this.getSubscribersList().then(() => {
-            this.props.updateReceiver(this.formatSubscrubersListForAPI(this.state.subscribers));
-        });
+        this.getSubscribersList();
     }
 
     getSubscribersList = (filter = { InTags: null, NotInTags: null, AndTags: null }) => {
@@ -50,6 +48,8 @@ export default class ReceiverChoiceForm extends Component {
                     ...this.state,
                     subscribers: this.formatData(response.data),
                     loading: false
+                }, () => {
+                    this.props.updateReceiver(this.state.subscribers);
                 });
             }
         });
@@ -70,14 +70,8 @@ export default class ReceiverChoiceForm extends Component {
         });
     }
 
-    formatSubscrubersListForAPI = subscribers => {
-        return subscribers.map(
-            ({ id, channel_id }) => ({ subscriber_id: id, channel_id }));
-    }
-
     filterSubscribers = (subscriber) => {
         const { subscribers } = this.state;
-
 
         for (let i = 0; i < subscribers.length; ++i) {
             if (subscribers[i].id === subscriber.id) {
@@ -125,7 +119,6 @@ export default class ReceiverChoiceForm extends Component {
             ...this.state,
             channels: allChannels || !channels.length ? 'ALL' : channels.map(channel => channel.value)
         }, () => {
-            this.props.updateReceiver(this.formatSubscrubersListForAPI(this.state.subscribers));
             this.updateSubscribersList();
         });
     }
@@ -135,7 +128,6 @@ export default class ReceiverChoiceForm extends Component {
             ...this.state,
             receivers: e.target.value
         }, () => {
-            this.props.updateReceiver(this.formatSubscrubersListForAPI(this.state.subscribers));
             this.updateSubscribersList();
         });
     }
