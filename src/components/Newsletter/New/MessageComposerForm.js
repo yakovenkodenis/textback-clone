@@ -8,8 +8,8 @@ import shortid from 'shortid';
 import Tooltip from '../../UiHelpers/Tooltip';
 import AdvancedTextEditor from '../../TextEditor/AdvancedTextEditor';
 import FileUpload from '../../FileUpload/FileUpload';
-import AddButtonsModal from './AddButtonsModal';
 import agent from '../../../agent';
+import AddButtonsModalDialog from './AddButtonsModalDialog';
 
 
 
@@ -39,7 +39,7 @@ export default class MessageComposerForm extends Component {
             currentMessage: '',
             droppedFiles: [],
             dropzoneActive: false,
-            isModalOpen: false
+            isAddButtonsModalDialogOpen: false
         };
     }
 
@@ -86,6 +86,7 @@ export default class MessageComposerForm extends Component {
     }
 
     removeMessage = messageId => {
+        console.log('removeMessage', messageId);
 
         const maybeMessageId = this.state.messages.find(message =>
             message.messageId === messageId
@@ -166,17 +167,27 @@ export default class MessageComposerForm extends Component {
         return activeMessage;
     }
 
-    onAddButton = () => {
+    addButton = (button) => {
         const activeButtons = this.getCurrentlyActiveMessage().message.buttons || [];
 
-        const id = random(activeButtons.length);
-        const name = 'Кнопка ' + (activeButtons.length + 1);
-        const url = 'https://google.com';
+        let createNew = activeButtons.findIndex(
+            btn => btn.id === button.id
+        ) === -1;
 
-        const button = { id, name, url };
+        if (createNew) {
+            activeButtons.push(button);
+        } else {
 
-        activeButtons.push(button);
-        
+            console.group('Button updating');
+            console.log(button);
+            console.groupEnd();
+
+            const neededButtonIndex = activeButtons.findIndex(btn =>
+                button.id === btn.id
+            );
+            activeButtons[neededButtonIndex > -1 ? neededButtonIndex : 0] = button;
+        }
+
         const { messages, activeMessageId } = this.state;
         const neededMessageIndex = messages.findIndex(message =>
             message.messageId === activeMessageId
@@ -214,32 +225,39 @@ export default class MessageComposerForm extends Component {
         });
     }
 
-    setButtonData = (e, buttonId, attribute) => {
-        const { messages } = this.state;
+    // buttonName --> name
+    // tags: [{value: 1, label: ''},...] --> [value, value, value]
+    formatMEssagesObjectToNeededFormForAPI = (messagesObj) => {
+        for (let i = 0; i < messagesObj.length; ++i) {
+            for (let j = 0; j < messagesObj[i].message.buttons.length; ++j) {
+                const button = messagesObj[i].message.buttons[j];
 
-        const neededMessageIndex = messages.findIndex(message =>
-            message.messageId === this.state.activeMessageId
-        );
-        const neededMessage = neededMessageIndex > -1 ? messages[neededMessageIndex] : messages[0];
+                if (button.removeTags && button.removeTags.constructor === Array) {
+                    messagesObj[i].message.buttons[j].removeTags =
+                        button.removeTags.map(tag => parseInt(tag.value, 10));
+                }
 
-        const neededButtonIndex = neededMessage.message.buttons.findIndex(button =>
-            buttonId === button.id
-        );
+                if (button.addTags && button.addTags.constructor === Array) {
+                    messagesObj[i].message.buttons[j].removeTags =
+                        button.addTags.map(tag => parseInt(tag.value, 10));
+                }
 
-        const neededButton = neededMessage.message.buttons[neededButtonIndex > -1 ? neededButtonIndex : 0];
-        neededButton[attribute] = e.target.value;
+                Object.defineProperty(
+                    messagesObj[i].message.buttons[j],
+                    'name',
+                    Object.getOwnPropertyDescriptor(messagesObj[i].message.buttons[j], 'buttonName')
+                );
+                delete messagesObj[i].message.buttons[j]['buttonName'];
+            }
+        }
 
-        messages[neededMessageIndex].message.buttons[neededButtonIndex] = neededButton;
-
-        this.setState({
-            ...this.state,
-            messages
-        });
+        return messagesObj;
     }
 
     logFinalJSONobjectToConsole = () => {
         console.log('Newsletter object:');
-        console.log(this.state.messages);
+        const messagesObj = this.formatMEssagesObjectToNeededFormForAPI(this.state.messages);
+        console.log(messagesObj);
     }
 
     onDragEnter = () => {
@@ -331,19 +349,17 @@ export default class MessageComposerForm extends Component {
         });
     }
 
-    closeModal = () => {
-        console.log('Closing modal...')
+    openAddButtonsModalDialog = e => {
         this.setState({
             ...this.state,
-            isModalOpen: false
+            isAddButtonsModalDialogOpen: true
         });
     }
 
-    openModal = () => {
-        console.log('Opening modal');
+    closeAddButtonsModalDialog = e => {
         this.setState({
             ...this.state,
-            isModalOpen: true
+            isAddButtonsModalDialogOpen: false
         });
     }
 
@@ -391,64 +407,7 @@ export default class MessageComposerForm extends Component {
             <h4 className="text-primary">
                 {this.props.title ? this.props.title : "Напишите сообщение"}
             </h4>
-            <br/>
-
-            <AddButtonsModal
-                isOpen={this.state.isModalOpen}
-                close={this.closeModal}
-                isMobile={isMobile}
-            >
-                <form className="">
-                    {
-                        activeButtons ? activeButtons.map(button => (
-                            <div className="form-group border" key={button.id}>
-                                <label name="text" htmlFor={button.name} className="col-form-label float-left">
-                                    Текст
-                                </label>
-                                <button
-                                    className="close float-right"
-                                    type="button"
-                                    data-dismiss="modal"
-                                    data-toggle="tooltip"
-                                    data-placement="top"
-                                    data-original-title="Удалить кнопку"
-                                    aria-label="Close"
-                                    style={{cursor: 'pointer'}}
-                                    onClick={e => { this.deleteButton(e, button.id) }}
-                                >
-                                    <i className="mdi mdi-delete-forever" />
-                                </button>
-                                <input
-                                    data-id={button.id}
-                                    type="text" className="form-control" id={button.name}
-                                    onChange={e => { this.setButtonData(e, button.id, "name")}}
-                                    value={button.name}
-                                    placeholder="Текст, который будет на кнопке" 
-                                />
-                                <label name="url" htmlFor={button.url} className="col-form-label">
-                                    Ссылка
-                                </label>
-                                <input 
-                                    data-id={button.id}
-                                    type="text" className="form-control" id={button.url}
-                                    value={button.url}    
-                                    onChange={e => { this.setButtonData(e, button.id, "url")}}
-                                    placeholder="Ссылка кнопки"
-                                />
-                                <br/>
-                            </div>
-                        )) : null
-                    }
-                    <button
-                        className={`btn btn-block btn-outline-success btn-icon-text btn-newsletter-composer ${isMobile ? "w-100" : ""}`}
-                        type="button"
-                        onClick={this.onAddButton}
-                    >
-                        Добавить
-                    </button>
-                </form>
-            </AddButtonsModal>
-    
+            <br/>    
             <form className={`${isMobile ? "" : "d-flex justify-content-left"}`}>
                 <div className={`${isMobile ? "col-12 px-0" : "col-md-4"}`}>
                     <button
@@ -520,7 +479,7 @@ export default class MessageComposerForm extends Component {
                         <button 
                             className={`btn btn-light btn-icon-text ${isMobile ? "mb-1 w-100" : "mr-1"}`}
                             type="button"
-                            onClick={this.openModal}
+                            onClick={this.openAddButtonsModalDialog}
                         >
                             <i className="mdi mdi-plus btn-icon-prepend" />
                             Добавить кнопки
@@ -622,6 +581,16 @@ export default class MessageComposerForm extends Component {
             </form>
         </div>
     </div>
+
+    <AddButtonsModalDialog
+        isOpen={this.state.isAddButtonsModalDialogOpen}
+        close={this.closeAddButtonsModalDialog}
+        isMobile={isMobile}
+        activeButtons={activeButtons}
+        messages={this.state.messages}
+        addButton={this.addButton}
+        deleteButton={this.deleteButton}
+    />
 </FileUpload>
         );
     }
