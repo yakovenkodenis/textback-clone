@@ -22,24 +22,60 @@ export default class ReceiverChoiceForm extends Component {
             channels: 'ALL',
             subscribers: [],
             loading: false,
-            isSubscriberModalOpen: false
+            isSubscriberModalOpen: false,
+            allowStateUpdate: true
         }
+
+        this.channelsSelectRef = React.createRef();
     }
 
     componentDidMount() {
-        this.updateSubscribersList();
+        if (!this.props.edit) {
+            this.updateSubscribersList();
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.edit && this.state.allowStateUpdate && this.props.receivers.length > 0) {
+            console.log('Component did update [receivers]', this.props.receivers);
+
+            let channels = this.state.channels === 'ALL' ? [] : this.state.channels;
+
+            if (this.channelsSelectRef.current && channels !== 'ALL') {
+                channels = this.channelsSelectRef.current.props.options
+                 .filter(c => this.props.receiversFilter.channels.some(a => c.value === a));
+
+                console.log(this.channelsSelectRef.current.select)
+
+                this.channelsSelectRef.current.select.setValue(channels);
+            }
+
+            this.setState({
+                ...this.state,
+                subscribers: this.props.receivers,
+                allowStateUpdate: false,
+                ...this.props.receiversFilter,
+                channels
+            });
+        } 
     }
 
     updateSubscribersList() {
         this.getSubscribersList();
     }
 
-    getSubscribersList = (filter = { InTags: null, NotInTags: null, AndTags: null }) => {
+    getSubscribersList = (
+        filter = { InTags: null, NotInTags: null, AndTags: null }
+    ) => {
         this.setState({
             ...this.state,
             loading: true,
             subscribers: []
         });
+
+        if (this.state.channels !== 'ALL' && this.state.channels.length !== 0) {
+            filter['Channels'] = this.state.channels.map(c => c.value || c);
+        }
 
         return agent.Subscribers.getList(Object.values(filter).some(Boolean) ? filter : {})
          .then(response => {
@@ -49,7 +85,10 @@ export default class ReceiverChoiceForm extends Component {
                     subscribers: this.formatData(response.data),
                     loading: false
                 }, () => {
-                    this.props.updateReceiver(this.state.subscribers);
+                    this.props.updateReceiver(this.state.subscribers, {
+                        receivers: this.state.receivers,
+                        channels: this.state.channels === 'ALL' ? [] : this.state.channels
+                    });
                 });
             }
         });
@@ -177,6 +216,7 @@ export default class ReceiverChoiceForm extends Component {
                         closeMenuOnSelect={false}
                         components={makeAnimated()}
                         isMulti
+                        ref={this.channelsSelectRef}
                         defaultValue={[{value: 'ALL', label: 'Все каналы'}]}
                         options={[{value: 'ALL', label: 'Все каналы'}, ...channels]}
                         placeholder="Каналы"

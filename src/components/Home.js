@@ -54,6 +54,10 @@ const routes = [
         component: () => <NewNewsletter />
     },
     {
+        path: '/newsletter/draft/:id',
+        component: () => <NewNewsletter edit />
+    },
+    {
         path: '/autofunnels',
         exact: true,
         component: () => <Autofunnels />

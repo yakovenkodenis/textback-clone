@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
 
@@ -8,16 +8,44 @@ import ReceiverChoiceForm from './ReceiverChoiceForm';
 import PageHeader from './PageHeader';
 import CardWrapper from './CardWrapper';
 import SendNewsletter from './SendNewsletter';
+import agent from '../../../agent';
 
 
+@inject('newsletterStore')
 @withRouter
 @observer
 class New extends Component {
 
-    state = {
-        receivers: [],
-        newsletter: [],
-        title: 'Новая рассылка'
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = {
+            receivers: [],
+            newsletter: [],
+            title: 'Новая рассылка',
+            receiversFilter: {}
+        }
+    }
+
+    componentDidMount() {
+        if (this.props.edit) {
+            const draftId =  this.props.match.params.id;
+
+            if (draftId && Number.isInteger(parseInt(draftId, 10))) {
+                agent.Newsletter.getDraft(draftId)
+                    .then(response => {
+                    if (response.success) {
+                        const draft = response.data.data;
+                        console.log(draft);
+
+                        this.setState({
+                            ...this.state,
+                            ...draft
+                        });
+                    }
+                });
+            }
+        }
     }
 
     updateNewsletter = newsletter => {
@@ -27,10 +55,11 @@ class New extends Component {
         });
     }
 
-    updateReceiver = receivers => {
+    updateReceiver = (receivers, receiversFilter={}) => {
         this.setState({
             ...this.state,
-            receivers: receivers
+            receivers: receivers,
+            receiversFilter
         });
     }
 
@@ -52,14 +81,32 @@ class New extends Component {
 
     saveNewsletter = () => {
         const receivers = this.state.receivers
-            .filter(s => s.isSelected)
-            .map(({ id, channel_id }) => ({ subscriber_id: id, channel_id }));
+            .filter(s => s.isSelected);
+            // .map(({ id, channel_id }) => ({ subscriber_id: id, channel_id }));
         
         const finalConfig = this.state;
         finalConfig.receivers = receivers;
 
+        console.log('Begin saving draft...', finalConfig);
+
+        if (this.props.edit) {
+            const draftId = parseInt(this.props.match.params.id, 10);
+
+            if (Number.isInteger(draftId)) {
+                console.log('SHOULD UPDATE DRAFT #', draftId);
+                this.props.newsletterStore.saveDraft(finalConfig, this.props.match.params.id);
+            }
+        } else {
+            this.props.newsletterStore.saveDraft(finalConfig);
+        }
+
+        this.props.history.push('/admin/newsletter');
+
         // save as a draft
-        console.log(finalConfig);
+        // ----------------------------------------
+        // !!!IMPORTANT: if this.props.edit --> update the draft, else save new.
+        // ----------------------------------------
+        // console.log(finalConfig);
     }
 
     render() {
@@ -88,12 +135,17 @@ class New extends Component {
                         <ReceiverChoiceForm
                             isMobile={isMobile}
                             updateReceiver={this.updateReceiver}
+                            receivers={this.state.receivers}
+                            receiversFilter={this.state.receiversFilter}
+                            edit={this.props.edit}
                         />
                     </CardWrapper>
 
                     <MessageComposerForm
                         isMobile={isMobile}
                         onStateChange={this.updateNewsletter}
+                        messages={this.state.newsletter}
+                        edit={this.props.edit}
                     />
 
                     <CardWrapper title="Отправьте рассылку">

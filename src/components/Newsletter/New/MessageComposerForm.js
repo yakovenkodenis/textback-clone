@@ -26,6 +26,7 @@ export default class MessageComposerForm extends Component {
 
         this.textEditorRef = React.createRef();
         this.dropzoneRef = React.createRef();
+        this.firstMessageButtonRef = React.createRef();
 
         this.state = {
             messages: [{
@@ -33,7 +34,7 @@ export default class MessageComposerForm extends Component {
                     messageText: '',
                     buttons: [] // [{name, url, id}, ...]
                 },
-                messageAttachments: [],
+                messageAttachments: [], // [{id, name, preview, progress}]
                 messageId: 0,
                 title: ''
             }],
@@ -42,7 +43,8 @@ export default class MessageComposerForm extends Component {
             droppedFiles: [],
             dropzoneActive: false,
             isAddButtonsModalDialogOpen: false,
-            currentlyActiveMessageTitle: ''
+            currentlyActiveMessageTitle: '',
+            allowStateUpdate: true
         };
     }
 
@@ -51,9 +53,53 @@ export default class MessageComposerForm extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.onStateChange) {
+        if (this.props.onStateChange && !this.props.edit) {
             this.props.onStateChange(this.state.messages);
         }
+
+        if (this.props.edit && this.state.allowStateUpdate && this.props.messages.length > 0) {
+            console.log('Component did update [messages]', this.props.messages);
+
+            const promisesForEachMessageAttachments = this.props.messages.map(message => {
+                return Promise.all(message.messageAttachments.map(
+                    attachment => agent.Files.getFile(attachment.id))
+                );
+            });
+
+            Promise.all(promisesForEachMessageAttachments).then(linksArr => {
+                console.log('IDs: ', linksArr);
+
+                const messages = this.props.messages;
+
+                linksArr.forEach((links, index) => {
+                   messages[index].messageAttachments = links.map((link, i) => {
+                        let imagesWithUrls = messages[index].messageAttachments[i];
+
+                        if (link.success) {
+                            imagesWithUrls = {
+                                ...imagesWithUrls,
+                                preview: link.data.file_url,
+                                name: `Вложение #${i + 1}`
+                            }
+                        }
+
+                        return imagesWithUrls;
+                   });
+                });
+
+                console.log('Images: ', messages);
+
+                this.setState({
+                    ...this.state,
+                    messages: this.props.messages,
+                    allowStateUpdate: false
+                }, () => {
+                    if (this.firstMessageButtonRef.current) {
+                        this.firstMessageButtonRef.current.click();
+                    }
+                });
+            });
+        } 
     }
 
     setTextEditorCurrentValue = value => {
@@ -388,6 +434,7 @@ export default class MessageComposerForm extends Component {
                     <button
                         className={`btn btn-outline-success btn-icon-text ${isMobile ? "w-100" : ""}`}
                         type="button"
+                        ref={this.firstMessageButtonRef}
                         onClick={() => { this.setMessageActive(this.state.messages[0].messageId) }}
                         style={{
                             backgroundColor: this.state.activeMessageId === 0 ? '#1bcfb4' : 'transparent',

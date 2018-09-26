@@ -144,7 +144,7 @@ const Subscribers = {
             StatusId, SubscriberId, ChannelId
         }),
 
-    getList: (filter = { InTags: null, NotInTags: null, AndTags: null }) =>
+    getList: (filter = { InTags: null, NotInTags: null, AndTags: null, Channels: null }) =>
         requests.post('/', {
             "Controller": "Subscriber",
             "Action": "GetList",
@@ -284,7 +284,56 @@ const Files = {
             `/upload?token=${commonStore.token}`,
             file,
             callback
-        )
+        ),
+
+    getFile: (FileId) =>
+        requests.post('/', {
+            "Controller": "Message",
+            "Action": "GetFileFromBuffer",
+            FileId
+        })
+}
+
+const Newsletter = {
+    getList: () =>
+        requests.post('/', {
+            "Controller": "Newsletter",
+            "Action": "GetDraftList"
+        }),
+
+    saveDraft: (Data, NewsletterId) => {
+        let request;
+
+        if (NewsletterId) {
+            request = requests.post('/', {
+                "Controller": "Newsletter",
+                "Action": "SaveDraft",
+                Data, NewsletterId
+            });
+        } else {
+            request = requests.post('/', {
+                "Controller": "Newsletter",
+                "Action": "SaveDraft",
+                Data
+            });
+        }
+
+        return request;
+    },
+
+    getDraft: NewsletterId =>
+        requests.post('/', {
+            "Controller": "Newsletter",
+            "Action": "GetDraft",
+            NewsletterId
+        }),
+
+    deleteDraft: NewsletterId =>
+        requests.post('/', {
+            "Controller": "Newsletter",
+            "Action": "DeleteDraft",
+            NewsletterId
+        })
 }
 
 const Profile = {
@@ -299,5 +348,6 @@ export default {
     Subscribers,
     Channels,
     Messages,
-    Files
+    Files,
+    Newsletter
 };

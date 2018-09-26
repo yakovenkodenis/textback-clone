@@ -34,6 +34,7 @@ import newsletterMessageTemplateStore from './stores/newsletterMessageTemplateSt
 import subscribersStore from './stores/subscribersStore';
 import channelsStore from './stores/channelsStore';
 import messagesStore from './stores/messagesStore';
+import newsletterStore from './stores/newsletterStore';
 
 window.jQuery = window.jquery = window.$ = jQuery;
 require('bootstrap/dist/js/bootstrap.bundle.min.js');
@@ -46,7 +47,8 @@ const stores = {
     newsletterMessageTemplateStore,
     subscribersStore,
     channelsStore,
-    messagesStore
+    messagesStore,
+    newsletterStore
 };
 
 
