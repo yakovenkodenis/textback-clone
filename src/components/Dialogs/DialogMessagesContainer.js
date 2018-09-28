@@ -45,6 +45,9 @@ class DialogMessagesContainer extends Component {
     }
 
     componentDidMount() {
+        console.log('DialogMessagesContainer is MOUNTED');
+        this._isMounted = true;
+
         // TODO think about responsiveness and number of messages in the message box
         window.onresize = e => {
             this.setState({
@@ -87,7 +90,20 @@ class DialogMessagesContainer extends Component {
     }
 
     componentWillUnmount() {
+        this._isMounted = false;
         window.onresize = undefined;
+
+        console.log('DialogMessagesContainer is UNMOUNTED');
+
+        this.setState({
+            viewportHeight: document.documentElement.clientHeight - 400,
+            selectedMessages: [],
+            afterDeletion: false,
+            loadingPrevious: false,
+            allowedToLoadPrevious: true,
+            offset: 0,   // for pagination
+            limit: 50,    // for pagination
+        });
     }
 
     elementVisibleInViewport = watcher => {
@@ -104,12 +120,14 @@ class DialogMessagesContainer extends Component {
                 console.log('Setting next offset to: ', this.state.offset + this.state.limit);
                 console.groupEnd();
 
-                this.setState({
-                    ...this.state,
-                    loadingPrevious: true,
-                    allowedToLoadPrevious: false,
-                    offset: this.state.offset + this.state.limit
-                });
+                if (this._isMounted) {
+                    this.setState({
+                        ...this.state,
+                        loadingPrevious: true,
+                        allowedToLoadPrevious: false,
+                        offset: this.state.offset + this.state.limit
+                    });
+                }
             }
 
             // if loading is not currently performed and loading is allowed,
@@ -198,10 +216,12 @@ class DialogMessagesContainer extends Component {
             );
         }
 
-        this.setState({
-            ...this.state,
-            selectedMessages
-        });
+        if (this._isMounted) {
+            this.setState({
+                ...this.state,
+                selectedMessages
+            });
+        }
     }
 
     onDeleteMessages = () => {
@@ -211,11 +231,13 @@ class DialogMessagesContainer extends Component {
             );
         });
 
-        this.setState({
-            ...this.state,
-            selectedMessages: [],
-            afterDeletion: true
-        });
+        if (this._isMounted) {
+            this.setState({
+                ...this.state,
+                selectedMessages: [],
+                afterDeletion: true
+            });
+        }
     }
 
     render() {

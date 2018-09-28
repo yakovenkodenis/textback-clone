@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
+import { observer } from 'mobx-react';
+// import $ from 'jquery';
 
 
+@observer
 export default class ButtonsTableContainer extends Component {
     
     componentDidMount() {
-        $('[data-toggle="tooltip"]').tooltip(); // initiate tooltips
+        // $('[data-toggle="tooltip"]').tooltip(); // initiate tooltips
     }
 
     generateButtonsTable = (buttons) => {

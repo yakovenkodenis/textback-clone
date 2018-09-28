@@ -6,33 +6,43 @@ import { toImage } from 'emojione';
 import { datediff, unixtimeToDate } from '../../utils';
 
 
+const getStyles = (isActive, unread) => ({
+    cursor: "pointer",
+    backgroundColor: isActive ? "#e9ecef" : unread ? "#f8f9fa" : "#fff"
+});
+
 @withRouter
 @observer
 export default class DialogsListItem extends Component {
+
+    componentDidMount() {
+        console.log('DialogsListItem MOUNTED');
+    }
+
+    componentWillUnmount() {
+        console.log('DialogsListItem UNMOUNTED');
+    }
+
+    goToDialogsRoute = () => {
+        const { history, match, path } = this.props;
+        history.push(`/admin/dialogs/${match.params.currentFilter}/${path}`);
+    }
 
     render() {
 
         const {
             name, last_active, bodyPreview,
             unreadCount, unread,
-            path, channel_type,
-            history, match, isActive
+            channel_type, isActive
         } = this.props;
 
         const timeAgo = datediff(unixtimeToDate(last_active), new Date());
 
-        
-
         return (
             <a
                 className="list-group-item list-group-item-action flex-column align-items-start list-group-item-dialogs"
-                style={{
-                    cursor: "pointer",
-                    backgroundColor: isActive ? "#e9ecef" : unread ? "#f8f9fa" : "#fff",
-                }}
-                onClick={() => {
-                    history.push(`/admin/dialogs/${match.params.currentFilter}/${path}`)
-                }}
+                style={getStyles(isActive, unread)}
+                onClick={this.goToDialogsRoute}
             >
                 <div className="d-flex w-100 justify-content-between">
                     <h5 className="mb-1">

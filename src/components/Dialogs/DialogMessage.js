@@ -1,13 +1,108 @@
 import React, { Component } from 'react';
 import { toImage } from 'emojione';
 import Image from 'react-image-webp';
+import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { Watch } from 'scrollmonitor-react';
 
 import { unixtimeToDate, formatDate, linkify } from '../../utils';
 
 
+const getBoxShadow = isSticker => (
+    isSticker ? {
+        boxShadow: 'none'
+    } : {}
+);
+
+const imageStyles = {
+    height: '80%',
+    width: '80%',
+    objectFit: 'obtain'
+};
+
+const stickerStyles = {
+    height: '45%',
+    width: '45%',
+    objectFit: 'obtain'
+};
+
+const getBtnStyles = hover => ({
+    opacity: hover ? 0.7 : 0.2,
+    transform: 'scale(0.65, 0.65)'
+});
+
+const getPaddingsForSides = owner => (
+    owner
+    ? {
+        paddingLeft: '0px',
+        cursor: 'pointer'
+    } : {
+        paddingRight: '0px',
+        cursor: 'pointer'
+    }
+);
+
+let getMessageContent = (
+    isPNGsticker, isSticker, isImage,
+    files, hasKeyboard, keyboard,
+    text
+) => (
+    isPNGsticker
+    ? (
+        <img
+            src={files[0].url}
+            alt={files[0].file_name + " png-sticker"}
+            className="image-tile"
+            style={stickerStyles}
+        />
+    ) : isSticker
+    ? (
+        <Image
+            webp={files[0].url}
+            className="image-tile"
+            style={stickerStyles}
+        />
+    ) : isImage ? ( 
+        files.map((file, index) =>
+            <img
+                src={file.url}
+                alt={file.file_name}
+                className="image-tile my-1"
+                style={imageStyles}
+                key={index}
+            />
+        )
+    ) : (
+        <React.Fragment>
+        <p
+            className="convert-emoji"
+            dangerouslySetInnerHTML={{
+                __html: toImage(linkify(text))
+            }}
+        />
+        { hasKeyboard
+            && (
+                <div className="d-flex justify-content-center my-2 flex-wrap">
+                    {keyboard.map((button, index) => (
+                        <a
+                        href={button.url}
+                        className="btn btn-inverse-primary btn-fw m-2"
+                        target="_blank"
+                        key={index}
+                    >
+                        {button.text}
+                    </a>
+                    ))}
+                </div>
+            )
+        }
+        </React.Fragment>
+    )
+);
+
+
 @withRouter
+@observer
 export default Watch(class DialogMessage extends Component {
 
     state = {
@@ -48,7 +143,6 @@ export default Watch(class DialogMessage extends Component {
             is_attachment,
             files,
             date,
-            afterDeletion,
             keyboard
         } = this.props;
 
@@ -59,88 +153,11 @@ export default Watch(class DialogMessage extends Component {
         const isPNGsticker = isSticker && files[0].url && files[0].url.endsWith(".png");
         const hasKeyboard = keyboard && keyboard.constructor === Array && keyboard.length > 0;
 
-        const imageStyles = {
-            height: '80%',
-            width: '80%',
-            objectFit: 'obtain'
-        };
-
-        const stickerStyles = {
-            height: '45%',
-            width: '45%',
-            objectFit: 'obtain'
-        };
-
-        const styles = owner
-          ? {
-              paddingLeft: '0px'
-          } : {
-              paddingRight: '0px'
-          };
-
-        const btnStyles = {
-            opacity: this.state.hover ? 0.7 : 0.2,
-            transform: 'scale(0.65, 0.65)'
-        }
-
-        let timelinePanelStyles = {};
-        if (isSticker) timelinePanelStyles = {...timelinePanelStyles, boxShadow: "none"};
-        if (afterDeletion) timelinePanelStyles = {...timelinePanelStyles, background: "#fff"};
-
-
-        let messageContent = (
-            isPNGsticker
-            ? (
-                <img
-                    src={files[0].url}
-                    alt={files[0].file_name + " png-sticker"}
-                    className="image-tile"
-                    style={stickerStyles}
-                />
-            ) : isSticker
-            ? (
-                <Image
-                    webp={files[0].url}
-                    className="image-tile"
-                    style={stickerStyles}
-                />
-            ) : isImage ? ( 
-                files.map((file, index) =>
-                    <img
-                        src={file.url}
-                        alt={file.file_name}
-                        className="image-tile my-1"
-                        style={imageStyles}
-                        key={index}
-                    />
-                )
-            ) : (
-                <React.Fragment>
-                <p
-                    className="convert-emoji"
-                    dangerouslySetInnerHTML={{
-                        __html: toImage(linkify(text))
-                    }}
-                />
-                { hasKeyboard
-                    && (
-                        <div className="d-flex justify-content-center my-2 flex-wrap">
-                            {keyboard.map((button, index) => (
-                                <a
-                                href={button.url}
-                                className="btn btn-inverse-primary btn-fw m-2"
-                                target="_blank"
-                                key={index}
-                            >
-                                {button.text}
-                            </a>
-                            ))}
-                        </div>
-                    )
-                }
-                </React.Fragment>
-            )
-        )
+        let messageContent = getMessageContent(
+            isPNGsticker, isSticker, isImage,
+            files, hasKeyboard, keyboard,
+            text
+        );
 
         return (
             <div
@@ -151,10 +168,7 @@ export default Watch(class DialogMessage extends Component {
                      timeline-wrapper-success d-flex
                     `
                 }
-                style={{
-                    ...styles,
-                    cursor: 'pointer'
-                }}
+                style={getPaddingsForSides(owner)}
                 onMouseEnter={this.hover}
                 onMouseLeave={this.unhover}
                 onClick={this.onSelect}
@@ -167,14 +181,14 @@ export default Watch(class DialogMessage extends Component {
                                 ${this.state.hover ? "btn-outline-secondary-hover" : ""}
                             `
                         }
-                        style={btnStyles}
+                        style={getBtnStyles(this.state.hover)}
                     >
                         <i className="mdi mdi-check text-info"></i>
                     </button>
                 }
                 <div
                     className={`timeline-panel ${this.state.selected ? "background-selected" : ""}`}
-                    style={timelinePanelStyles}
+                    style={getBoxShadow(isSticker)}
                 >
                     <div className="timeline-body">
                         {messageContent}
@@ -193,7 +207,7 @@ export default Watch(class DialogMessage extends Component {
                                 ${this.state.hover ? "btn-outline-secondary-hover" : ""}
                             `
                         }
-                        style={btnStyles}
+                        style={getBtnStyles(this.state.hover)}
                     >
                         <i className="mdi mdi-check text-info"></i>
                     </button>

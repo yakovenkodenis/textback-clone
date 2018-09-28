@@ -15,7 +15,10 @@ class Actions extends Component {
                             <i className="mdi mdi-play btn-icon-prepend"></i>
                             Включить
                         </button>
-                        <button className="btn btn-light btn-fw mx-2">
+                        <button
+                            className="btn btn-light btn-fw mx-2"
+                            onClick={this.props.save}
+                        >
                             Сохранить
                         </button>
                     </div>

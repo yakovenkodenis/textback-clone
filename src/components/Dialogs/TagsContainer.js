@@ -18,9 +18,11 @@ export default class TagsContainer extends Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
+
         agent.Subscribers.getInfo(this.props.channelId, this.props.subscriberId)
         .then(response => {
-            if (response.success && response.data.tags && this.state.isFirstTime) {
+            if (response.success && response.data.tags && this.state.isFirstTime && this._isMounted) {
                 this.setState({
                     ...this.state,
                     isFirstTime: false,
@@ -33,6 +35,10 @@ export default class TagsContainer extends Component {
                 });
             }
         });
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     loadTags = () => {

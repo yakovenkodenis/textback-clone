@@ -13,7 +13,6 @@ import UserProfile from './UserProfile';
 class DialogContainer extends Component {
 
     render() {
-
         const {
             name, /*messages,*/
             isMobile,

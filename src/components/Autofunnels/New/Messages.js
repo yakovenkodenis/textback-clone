@@ -44,7 +44,7 @@ class Messages extends Component {
                         <label className="form-check-label my-auto">
                             <input
                                 type="checkbox" className="form-check-input"
-                                checked={message.active}
+                                defaultChecked={message.active}
                             />
                             <i className="input-helper"></i>
                         </label>

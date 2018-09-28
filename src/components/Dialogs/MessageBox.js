@@ -12,6 +12,54 @@ import FileUpload from '../FileUpload/FileUpload';
 import AddButtonsModalDialog from '../Newsletter/New/AddButtonsModalDialog';
 
 
+const activeDropZoneStyles = {
+    border: '2px solid #777',
+    opacity: '0.7'
+};
+
+const dropZoneStyles = {
+    position: 'absolute',
+    top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: 'rgba(192, 192, 192, 0.4)',
+    zIndex: 9999,
+    border: '2px dashed black',
+    textAlign: 'center',
+    verticalAlign: 'middle',
+    lineHeight: '7rem'
+};
+
+const getDropzoneStyles = (dropzoneActive) => {
+    if (dropzoneActive) return activeDropZoneStyles;
+    return { minHeight: '100px' };
+}
+
+const tooltipStyles = {
+    tooltip: {
+        background: 'transparent'
+    },
+    wrapper: {
+        display: 'block'
+    },
+    content: {
+        background: 'transparent'
+    },
+    arrow: {
+        borderTop: '5px solid transparent'
+    }
+};
+
+const displayNone = {
+    display: 'none'
+};
+
+const zIndexZero = {
+    zIndex: 0
+};
+
+const cursorPointer = {
+    cursor: 'pointer'
+};
+
 @inject('messagesStore')
 @withRouter
 @observer
@@ -33,6 +81,14 @@ export default class MessageBox extends Component {
             buttons: [],
             sendButtonActive: true
         };
+    }
+
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     scrollSmoothToBottom = () => {
@@ -207,14 +263,20 @@ export default class MessageBox extends Component {
         });
     }
 
+    openDropzone = () => {
+        this.dropzoneRef.current.open();
+    }
+
+    onDeleteAttachedFile = file => {
+        this.deleteAttachedFile(file);
+    }
+
+    getInitialMessageState = message => ([
+        { message: { messageText: message }, messageId: 0 }
+    ])
+
     render() {
-
         const dropzoneActive = this.state.dropzoneActive;
-
-        const activeDropZoneStyles = {
-            border: '2px solid #777',
-            opacity: '0.7'
-        };
 
         const { isMobile } = this.props;
 
@@ -243,27 +305,12 @@ export default class MessageBox extends Component {
             >
                 <div
                     className="form-group"
-                    style={
-                        dropzoneActive
-                        ? activeDropZoneStyles
-                        : {
-                            minHeight: '100px'
-                        }
-                    }
+                    style={getDropzoneStyles(dropzoneActive)}
                 >
                     {dropzoneActive &&
                         <div
                             className="dropzone-background h1"
-                            style={{
-                                position: 'absolute',
-                                top: 0, left: 0, right: 0, bottom: 0,
-                                backgroundColor: 'rgba(192, 192, 192, 0.4)',
-                                zIndex: 9999,
-                                border: '2px dashed black',
-                                textAlign: 'center',
-                                verticalAlign: 'middle',
-                                lineHeight: '7rem'
-                            }}
+                            style={dropZoneStyles}
                         >Перетащите файлы сюда</div>
                     }
                         <AdvancedTextEditor
@@ -275,7 +322,7 @@ export default class MessageBox extends Component {
 
                 <div
                     className={`form-group d-flex justify-content-between ${isMobile ? "flex-wrap" : ""}`}
-                    style={{zIndex: 0}}
+                    style={zIndexZero}
                 >
 
                     <button
@@ -297,7 +344,7 @@ export default class MessageBox extends Component {
                             className="form-control file-upload-info border-0"
                             disabled placeholder=""
                             type="text"
-                            style={{display: 'none'}}
+                            style={displayNone}
                         />
                         <span
                             className={`input-group-append ${isMobile ? "w-100 mx-auto my-1" : ""}`}
@@ -305,7 +352,7 @@ export default class MessageBox extends Component {
                             <button
                                 className={`file-upload-browse btn btn-light btn-icon-text ${isMobile ? "w-100" : ""}`}
                                 type="button"
-                                onClick={() => { this.dropzoneRef.current.open(); }}
+                                onClick={this.openDropzone}
                             >
                                 <i className="mdi mdi-upload btn-icon-prepend" />
                                 Прикрепить файл
@@ -349,20 +396,7 @@ export default class MessageBox extends Component {
                                     maxHeight: '15rem'
                                 }}/>
                             }
-                            styles={{
-                                tooltip: {
-                                    background: 'transparent'
-                                },
-                                wrapper: {
-                                    display: 'block'
-                                },
-                                content: {
-                                    background: 'transparent'
-                                },
-                                arrow: {
-                                    borderTop: '5px solid transparent'
-                                }
-                            }}
+                            styles={tooltipStyles}
                         >
                             <li
                                 id={`hover-image-${file.id}`}
@@ -372,10 +406,8 @@ export default class MessageBox extends Component {
                                 <span
                                     aria-hidden="true"
                                     className="float-right" 
-                                    style={{
-                                        cursor: 'pointer'
-                                    }}
-                                    onClick={() => { this.deleteAttachedFile(file) }}
+                                    style={cursorPointer}
+                                    onClick={this.onDeleteAttachedFile}
                                 >
                                     ×
                                 </span>
@@ -390,9 +422,10 @@ export default class MessageBox extends Component {
                 close={this.closeModal}
                 isMobile={isMobile}
                 activeButtons={this.state.buttons}
-                messages={[{ message: { messageText: this.state.message }, messageId: 0 }]}
+                messages={this.getInitialMessageState()}
                 addButton={this.onAddButton}
                 deleteButton={this.onDeleteButton}
+                withoutResponseType
             />
             </React.Fragment>
         );

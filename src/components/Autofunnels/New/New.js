@@ -13,6 +13,23 @@ import CardWrapper from '../../CardWrapper';
 @observer
 export default class New extends Component {
 
+    state = {
+        generalInfo: {},
+        messages: {},
+        settings: {}
+    }
+
+    updateGeneralInfoData = generalInfo => {
+        this.setState({
+            ...this.state,
+            generalInfo
+        });
+    }
+
+    saveAutofunnel = () => {
+        console.log('Save chain: ', this.state);
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -20,7 +37,7 @@ export default class New extends Component {
 
                 <div className="row">
                     <CardWrapper title="Общая информация">
-                        <GeneralInfo isCardBody={true} />
+                        <GeneralInfo updateGeneralInfoData={this.updateGeneralInfoData} />
                     </CardWrapper>
 
                     <CardWrapper title="Сообщения">
@@ -32,7 +49,7 @@ export default class New extends Component {
                     </CardWrapper>
 
                     <CardWrapper title="">
-                        <Actions />
+                        <Actions save={this.saveAutofunnel} />
                     </CardWrapper>
                 </div>
             </React.Fragment>

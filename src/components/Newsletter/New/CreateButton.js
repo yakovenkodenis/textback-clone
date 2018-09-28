@@ -329,20 +329,25 @@ export default class CreateButton extends Component {
                         onChange={e => { this.onButtonDataChange('buttonName', e); }}
                     />
                 </div>
-                <div className="form-group">
-                    <label htmlFor="buttonType">Тип кнопки</label>
-                    <select
-                        id="buttonType" className="form-control form-control-lg"
-                        onChange={e => { this.onButtonDataChange('buttonType', e); }}
-                        value={this.state.buttonType}
-                    >
-                        <option value="link">Ссылка</option>
-                        <option value="response">Ответ</option>
-                    </select>
-                </div>
+                {
+                    !this.props.withoutResponseType &&
+                    <div className="form-group">
+                        <label htmlFor="buttonType">Тип кнопки</label>
+                        <select
+                            id="buttonType" className="form-control form-control-lg"
+                            onChange={e => { this.onButtonDataChange('buttonType', e); }}
+                            value={this.state.buttonType}
+                        >
+                            <option value="link">Ссылка</option>
+                            <option value="response">Ответ</option>
+                        </select>
+                    </div>
+                }
 
                 {
-                    this.state.buttonType === 'link'
+                    this.props.withoutResponseType
+                    ? this.renderFormForLinkButton()
+                    : this.state.buttonType === 'link'
                     ? this.renderFormForLinkButton()
                     : this.state.buttonType === 'response'
                     ? this.renderFormForResponseButton(messages)

@@ -81,6 +81,7 @@ export default class AddButtonsModalDialog extends Component {
                                     ? this.state.selectedButton
                                     : null
                                 }
+                                withoutResponseType={this.props.withoutResponseType}
                             />
                             : <ButtonsTableContainer
                                 isMobile={isMobile}

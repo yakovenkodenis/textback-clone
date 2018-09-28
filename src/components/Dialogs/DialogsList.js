@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
-import shortid from 'shortid';
 
 import DialogListItem from './DialogListItem';
 import { truncate } from '../../utils';
@@ -34,6 +33,16 @@ export default class DialogsList extends Component {
         });
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+        console.log('DialogsList MOUNTED');
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+        console.log('DialogsList UNMOUNTED');
+    }    
+
     filterDialogs = e => {
         const updatedDialogs = this.props.dialogs.filter(subscriber =>
             subscriber.name.toLowerCase().search(
@@ -50,32 +59,34 @@ export default class DialogsList extends Component {
         });
     }
 
+    getDialogs = dialogs => dialogs
+     .slice()
+     .sort((d1, d2) => d1.message_preview.date < d2.message_preview.date)
+     .map(dialog => {
+
+        const {
+            name, path, channel_type,
+            message_preview, unreadCount, unread, isActive,
+        } = dialog;
+
+        const bodyPreview =
+            message_preview && (message_preview.text || message_preview.text === "")
+            ? truncate(message_preview.text, 30, true)
+            : 'Сообщений нет';
+
+        const last_active = message_preview.date;
+
+        const props = {
+            name, last_active, bodyPreview, path, channel_type,
+            unreadCount, unread, isActive
+        }
+
+        return <DialogListItem key={dialog.subscriber_id + '-' + dialog.channel_id} {...props} />;
+    });
+
     render() {
 
-        const dialogs = this.state.dialogs   // <-- dialogs is an array of subscribers here
-          .slice()
-          .sort((d1, d2) => d1.message_preview.date < d2.message_preview.date)
-          .map(dialog => {
-
-            const {
-                name, path, channel_type,
-                message_preview, unreadCount, unread, isActive,
-            } = dialog;
-
-            const bodyPreview =
-                message_preview && (message_preview.text || message_preview.text === "")
-                ? truncate(message_preview.text, 30, true)
-                : 'Сообщений нет';
-
-            const last_active = message_preview.date;
-
-            const props = {
-                name, last_active, bodyPreview, path, channel_type,
-                unreadCount, unread, isActive
-            }
-
-            return <DialogListItem key={shortid.generate()} {...props} />;
-        });
+        const dialogs = this.getDialogs(this.state.dialogs);
 
         return (
             <div className="list-group">

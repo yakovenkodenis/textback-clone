@@ -88,6 +88,7 @@ const routes = [
     }
 ];
 
+
 @inject('channelsStore', 'subscribersStore', 'commonStore', 'messagesStore')
 @withRouter
 @observer
@@ -112,15 +113,19 @@ class Home extends Component {
     }
 
     componentWillUnmount(){
+        this._isMounted = false;
         this.unlistenRoutesChange();
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.props.channelsStore.getChannelsList()
           .then(() => this.props.subscribersStore.getSubscribersDetailedList())
           .then(() => {
               console.log('Start polling in Home.js componentDidMount');
-              this.pollUpdates();
+              if (this._isMounted) {
+                this.pollUpdates();
+              }
           });
     }
 
