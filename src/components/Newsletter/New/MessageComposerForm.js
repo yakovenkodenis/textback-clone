@@ -393,14 +393,14 @@ export default class MessageComposerForm extends Component {
             opacity: '0.7'
         };
 
-        const { isMobile } = this.props;
+        const { isMobile, modalSized } = this.props;
 
         const activeButtons = this.getCurrentlyActiveMessage().message.buttons || [];
 
 
         return (
 <FileUpload
-    className={`${this.props.disablePaddingBottom ? "" : "grid-margin"} ${!this.props.isForWidget ? "col-md-12 stretch-card" : "stretch-card"} ${this.props.disableMarginBottom ? "mt-0" : ""}`}
+    className={`${this.props.disablePaddingBottom ? "" : "grid-margin"} ${!this.props.withoutSelfSending ? "col-md-12 stretch-card" : "stretch-card"} ${this.props.disableMarginBottom ? "mt-0" : ""}`}
     onDrop={this.onFilesDrop}
     disableClick
     onDragEnter={this.onDragEnter}
@@ -430,7 +430,7 @@ export default class MessageComposerForm extends Component {
             </h4>
             <br/>    
             <form className={`${isMobile ? "" : "d-flex justify-content-left"}`}>
-                <div className={`${isMobile ? "col-12 px-0" : "col-md-4"}`}>
+                <div className={`${isMobile ? "col-12 px-0" : modalSized ? "col-md-5" : "col-md-4"}`}>
                     <button
                         className={`btn btn-outline-success btn-icon-text ${isMobile ? "w-100" : ""}`}
                         type="button"
@@ -495,7 +495,7 @@ export default class MessageComposerForm extends Component {
                 </div>
 
                 <div
-                    className={`${isMobile ? "col-12 px-0 my-4" :"col-md-5"}`}
+                    className={`${isMobile ? "col-12 px-0 my-4" : modalSized? "col-md-7" : "col-md-5"}`}
                     style={{
                         minHeight: '100px'
                     }}
@@ -606,7 +606,7 @@ export default class MessageComposerForm extends Component {
 
                 </div>
 
-                { !this.props.isForWidget &&
+                { !this.props.withoutSelfSending &&
                     <div className={`${isMobile ? "col-md-3 px-0" : "col-md-3"}`}>
                         <h4 className="card-title text-success">Проверка перед отправкой</h4>
                         <p className="card-description">Отправьте сообщение себе</p>

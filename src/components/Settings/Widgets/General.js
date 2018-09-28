@@ -251,10 +251,10 @@ export default class General extends Component {
             <MessageComposerForm
                 title="Сообщение после успешной подписки"
                 isMobile={isMobile}
-                isForWidget={true}
                 onStateChange={this.getMessageState}
                 disableMarginBottom
                 disablePaddingBottom
+                withoutSelfSending
             />
             </React.Fragment>
         )

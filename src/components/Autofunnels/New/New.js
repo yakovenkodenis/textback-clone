@@ -26,6 +26,13 @@ export default class New extends Component {
         });
     }
 
+    updateSettingsInfoData = settings => {
+        this.setState({
+            ...this.state,
+            settings
+        });
+    }
+
     saveAutofunnel = () => {
         console.log('Save chain: ', this.state);
     }
@@ -41,11 +48,11 @@ export default class New extends Component {
                     </CardWrapper>
 
                     <CardWrapper title="Сообщения">
-                        <Messages />
+                        <Messages test />
                     </CardWrapper>
 
                     <CardWrapper title="Настройки">
-                        <Settings />
+                        <Settings updateSettingsInfo={this.updateSettingsInfoData} />
                     </CardWrapper>
 
                     <CardWrapper title="">

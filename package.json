@@ -78,6 +78,7 @@
     "react-lightweight-tooltip": "^1.0.0",
     "react-linkify": "^0.2.2",
     "react-modal": "^3.5.1",
+    "react-motion": "^0.5.2",
     "react-perfect-scrollbar": "^1.2.1",
     "react-polyfill": "0.0.2",
     "react-progressbar.js": "^0.2.0",

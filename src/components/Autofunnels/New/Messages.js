@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import MediaQuery from 'react-responsive';
 import $ from 'jquery';
-import shortid from 'shortid';
+
+import MessageComposerModal from './MessageComposerModal';
 
 
 class Messages extends Component {
@@ -10,35 +11,59 @@ class Messages extends Component {
         super(props, context);
 
         this.state = {
-            messages: [
-                { time: 'Через 3 часа', active: true, name: 'Полезный контент' },
-                { time: 'Через 3 часа', active: true, name: 'Ненавязчивая продажа' },
-                { time: 'Через 3 часа', active: true, name: 'Сообщение #7' }
-            ]
+            isMessagesComposerModalOpen: false,
+            activeMessageChain: 0,
+            messages: []
         };
     }
 
     componentDidMount() {
         $('[data-toggle="tooltip"]').tooltip(); // initiate tooltips
+
+        this.setState({
+            ...this.state,
+            messages: [
+                { id: 'id1', time: 'Через 3 часа', active: true, name: 'Полезный контент' },
+                { id: 'id2', time: 'Через 2 часа', active: false, name: 'Ненавязчивая продажа' },
+                { id: 'id3', time: 'Через 4 часа', active: true, name: 'Сообщение #7' }
+            ]
+        });
     }
 
     handleOnAddMessage = e => {
+
+        const msg = { key: `${Math.random()}`, time: 'Через 3 часа', active: true, name: `Сообщение #${Math.random()}` };
+
         this.setState({
             ...this.state,
             messages: [
                 ...this.state.messages,
-                { time: 'Через 3 часа', active: true, name: `Сообщение #${Math.random()}` }
+                msg
             ]
-        })
+        });
     }
 
-    render() {
+    openMessagesModal = (index) => {
+        this.setState({
+            ...this.state,
+            activeMessageChain: this.state.messages[index],
+            isMessagesComposerModalOpen: true
+        });
+    }
 
-        const rows = this.state.messages.map((message) => (
-            <tr key={shortid.generate()}>
+    closeMessagesModal = () => {
+        this.setState({
+            ...this.state,
+            isMessagesComposerModalOpen: false
+        });
+    }
+
+    renderTableRow = (message) => {
+        return (
+            <tr key={message.id}>
                 <td><u>{message.time}</u></td>
 
-                <td className="d-flex justify-content-start">
+                <td className="d-flex justify-content-center mb-1">
                     <div
                         className="form-check form-check-flat form-check-primary my-auto">
                         <label className="form-check-label my-auto">
@@ -51,6 +76,14 @@ class Messages extends Component {
                     </div>
                 </td>
 
+                <td>
+                    <div className="col-12 d-flex justify-content-center">
+                        <i className="mdi mdi-drag-vertical"
+                            style={{transform: 'scale(1.6)', cursor: 'pointer'}}
+                        />
+                    </div>
+                </td>
+
                 <td>{message.name}</td>
                 <td>
                     <div className="col-12 d-flex justify-content-center">
@@ -60,6 +93,7 @@ class Messages extends Component {
                             data-toggle="tooltip"
                             data-placement="top"
                             data-original-title="Изменить"
+                            onClick={() => { this.openMessagesModal(message.id); }}
                         >
                             <i className="mdi mdi-pencil-box-outline" />
                         </label>
@@ -75,33 +109,48 @@ class Messages extends Component {
                     </div>
                 </td>
             </tr>
-        ));
+        );
+    }
+
+    render() {
+
+        const { isMobile } = this.props;
 
         return (
-            <div className="mt-5">
-                <table className="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Время</th>
-                            <th>Активность</th>
-                            <th>Название сообщения</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows}
-                    </tbody>
-                </table>
-                <br/>
-
+        <React.Fragment>
+            <div className="">
                 <button
-                    className="btn btn-gradient-primary btn-icon-text mr-2"
+                    className="btn btn-gradient-primary btn-icon-text mb-3"
                     onClick={this.handleOnAddMessage}
                 >
                     <i className="mdi mdi-plus btn-icon-prepend"></i>
                     Добавить сообщение
                 </button>
+                <br/>
+                <table className="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Время</th>
+                            <th>Активность</th>
+                            <th></th>
+                            <th>Название сообщения</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            this.state.messages.map(msg => this.renderTableRow(msg))
+                        }
+                    </tbody>
+                </table>
             </div>
+            <MessageComposerModal
+                isOpen={this.state.isMessagesComposerModalOpen}
+                close={this.closeMessagesModal}
+                isMobile={isMobile}
+                messages={this.state.activeMessageChain}
+            />
+        </React.Fragment>
         )
     }
 }
