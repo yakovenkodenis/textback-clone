@@ -110,17 +110,11 @@ class New extends Component {
     sendNewsletter = (sendType) => {
         const finalConfig = this.getFinalConfig();
 
-        if (sendType === 'plan') {
-            this.saveNewsletter()
-        } else {
-            this.saveAsDraft(finalConfig)
-            .then(({ newsletter_id }) => {
-                if (newsletter_id) {
-                    this.props.newsletterStore.startNewsletter(newsletter_id);
-                }
-               this.props.history.push('/admin/newsletter');
-            });
-        }
+        this.props.newsletterStore.startNewsletter(finalConfig)
+         .then(response => {
+             console.log('After SendNewsletter RESPONSE: ', response);
+             this.props.history.push('/admin/newsletter');
+        });
     }
 
     saveNewsletter = () => {
@@ -180,6 +174,7 @@ class New extends Component {
                             saveNewsletter={this.saveNewsletter}
                             sendNewsletter={this.sendNewsletter}
                             updateSendingTime={this.updateSendingTime}
+                            setUnixTime={this.state.time}
                         />
                     </CardWrapper>
                 </div>

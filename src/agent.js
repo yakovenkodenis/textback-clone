@@ -313,11 +313,11 @@ const Newsletter = {
             "Action": "GetStartedList"
         }),
 
-    startNewsletter: (NewsletterId) =>
+    startNewsletter: (Data) =>
         requests.post('/', {
             "Controller": "Newsletter",
             "Action": "StartNewsletter",
-            NewsletterId
+            Data
         }),
 
     saveDraft: (Data, NewsletterId) => {

@@ -103,7 +103,7 @@ export default class SendNewsletter extends Component {
                         type="radio"
                         id="plan-newsletter"
                         value="plan"
-                        checked={this.state.sendType === 'plan'}
+                        checked={this.props.setUnixTime !== 0 || this.state.sendType === 'plan'}
                         className="form-check-input"/>
                     <i className="input-helper" />
                 </label>

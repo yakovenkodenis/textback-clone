@@ -84,7 +84,42 @@ class NewsletterStore {
         runInAction(() => {
             this.inProgress = false;
         });
+
+        return savedDraft;
     }
+
+
+    async startNewsletterOnAPI(draft) {
+        /*
+            Response format:
+            {
+                success: true
+                data: { ...???... }
+            }
+        */
+
+        const response = await agent.Newsletter.startNewsletter(draft);
+
+        return response.success ? response.data : [];
+    }
+
+    @action('Get the detailed list of newsletter drafts')
+    startNewsletter = async (draft) => {
+        this.inProgress = true;
+
+        const startedNewsletter = await this.startNewsletterOnAPI(draft);
+
+        console.log('DRAFT SAVE RESPONSE: ', startedNewsletter);
+
+        // update this.drafts
+        runInAction(() => {
+            this.inProgress = false;
+        });
+
+        return startedNewsletter;
+    }
+
+
 
     async getDraftFromAPI(id, isPlanned=false) {
         const response = await agent.Newsletter.getDraft(id, isPlanned);
