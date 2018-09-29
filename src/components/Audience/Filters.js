@@ -8,13 +8,54 @@ import agent from '../../agent';
 
 export default class Filters extends Component {
 
-    state = {
-        AndTags: false,
-        InTags: [],
-        NotInTags: []
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = {
+            AndTags: false,
+            InTags: [],
+            NotInTags: [],
+    
+            allowStateChange: true
+        }
+
+        this.inTagsSelectRef = React.createRef();
+        this.notInTagsSelectRef = React.createRef();
     }
 
     componentDidUpdate(prevProps, prevState) {
+
+        // console.log('componentDidUpdate Filters.js: ', this.props.edit, this.props.defaultFilters);
+
+        if (
+            this.props.edit
+            && this.props.defaultFilters
+            && this.allowStateChange
+            && this.inTagsSelectRef.current.select
+            && this.notInTagsSelectRef.current.select
+        ) {
+            const { inTags, notInTags, andTags } = this.props.defaultFilters;
+
+            console.log('Filters.js update: ', inTags, notInTags, andTags);
+
+            if (this.inTagsSelectRef.current) {
+                console.log(this.inTagsSelectRef.current);
+                this.inTagsSelectRef.current.select.setValue(inTags);
+            }
+
+            if (this.notInTagsSelectRef.current) {
+                this.notInTagsSelectRef.current.select.setValue(notInTags);
+            }
+
+            this.setState({
+                ...this.state,
+                AndTags: andTags,
+                InTags: inTags,
+                NotInTags: notInTags,
+                allowStateChange: false
+            });
+        }
+
         const difference = diff(prevState, this.state);
 
         if (Object.keys(difference).length) {
@@ -24,6 +65,13 @@ export default class Filters extends Component {
             NotInTags = NotInTags.map(tag => parseInt(tag.value, 10));
 
             console.log('INITIATE LOADING WITH DATA: ', this.state);
+
+            this.props.updateFilters({
+                inTags: InTags,
+                notInTags: NotInTags, 
+                andTags: AndTags
+            });
+
             this.props.getSubscribersList({ InTags, NotInTags, AndTags });
         }
     }
@@ -45,14 +93,17 @@ export default class Filters extends Component {
         this.setState({
             ...this.state,
             InTags: tags
+        }, () => {
+            this.syncFilters();
         });
     }
 
     handleSelectChangeForNotInTags = (tags) => {
-        
         this.setState({
             ...this.state,
             NotInTags: tags
+        }, () => {
+            this.syncFilters();
         });
     }
 
@@ -60,7 +111,17 @@ export default class Filters extends Component {
         this.setState({
             ...this.state,
             AndTags: e.target.value === 'ALL'
-        })
+        }, () => {
+            this.syncFilters();
+        });
+    }
+
+    syncFilters = () => {
+        this.props.updateFilters({
+            inTags: this.state.InTags,
+            notInTags: this.state.NotInTags, 
+            andTags: this.state.AndTags
+        });
     }
 
     render() {
@@ -79,11 +140,13 @@ export default class Filters extends Component {
                     <div className={`${isMobile ? "col-12" : "col-6"}`}>
                         <p>Присвоен тег: </p>
                         <AsyncSelect
-                            closeMenuOnSelect={false}
+                            closeMenuOnSelect={true}
+                            ref={this.inTagsSelectRef}
                             components={makeAnimated()}
                             isMulti
                             cacheOptions
                             defaultOptions
+                            value={this.props.defaultFilters.inTags || this.state.inTags}
                             placeholder="Присвоен тег"
                             loadingMessage={() => "Загрузка..."}
                             loadOptions={this.loadTags}
@@ -93,11 +156,13 @@ export default class Filters extends Component {
                         <br/>
                         <p>Не присвоен тег: </p>
                         <AsyncSelect
-                            closeMenuOnSelect={false}
+                            closeMenuOnSelect={true}
+                            ref={this.notInTagsSelectRef}
                             components={makeAnimated()}
                             isMulti
                             cacheOptions
                             defaultOptions
+                            value={this.props.defaultFilters.notInTags || this.state.notInTags}
                             placeholder="Не присвоен тег"
                             loadingMessage={() => "Загрузка..."}
                             loadOptions={this.loadTags}
@@ -110,8 +175,8 @@ export default class Filters extends Component {
                             <label htmlFor="logical-and" className="form-check-label">
                                 Соответствие одновременно всем критериям
                                 <input
-                                    defaultChecked
                                     onChange={this.handleAndTagsChange}
+                                    checked={this.props.defaultFilters.andTags || this.state.AndTags}
                                     type="radio"
                                     value="ALL"
                                     name="logical-filter"
@@ -126,6 +191,7 @@ export default class Filters extends Component {
                                 Соответствие хотя бы одному из критериев
                                 <input
                                     onChange={this.handleAndTagsChange}
+                                    checked={!this.props.defaultFilters.andTags && !this.state.AndTags}
                                     type="radio"
                                     name="logical-filter"
                                     id="logical-or"

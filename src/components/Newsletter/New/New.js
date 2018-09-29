@@ -37,11 +37,13 @@ class New extends Component {
                     .then(response => {
                     if (response.success) {
                         const draft = response.data.data;
-                        console.log(draft);
+                        // console.log(draft);
 
                         this.setState({
                             ...this.state,
                             ...draft
+                        }, () => {
+                            console.log(this.state);
                         });
                     }
                 });
@@ -57,6 +59,8 @@ class New extends Component {
     }
 
     updateReceiver = (receivers, receiversFilter={}) => {
+
+        console.log('updateReceiver in New.js: ', receiversFilter);
         this.setState({
             ...this.state,
             receivers: receivers,
@@ -64,10 +68,10 @@ class New extends Component {
         });
     }
 
-    updateSendingTime = (unixTime) => {
+    updateSendingTime = (unixTime, sendType) => {
         this.setState({
             ...this.state,
-            time: unixTime
+            time: sendType === 'immediately' ? 0 : unixTime
         });
     }
 
@@ -110,6 +114,10 @@ class New extends Component {
     sendNewsletter = (sendType) => {
         const finalConfig = this.getFinalConfig();
 
+        if (sendType === 'immediately') {
+            finalConfig.time = 0;
+        }
+
         this.props.newsletterStore.startNewsletter(finalConfig)
          .then(response => {
              console.log('After SendNewsletter RESPONSE: ', response);
@@ -117,8 +125,13 @@ class New extends Component {
         });
     }
 
-    saveNewsletter = () => {
+    saveNewsletter = (sendType) => {
         const finalConfig = this.getFinalConfig();
+
+        if (sendType === 'immediately') {
+            console.log('SAVE IMMEDIATE DRAFT')
+            finalConfig.time = 0;
+        }
 
         console.log('Begin saving draft...', finalConfig);
         console.log('ROUTE PARAMS: ', this.props.match);

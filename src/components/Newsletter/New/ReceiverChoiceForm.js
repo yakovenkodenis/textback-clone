@@ -9,7 +9,11 @@ import SubscribersListModal from './SubscribersListModal';
 import Filters from '../../Audience/Filters';
 
 
-@inject('channelsStore', 'subscribersStore')
+const selectMinWidth = {
+    minWidth: '150px'
+};
+
+@inject('channelsStore')
 @withRouter
 @observer
 export default class ReceiverChoiceForm extends Component {
@@ -21,6 +25,11 @@ export default class ReceiverChoiceForm extends Component {
             receivers: "subscribers",
             channels: 'ALL',
             subscribers: [],
+
+            inTags: [],
+            notInTags: [],
+            andTags: true,
+
             loading: false,
             isSubscriberModalOpen: false,
             allowStateUpdate: true
@@ -36,28 +45,50 @@ export default class ReceiverChoiceForm extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.edit && this.state.allowStateUpdate && this.props.receivers.length > 0) {
+        if (
+            this.props.edit
+            && this.state.allowStateUpdate
+            && this.props.receivers.length > 0
+            && this.props.channelsStore.channels.length > 0
+        ) {
             console.log('Component did update [receivers]', this.props.receivers);
 
-            let channels = this.state.channels === 'ALL' ? [] : this.state.channels;
+            const filteredChannels = this.props.receiversFilter.channels;
+            let channels = filteredChannels.length > 0
+                             ? filteredChannels
+                             : [{ label: "Все каналы", value: "ALL" }];
 
-            if (this.channelsSelectRef.current && channels !== 'ALL') {
-                channels = this.channelsSelectRef.current.props.options
-                 .filter(c => this.props.receiversFilter.channels.some(a => c.value === a));
 
-                console.log(this.channelsSelectRef.current.select)
+            if (this.channelsSelectRef.current) {
+
+                if (typeof channels[0] === "string") {
+                    channels = this.channelsSelectRef.current.props.options
+                        .filter(c => this.props.receiversFilter.channels.some(a => c.value === a));
+                }
 
                 this.channelsSelectRef.current.select.setValue(channels);
             }
 
             this.setState({
                 ...this.state,
-                subscribers: this.props.receivers,
                 allowStateUpdate: false,
+                loading: false,
                 ...this.props.receiversFilter,
+                subscribers: this.props.receivers,
                 channels
+            }, () => {
+                console.log('After componentDidUpdate: ', this.state);
             });
-        } 
+        }
+    }
+
+    updateTagsFilter = (tagsFilter) => {
+        this.setState({
+            ...this.state,
+            inTags: tagsFilter.inTags,
+            notInTags: tagsFilter.notInTags,
+            andTags: tagsFilter.andTags
+        });
     }
 
     updateSubscribersList() {
@@ -67,6 +98,7 @@ export default class ReceiverChoiceForm extends Component {
     getSubscribersList = (
         filter = { InTags: null, NotInTags: null, AndTags: null }
     ) => {
+        
         this.setState({
             ...this.state,
             loading: true,
@@ -87,7 +119,10 @@ export default class ReceiverChoiceForm extends Component {
                 }, () => {
                     this.props.updateReceiver(this.state.subscribers, {
                         receivers: this.state.receivers,
-                        channels: this.state.channels === 'ALL' ? [] : this.state.channels
+                        channels: this.state.channels === 'ALL' ? [] : this.state.channels,
+                        notInTags: this.state.notInTags,
+                        inTags: this.state.inTags,
+                        andTags: this.state.andTags
                     });
                 });
             }
@@ -167,9 +202,13 @@ export default class ReceiverChoiceForm extends Component {
             ...this.state,
             receivers: e.target.value
         }, () => {
-            this.updateSubscribersList();
+            if (this.props.edit && !this.state.allowStateUpdate) {
+                this.updateSubscribersList();
+            }
         });
     }
+
+    noChannelsMessage = () => "Нет каналов";
 
     render() {
 
@@ -181,6 +220,9 @@ export default class ReceiverChoiceForm extends Component {
             value: channel.channel_id.toString(), label: channel.first_name
          }))
          : [];
+
+        const { inTags, notInTags, andTags } = this.state;
+        const defaultFilters = { inTags, notInTags, andTags };
 
         return (
         <React.Fragment>
@@ -208,7 +250,7 @@ export default class ReceiverChoiceForm extends Component {
                         <option value="">Что-то еще 2</option>
                     </select>
                 </div>
-                <div className={`form-group ${isMobile ? "" : "mx-5"}`}>
+                <div className={`form-group ${isMobile ? "" : "mx-5"}`} style={selectMinWidth}>
                     <label htmlFor="allChannels">
                         Каналы
                     </label>
@@ -221,7 +263,7 @@ export default class ReceiverChoiceForm extends Component {
                         options={[{value: 'ALL', label: 'Все каналы'}, ...channels]}
                         placeholder="Каналы"
                         onChange={this.handleSelectChannels}
-                        noOptionsMessage={() => "Нет каналов"}
+                        noOptionsMessage={this.noChannelsMessage}
                     />
                 </div>
                 <div className={`form-group ${isMobile ? "" : "mx-5"}`}>
@@ -244,6 +286,10 @@ export default class ReceiverChoiceForm extends Component {
                 getSubscribersList={this.getSubscribersList}
                 isMobile={isMobile}
                 withoutTitle={true}
+                updateFilters={this.updateTagsFilter}
+
+                edit={this.props.edit}
+                defaultFilters={defaultFilters}
             />
             <SubscribersListModal
                 isOpen={this.state.isSubscriberModalOpen}

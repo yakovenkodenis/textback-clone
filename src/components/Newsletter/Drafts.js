@@ -40,20 +40,20 @@ export default class Drafts extends Component {
                     <div className="col-12 d-flex justify-content-center">
                         <label
                             className="badge badge-outline-info my-auto mx-2"
-                            style={{cursor: "pointer", zIndex: 9999}}
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            data-original-title="Изменить"
+                            style={{cursor: "pointer"}}
+                            // data-toggle="tooltip"
+                            // data-placement="top"
+                            // data-original-title="Изменить"
                             onClick={() => history.push(`newsletter/draft/${draft.newsletter_id}`)}
                         >
                             <i className="mdi mdi-pencil-box-outline" />
                         </label>
                         <label
                             className="badge badge-outline-danger my-auto mx-2"
-                            style={{cursor: "pointer", zIndex: 9999}}
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            data-original-title="Удалить"
+                            style={{cursor: "pointer"}}
+                            // data-toggle="tooltip"
+                            // data-placement="top"
+                            // data-original-title="Удалить"
                             onClick={() => { this.deleteDraft(draft.newsletter_id); }}
                         >
                             <i className="mdi mdi-delete-forever" />

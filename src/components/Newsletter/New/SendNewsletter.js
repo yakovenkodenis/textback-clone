@@ -18,14 +18,19 @@ export default class SendNewsletter extends Component {
         moment: moment(),
         displayPicker: false,
         sendButtonText: 'Отправить сейчас',
-        sendType: 'immediately'
+        sendType: 'immediately',
+        firstTimeUpdate: true
     }
 
-    componentDidMount() {
-        if (this.props.setUnixTime) {
+    componentDidUpdate() {
+        if (this.props.setUnixTime > 0 && this.state.firstTimeUpdate) {
             this.setState({
                 ...this.state,
-                moment: moment(this.props.setUnixTime / 1000)
+                moment: moment(this.props.setUnixTime),
+                sendType: 'plan',
+                displayPicker: true,
+                sendButtonText: 'Запланировать рассылку',
+                firstTimeUpdate: false
             });
         }
     }
@@ -58,7 +63,7 @@ export default class SendNewsletter extends Component {
 
     syncTime = moment => {
         if (this.props.updateSendingTime) {
-            this.props.updateSendingTime(moment.valueOf())
+            this.props.updateSendingTime(moment.valueOf(), this.state.sendType);
         }
     }
 
@@ -73,6 +78,10 @@ export default class SendNewsletter extends Component {
 
     sendNewsletter = () => {
         this.props.sendNewsletter(this.state.sendType);
+    }
+
+    saveNewsletter = () => {
+        this.props.saveNewsletter(this.state.sendType);
     }
 
     render() {
@@ -103,7 +112,7 @@ export default class SendNewsletter extends Component {
                         type="radio"
                         id="plan-newsletter"
                         value="plan"
-                        checked={this.props.setUnixTime !== 0 || this.state.sendType === 'plan'}
+                        checked={this.state.sendType === 'plan'}
                         className="form-check-input"/>
                     <i className="input-helper" />
                 </label>
@@ -113,6 +122,7 @@ export default class SendNewsletter extends Component {
                 className="my-3 ml-0 col-3 pl-0"
                 format="DD-MM-YYYY HH:mm"
                 min={moment()}
+                value={this.state.moment}
                 defaultValue={this.state.moment}
                 options={true}
                 onChange={this.handleDateTimeChange}
@@ -131,7 +141,7 @@ export default class SendNewsletter extends Component {
                 <button
                     className={`btn btn-light btn-icon-text ${isMobile ? "w-100 mt-2" : "ml-1"}`}
                     type="button"
-                    onClick={this.props.saveNewsletter}
+                    onClick={this.saveNewsletter}
                 >
                     Сохранить как черновик
                 </button>

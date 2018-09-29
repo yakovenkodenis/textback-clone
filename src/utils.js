@@ -103,7 +103,7 @@ export const linkify = text =>
 
 
 export const truncate = (msg, n, useWordBoundary) => {
-    if (msg.length <= n) { return msg; }
+    if (!msg || msg.length <= n) { return msg; }
     let subString = msg.substr(0, n - 1);
     return (useWordBoundary
         ? subString.substr(0, subString.lastIndexOf(' '))
