@@ -90,7 +90,7 @@ let getMessageContent = (
                         target="_blank"
                         key={index}
                     >
-                        {button.text}
+                        {button.name}
                     </a>
                     ))}
                 </div>
