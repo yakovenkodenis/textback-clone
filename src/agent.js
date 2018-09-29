@@ -301,6 +301,25 @@ const Newsletter = {
             "Action": "GetDraftList"
         }),
 
+    getPlannedList: () =>
+        requests.post('/', {
+            "Controller": "Newsletter",
+            "Action": "GetPlannedList"
+        }),
+
+    getStartedList: () =>
+        requests.post('/', {
+            "Controller": "Newsletter",
+            "Action": "GetStartedList"
+        }),
+
+    startNewsletter: (NewsletterId) =>
+        requests.post('/', {
+            "Controller": "Newsletter",
+            "Action": "StartNewsletter",
+            NewsletterId
+        }),
+
     saveDraft: (Data, NewsletterId) => {
         let request;
 
@@ -321,19 +340,37 @@ const Newsletter = {
         return request;
     },
 
-    getDraft: NewsletterId =>
-        requests.post('/', {
+    getDraft: (NewsletterId, isPlanned=false) => {
+        if (isPlanned) {
+            return requests.post('/', {
+                "Controller": "Newsletter",
+                "Action": "GetDraft",
+                "ChangeToDraft": true,
+                NewsletterId
+            });
+        }
+
+        return requests.post('/', {
             "Controller": "Newsletter",
             "Action": "GetDraft",
             NewsletterId
-        }),
+        });
+    },
 
     deleteDraft: NewsletterId =>
         requests.post('/', {
             "Controller": "Newsletter",
             "Action": "DeleteDraft",
             NewsletterId
-        })
+        }),
+
+    deletePlannedNewsletter: (NewsletterId) =>
+        requests.post('/', {
+            "Controller": "Newsletter",
+            "Action": "DeletePlannedNewsletter",
+            NewsletterId
+        }),
+    
 }
 
 const Profile = {

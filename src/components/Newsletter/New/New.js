@@ -23,7 +23,8 @@ class New extends Component {
             receivers: [],
             newsletter: [],
             title: 'Новая рассылка',
-            receiversFilter: {}
+            receiversFilter: {},
+            time: 0
         }
     }
 
@@ -63,6 +64,13 @@ class New extends Component {
         });
     }
 
+    updateSendingTime = (unixTime) => {
+        this.setState({
+            ...this.state,
+            time: unixTime
+        });
+    }
+
     onNewsletterTitleChange = e => {
         this.setState({
             ...this.state,
@@ -75,11 +83,7 @@ class New extends Component {
             ({ id, channel_id }) => ({ subscriber_id: id, channel_id }));
     }
 
-    sendNewsletter = () => {
-        // save as a draft and send
-    }
-
-    saveNewsletter = () => {
+    getFinalConfig = () => {
         const receivers = this.state.receivers
             .filter(s => s.isSelected);
             // .map(({ id, channel_id }) => ({ subscriber_id: id, channel_id }));
@@ -87,26 +91,48 @@ class New extends Component {
         const finalConfig = this.state;
         finalConfig.receivers = receivers;
 
-        console.log('Begin saving draft...', finalConfig);
+        return finalConfig;
+    }
 
+    saveAsDraft = (finalConfig) => {
         if (this.props.edit) {
             const draftId = parseInt(this.props.match.params.id, 10);
 
             if (Number.isInteger(draftId)) {
                 console.log('SHOULD UPDATE DRAFT #', draftId);
-                this.props.newsletterStore.saveDraft(finalConfig, this.props.match.params.id);
+                return this.props.newsletterStore.saveDraft(finalConfig, this.props.match.params.id);
             }
         } else {
-            this.props.newsletterStore.saveDraft(finalConfig);
+            return this.props.newsletterStore.saveDraft(finalConfig);
         }
+    }
 
-        this.props.history.push('/admin/newsletter');
+    sendNewsletter = (sendType) => {
+        const finalConfig = this.getFinalConfig();
 
-        // save as a draft
-        // ----------------------------------------
-        // !!!IMPORTANT: if this.props.edit --> update the draft, else save new.
-        // ----------------------------------------
-        // console.log(finalConfig);
+        if (sendType === 'plan') {
+            this.saveNewsletter()
+        } else {
+            this.saveAsDraft(finalConfig)
+            .then(({ newsletter_id }) => {
+                if (newsletter_id) {
+                    this.props.newsletterStore.startNewsletter(newsletter_id);
+                }
+               this.props.history.push('/admin/newsletter');
+            });
+        }
+    }
+
+    saveNewsletter = () => {
+        const finalConfig = this.getFinalConfig();
+
+        console.log('Begin saving draft...', finalConfig);
+        console.log('ROUTE PARAMS: ', this.props.match);
+
+        this.saveAsDraft(finalConfig)
+         .then(() => {
+            this.props.history.push('/admin/newsletter');
+        });
     }
 
     render() {
@@ -153,6 +179,7 @@ class New extends Component {
                             isMobile={isMobile}
                             saveNewsletter={this.saveNewsletter}
                             sendNewsletter={this.sendNewsletter}
+                            updateSendingTime={this.updateSendingTime}
                         />
                     </CardWrapper>
                 </div>

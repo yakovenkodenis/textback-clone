@@ -240,6 +240,8 @@ export default class MessageBox extends Component {
             return agent.Files.upload(formData, trackProgress);
         });
 
+        // IMPORTANT!!!
+        // REJECT THE PROMISE WHEN COMPONENT UNMOUNTS!!!
         Promise.all(promises).then((ids) => {
             const files = this.state.files.map((file, index) => {
                 file.id = ids[index].data.file_id;

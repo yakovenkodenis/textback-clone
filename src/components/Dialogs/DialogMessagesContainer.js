@@ -63,6 +63,9 @@ class DialogMessagesContainer extends Component {
 
             console.log('DialogMessagesContainer.js [componentDidMount]: WE ARE LOADING NEW MESSAGES!!!')
 
+
+            // IMPORTANT!!!
+            // REJECT THE PROMISE WHEN COMPONENT UNMOUNTS!!!
             this.loadMessages()
               .then(() => {
                   nextTick(() => {

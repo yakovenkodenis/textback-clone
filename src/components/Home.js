@@ -94,6 +94,8 @@ const routes = [
 @observer
 class Home extends Component {
 
+    _isMounted = false;
+
     constructor(props, context) {
         super(props, context);
 
