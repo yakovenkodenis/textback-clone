@@ -36,6 +36,10 @@ class Settings extends Component {
         };
     }
 
+    componentDidMount() {
+        this.props.updateSettingsInfo(this.state);
+    }
+
     handleCheckboxChange = e => {
         const target = e.target;
         const value = target.type === 'checkbox' ? Boolean(target.checked) : target.value;

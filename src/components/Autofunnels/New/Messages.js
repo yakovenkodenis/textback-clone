@@ -1,9 +1,29 @@
 import React, { Component } from 'react';
 import MediaQuery from 'react-responsive';
 import $ from 'jquery';
+import shortid from 'shortid';
 
 import MessageComposerModal from './MessageComposerModal';
 
+
+const getDefaultMessage = id => ({
+    title: 'Название сообщения',
+    id,
+    isActive: true,
+    messages: [{
+        message: {
+            messageText: '',
+            buttons: [] // [{name, url, id}, ...]
+        },
+        messageAttachments: [], // [{id, name, preview, progress}]
+        messageId: 0,
+        title: ''
+    }],
+    sendTime: {
+        unit: 'hour',
+        measure: 3
+    }
+});
 
 class Messages extends Component {
 
@@ -12,8 +32,8 @@ class Messages extends Component {
 
         this.state = {
             isMessagesComposerModalOpen: false,
-            activeMessageChain: 0,
-            messages: []
+            activeChain: null,
+            messagesChain: [getDefaultMessage(0)]
         };
     }
 
@@ -22,31 +42,32 @@ class Messages extends Component {
 
         this.setState({
             ...this.state,
-            messages: [
-                { id: 'id1', time: 'Через 3 часа', active: true, name: 'Полезный контент' },
-                { id: 'id2', time: 'Через 2 часа', active: false, name: 'Ненавязчивая продажа' },
-                { id: 'id3', time: 'Через 4 часа', active: true, name: 'Сообщение #7' }
-            ]
+            activeChain: this.state.messagesChain[0]
+        }, () => {
+            this.props.updateMessagesChainData(this.state.messagesChain);
         });
     }
 
     handleOnAddMessage = e => {
+        const newId = shortid.generate();
 
-        const msg = { key: `${Math.random()}`, time: 'Через 3 часа', active: true, name: `Сообщение #${Math.random()}` };
+        console.log('Current messages: ', this.state.messagesChain);
 
         this.setState({
             ...this.state,
-            messages: [
-                ...this.state.messages,
-                msg
+            messagesChain: [
+                ...this.state.messagesChain,
+                getDefaultMessage(newId)
             ]
+        }, () => {
+            this.props.updateMessagesChainData(this.state.messagesChain);
         });
     }
 
-    openMessagesModal = (index) => {
+    openMessagesModal = (id) => {
         this.setState({
             ...this.state,
-            activeMessageChain: this.state.messages[index],
+            activeChain: this.getChainById(id),
             isMessagesComposerModalOpen: true
         });
     }
@@ -58,10 +79,65 @@ class Messages extends Component {
         });
     }
 
-    renderTableRow = (message) => {
+    getChainById = id => {
+        const chains = this.state.messagesChain;
+        const neededChainIndex = chains.findIndex(chain => chain.id === id);
+
+        return neededChainIndex === -1 ? chains[0] : chains[neededChainIndex];
+    }
+
+    updateChainItem = (chain) => {
+        const chains = this.state.messagesChain;
+        let neededIndex = chains.findIndex(c => c.id === chain.id);
+        neededIndex = neededIndex === -1 ? 0 : neededIndex;
+
+        chains[neededIndex] = {
+            ...chains[neededIndex],
+            ...chain
+        };
+
+        console.log('updateChainItem', chain);
+
+        this.setState({
+            ...this.state,
+            messagesChain: chains,
+            isMessagesComposerModalOpen: false
+        }, () => {
+            this.props.updateMessagesChainData(this.state.messagesChain);
+        });
+    }
+
+    handleIsChainActiveChange = id => {
+        const chains = this.state.messagesChain;
+        let neededChainIndex = chains.findIndex(chain => chain.id === id);
+        neededChainIndex = neededChainIndex === -1 ? 0 : neededChainIndex;
+
+        chains[neededChainIndex].isActive = !chains[neededChainIndex].isActive;
+
+        this.setState({
+            ...this.state,
+            messagesChain: chains
+        }, () => {
+            this.props.updateMessagesChainData(this.state.messagesChain);
+        });
+    }
+
+    renderTableRow = (chain) => {
         return (
-            <tr key={message.id}>
-                <td><u>{message.time}</u></td>
+            <tr key={chain.id}>
+                <td><u>
+                    {
+                        chain.sendTime.specificSendTime
+                        ? chain.sendTime.specificSendTime
+                        : 'Через ' + chain.sendTime.measure + (
+                            chain.sendTime.unit === 'hour'
+                            ? ' часов'
+                            : chain.sendTime.unit === 'minute'
+                            ? ' минут'
+                            : ' дней'
+                        )
+                    }
+                </u></td>
 
                 <td className="d-flex justify-content-center mb-1">
                     <div
@@ -69,7 +145,8 @@ class Messages extends Component {
                         <label className="form-check-label my-auto">
                             <input
                                 type="checkbox" className="form-check-input"
-                                defaultChecked={message.active}
+                                checked={chain.isActive}
+                                onChange={() => { this.handleIsChainActiveChange(chain.id); }}
                             />
                             <i className="input-helper"></i>
                         </label>
@@ -84,25 +161,26 @@ class Messages extends Component {
                     </div>
                 </td>
 
-                <td>{message.name}</td>
+                <td>{chain.title}</td>
                 <td>
                     <div className="col-12 d-flex justify-content-center">
                         <label
                             className="badge badge-outline-info my-auto mx-2"
                             style={{cursor: "pointer"}}
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            data-original-title="Изменить"
-                            onClick={() => { this.openMessagesModal(message.id); }}
+                            // data-toggle="tooltip"
+                            // data-placement="top"
+                            // data-original-title="Изменить"
+                            onClick={() => { this.openMessagesModal(chain.id); }}
                         >
                             <i className="mdi mdi-pencil-box-outline" />
                         </label>
                         <label
                             className="badge badge-danger my-auto mx-2"
                             style={{cursor: "pointer"}}
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            data-original-title="Удалить"
+                            // data-toggle="tooltip"
+                            // data-placement="top"
+                            // data-original-title="Удалить"
+                            onClick={() => { this.deleteMessageChain(chain.id); }}
                         >
                             <i className="mdi mdi-delete-forever" />
                         </label>
@@ -139,7 +217,7 @@ class Messages extends Component {
                     </thead>
                     <tbody>
                         {
-                            this.state.messages.map(msg => this.renderTableRow(msg))
+                            this.state.messagesChain.map(chain => this.renderTableRow(chain))
                         }
                     </tbody>
                 </table>
@@ -148,7 +226,9 @@ class Messages extends Component {
                 isOpen={this.state.isMessagesComposerModalOpen}
                 close={this.closeMessagesModal}
                 isMobile={isMobile}
-                messages={this.state.activeMessageChain}
+                activeChain={this.state.activeChain}
+                updateChainItem={this.updateChainItem}
+                key={this.state.activeChain ? this.state.activeChain.id : shortid.generate()}
             />
         </React.Fragment>
         )

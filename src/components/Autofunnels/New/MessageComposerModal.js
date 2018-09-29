@@ -7,15 +7,46 @@ import '../../Newsletter/New/AddButtonsModalStyles.css';
 export default class MessageComposerModal extends Component {
 
     state = {
-        messages: []
+        messages: [],
+        title: '',
+        id: 0,
+    }
+
+    componentDidMount() {
+        this.setState({
+            ...this.props.activeChain
+        }, () => {
+            console.log('ComposerModal did Mount', this.state);
+        });
+    }
+
+    updateMessagesChain = messages => {
+        this.setState({
+            ...this.state,
+            messages
+        });
+    }
+
+    onTitleChange = e => {
+        this.setState({
+            ...this.state,
+            title: e.target.value
+        });
+    }
+
+    saveChain = () => {
+        this.props.updateChainItem(this.state);
+        this.closeModal();
     }
 
     closeModal = () => {
-        this.props.close();
+        this.setState({}, () => {
+            this.props.close();
+        });
     }
 
     render() {
-        const { isMobile, edit } = this.props;
+        const { isMobile } = this.props;
 
         return (
             <div
@@ -48,14 +79,32 @@ export default class MessageComposerModal extends Component {
                     </div>
                     <div className="add-buttons-modal-popup-body">
 
+                        <div className="form-group mx-5 mb-0 mt-2">
+                            <input
+                                type="text"
+                                placeholder="Название сообщения"
+                                className="form-control form-control-lg"
+                                id="chainTitle"
+                                value={this.state.title}
+                                onChange={this.onTitleChange}
+                            />
+                        </div>
+
                         <MessageComposerForm
                             isMobile={isMobile}
                             onStateChange={this.updateMessagesChain}
                             messages={this.state.messages}
-                            edit={edit}
+                            edit={true}
                             withoutSelfSending
                             modalSized
                         />
+
+                        <button
+                            className="btn btn-gradient-success btn-icon-text mr-2"
+                            onClick={this.saveChain}
+                        >
+                            Сохранить
+                        </button>
 
                     </div>
                     <div className="add-buttons-modal-popup-footer">

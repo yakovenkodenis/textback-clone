@@ -15,7 +15,7 @@ export default class New extends Component {
 
     state = {
         generalInfo: {},
-        messages: {},
+        messagesChain: [],
         settings: {}
     }
 
@@ -30,6 +30,13 @@ export default class New extends Component {
         this.setState({
             ...this.state,
             settings
+        });
+    }
+
+    updateMessagesChainData = messagesChain => {
+        this.setState({
+            ...this.state,
+            messagesChain
         });
     }
 
@@ -48,7 +55,7 @@ export default class New extends Component {
                     </CardWrapper>
 
                     <CardWrapper title="Сообщения">
-                        <Messages test />
+                        <Messages updateMessagesChainData={this.updateMessagesChainData} />
                     </CardWrapper>
 
                     <CardWrapper title="Настройки">

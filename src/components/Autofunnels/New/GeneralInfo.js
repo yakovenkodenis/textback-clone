@@ -30,6 +30,10 @@ class GeneralInfo extends Component {
         }
     }
 
+    componentDidMount() {
+        this.syncState(this.state);
+    }
+
     syncState = (state) => {
         if (this.props.updateGeneralInfoData) {
             const data = {...this.state};

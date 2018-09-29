@@ -4,20 +4,24 @@ import MediaQuery from 'react-responsive';
 
 class Actions extends Component {
     render() {
-        const { isMobile } = this.props;
+        const { isMobile, disabled } = this.props;
 
         return (
             <React.Fragment>
                 <div className={`${isMobile ? "" : "col-6"}`}>
 
                     <div>
-                        <button className="btn btn-gradient-primary btn-icon-text mr-2">
+                        <button
+                            className="btn btn-gradient-primary btn-icon-text mr-2"
+                            disabled={disabled}
+                        >
                             <i className="mdi mdi-play btn-icon-prepend"></i>
                             Включить
                         </button>
                         <button
                             className="btn btn-light btn-fw mx-2"
                             onClick={this.props.save}
+                            disabled={disabled}
                         >
                             Сохранить
                         </button>
