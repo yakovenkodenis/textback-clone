@@ -4,6 +4,7 @@ import $ from 'jquery';
 import shortid from 'shortid';
 
 import MessageComposerModal from './MessageComposerModal';
+import SendingTimeModal from './SendingTimeModal';
 
 
 const getDefaultMessage = id => ({
@@ -26,10 +27,15 @@ const getDefaultMessage = id => ({
     edit: false
 });
 
-const dragIconStyles = {
-    transform: 'scale(1.6)',
+const cursorPointer = {
     cursor: 'pointer'
 };
+
+const dragIconStyles = {
+    transform: 'scale(1.6)',
+    ...cursorPointer
+};
+
 
 class Messages extends Component {
 
@@ -38,6 +44,7 @@ class Messages extends Component {
 
         this.state = {
             isMessagesComposerModalOpen: false,
+            isSendingTimeModalOpen: false,
             activeChain: null,
             messagesChain: [getDefaultMessage(0)]
         };
@@ -113,6 +120,27 @@ class Messages extends Component {
         });
     }
 
+    updateSendTime = chain => {
+        const chains = this.state.messagesChain;
+        let neededIndex = chains.findIndex(c => c.id === chain.id);
+        neededIndex = neededIndex === -1 ? 0 : neededIndex;
+
+        chains[neededIndex] = {
+            ...chains[neededIndex],
+            ...chain
+        };
+
+        console.log('updateChainItem sendTime', chain);
+
+        this.setState({
+            ...this.state,
+            messagesChain: chains,
+            isSendingTimeModalOpen: false
+        }, () => {
+            this.props.updateMessagesChainData(this.state.messagesChain);
+        });
+    }
+
     handleIsChainActiveChange = id => {
         const chains = this.state.messagesChain;
         let neededChainIndex = chains.findIndex(chain => chain.id === id);
@@ -128,19 +156,44 @@ class Messages extends Component {
         });
     }
 
+    openSendingTimeModal = id => {
+        const chains = this.state.messagesChain;
+        let neededChainIndex = chains.findIndex(chain => chain.id === id);
+        neededChainIndex = neededChainIndex === -1 ? 0 : neededChainIndex;
+
+        this.setState({
+            ...this.state,
+            isSendingTimeModalOpen: true,
+            activeChain: chains[neededChainIndex]
+        });
+    }
+
+    closeSendingTimeModal = (sendTime) => {
+        console.log(sendTime);
+
+        this.setState({
+            ...this.state,
+            isSendingTimeModalOpen: false
+        });
+    }
+
     renderTableRow = (chain) => {
         return (
             <tr key={chain.id}>
-                <td><u>
+                <td><u style={cursorPointer} onClick={() => { this.openSendingTimeModal(chain.id); }}>
                     {
-                        chain.sendTime.specificSendTime
-                        ? chain.sendTime.specificSendTime
+                        (chain.sendTime.unit === 'immediately'
+                        ? 'Сразу'
                         : 'Через ' + chain.sendTime.measure + (
                             chain.sendTime.unit === 'hour'
                             ? ' часов'
                             : chain.sendTime.unit === 'minute'
                             ? ' минут'
                             : ' дней'
+                        )) + (
+                            chain.sendTime.specificSendTime
+                            ? ' в ' + chain.sendTime.specificSendTime
+                            : ''
                         )
                     }
                 </u></td>
@@ -235,6 +288,15 @@ class Messages extends Component {
                 activeChain={this.state.activeChain}
                 updateChainItem={this.updateChainItem}
                 key={this.state.activeChain ? this.state.activeChain.id : shortid.generate()}
+            />
+
+            <SendingTimeModal
+                isOpen={this.state.isSendingTimeModalOpen}
+                close={this.closeSendingTimeModal}
+                isMobile={isMobile}
+                activeChain={this.state.activeChain}
+                updateSendTime={this.updateSendTime}
+                key={shortid.generate()}
             />
         </React.Fragment>
         )

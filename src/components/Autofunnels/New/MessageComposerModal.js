@@ -11,7 +11,12 @@ export default class MessageComposerModal extends Component {
     state = {
         messages: [],
         title: '',
-        id: 0
+        id: 0,
+
+        sendTime: {
+            unit: 'hour',
+            measure: 3
+        }
     }
 
     _isMounted = false;
@@ -47,6 +52,16 @@ export default class MessageComposerModal extends Component {
         });
     }
 
+    onSendTimeChange = e => {
+        this.setState({
+            ...this.state,
+            sendTime: {
+                ...this.state.sendTime,
+                [e.target.name]: e.target.value
+            }
+        });
+    }
+
     saveChain = () => {
         if (this._isMounted) {
             this.setState({
@@ -75,22 +90,24 @@ export default class MessageComposerModal extends Component {
 
     render() {
         const { isMobile } = this.props;
+        const modalDisplayStyle = {
+            display: this.props.isOpen ? 'block' : 'none'
+        };
+        const modalSizeStyle = {
+            width: this.props.isMobile ? '100%' : '70%'
+        };
 
         return (
             <div
                 id="add-buttons-modal-popup-id"
                 className={`add-buttons-modal-popup`}
-                style={{
-                    display: this.props.isOpen ? 'block' : 'none'
-                }}
+                style={modalDisplayStyle}
             >
 
                 <div
                     className={`add-buttons-modal-popup-content`}
                     id="add-buttons-modal-popup-content-id"
-                    style={{
-                        width: this.props.isMobile ? '100%' : '70%'
-                    }}
+                    style={modalSizeStyle}
                 >
                     <div
                         className="add-buttons-modal-popup-header"
@@ -117,19 +134,20 @@ export default class MessageComposerModal extends Component {
                                 onChange={this.onTitleChange}
                             />
                         </div>
-
-                        {this.state.messages.length > 0 && <MessageComposerForm
-                            isMobile={isMobile}
-                            onStateChange={this.updateMessagesChain}
-                            messages={this.state.messages}
-                            edit={this.state.edit}
-                            withoutSelfSending
-                            modalSized
-                        />
+                        {
+                            this.state.messages.length > 0
+                            && <MessageComposerForm
+                                isMobile={isMobile}
+                                onStateChange={this.updateMessagesChain}
+                                messages={this.state.messages}
+                                edit={this.state.edit}
+                                withoutSelfSending
+                                modalSized
+                            />
                         }
 
                         <button
-                            className="btn btn-gradient-success btn-icon-text mr-2"
+                            className="btn btn-gradient-success btn-icon-text mr-2 mb-1"
                             onClick={this.saveChain}
                         >
                             Сохранить
