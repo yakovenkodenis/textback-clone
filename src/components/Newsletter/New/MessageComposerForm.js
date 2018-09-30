@@ -48,14 +48,21 @@ export default class MessageComposerForm extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.onStateChange /*&& !this.props.edit*/) {
-            this.props.onStateChange(this.state.messages);
+
+        // Super hack that makes autofunnels and newsletters editing fit together
+        if (this.props.isNewsletter) {
+            if (this.props.onStateChange && !this.props.edit) {
+                this.props.onStateChange(this.state.messages);
+            }
+        } else {
+            if (this.props.onStateChange) {
+                this.props.onStateChange(this.state.messages);
+            }
         }
 
         if (this.props.edit && this.state.allowStateUpdate && this.props.messages.length > 0) {
             console.log('Component did update [messages]', this.props.messages);
 
-            
             // ----------------------------------------------
             // Very dirty little hack which I'm not proud of:
             // ----------------------------------------------

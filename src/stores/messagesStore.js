@@ -110,6 +110,9 @@ class MessagesStore {
         runInAction(() => {
             this.chat.channel_id = ChannelId;
             this.chat.user_id = SubscriberId;
+
+            this.chat.messages = null;  // ??? does it do anything??
+
             this.chat.messages = newMessages.reverse().map(message => ({
                 ...message,
                 // message_id: message.message_id + salt

@@ -179,6 +179,7 @@ class New extends Component {
                         onStateChange={this.updateNewsletter}
                         messages={this.state.newsletter}
                         edit={this.props.edit}
+                        isNewsletter={true}
                     />
 
                     <CardWrapper title="Отправьте рассылку">
