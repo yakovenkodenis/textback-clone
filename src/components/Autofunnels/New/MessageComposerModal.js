@@ -1,30 +1,43 @@
 import React, { Component } from 'react';
+import { observer } from 'mobx-react';
 
 import MessageComposerForm from '../../Newsletter/New/MessageComposerForm';
 import '../../Newsletter/New/AddButtonsModalStyles.css';
 
 
+@observer
 export default class MessageComposerModal extends Component {
 
     state = {
         messages: [],
         title: '',
-        id: 0,
+        id: 0
     }
+
+    _isMounted = false;
 
     componentDidMount() {
+        this._isMounted = true;
+
         this.setState({
-            ...this.props.activeChain
+            ...this.props.activeChain,
+            activeChain: this.props.activeChain
         }, () => {
-            console.log('ComposerModal did Mount', this.state);
+            console.log('MessageComposerModal did Mount', this.state.activeChain);
         });
     }
 
-    updateMessagesChain = messages => {
-        this.setState({
-            ...this.state,
-            messages
-        });
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
+    updateMessagesChain = (messages) => {
+        if (this._isMounted) {
+            this.setState({
+                ...this.state,
+                messages
+            });
+        }
     }
 
     onTitleChange = e => {
@@ -35,14 +48,29 @@ export default class MessageComposerModal extends Component {
     }
 
     saveChain = () => {
-        this.props.updateChainItem(this.state);
-        this.closeModal();
+        if (this._isMounted) {
+            this.setState({
+                ...this.state,
+                edit: true
+            }, () => {
+                console.log('SAVE CHAIN: ', this.state.messages);
+                this.props.updateChainItem(this.state);
+                this.closeModal();
+            });
+        }
+    }
+
+    getMessagesFromState = () => {
+        const { messages } = this.state;
+
+        console.log('getMessagesFromState: ', messages);
+        return messages;
     }
 
     closeModal = () => {
-        this.setState({}, () => {
+        // this.setState({}, () => {
             this.props.close();
-        });
+        // });
     }
 
     render() {
@@ -90,14 +118,15 @@ export default class MessageComposerModal extends Component {
                             />
                         </div>
 
-                        <MessageComposerForm
+                        {this.state.messages.length > 0 && <MessageComposerForm
                             isMobile={isMobile}
                             onStateChange={this.updateMessagesChain}
                             messages={this.state.messages}
-                            edit={true}
+                            edit={this.state.edit}
                             withoutSelfSending
                             modalSized
                         />
+                        }
 
                         <button
                             className="btn btn-gradient-success btn-icon-text mr-2"

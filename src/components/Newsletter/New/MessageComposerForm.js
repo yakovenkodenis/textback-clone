@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { ContentState, EditorState } from 'draft-js';
-import $ from 'jquery';
 import shortid from 'shortid';
 
 import Tooltip from '../../UiHelpers/Tooltip';
@@ -48,19 +47,35 @@ export default class MessageComposerForm extends Component {
         };
     }
 
-    componentDidMount() {
-        $('[data-toggle="tooltip"]').tooltip(); // initiate tooltips
-    }
-
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.onStateChange && !this.props.edit) {
+        if (this.props.onStateChange /*&& !this.props.edit*/) {
             this.props.onStateChange(this.state.messages);
         }
 
         if (this.props.edit && this.state.allowStateUpdate && this.props.messages.length > 0) {
             console.log('Component did update [messages]', this.props.messages);
 
-            const promisesForEachMessageAttachments = this.props.messages.map(message => {
+            
+            // ----------------------------------------------
+            // Very dirty little hack which I'm not proud of:
+            // ----------------------------------------------
+            
+            let messages;
+
+            if (
+                this.props.messages.length === 1
+                && prevProps.messages.length > 1
+                && prevProps.messages[0].title !== ''
+                && this.props.messages[0].title === ''
+                && this.props.messages[0].message.messageText === ''
+                && prevProps.messages[0].message.messageText !== ''
+            ) {
+                messages = prevProps.messages;
+            } else {
+                messages = this.props.messages;
+            }
+
+            const promisesForEachMessageAttachments = messages.map(message => {
                 return Promise.all(message.messageAttachments.map(
                     attachment => agent.Files.getFile(attachment.id))
                 );
@@ -69,7 +84,7 @@ export default class MessageComposerForm extends Component {
             Promise.all(promisesForEachMessageAttachments).then(linksArr => {
                 console.log('IDs: ', linksArr);
 
-                const messages = this.props.messages;
+                // const messages = this.props.messages;
 
                 linksArr.forEach((links, index) => {
                    messages[index].messageAttachments = links.map((link, i) => {
@@ -87,11 +102,12 @@ export default class MessageComposerForm extends Component {
                    });
                 });
 
-                console.log('Images: ', messages);
+                console.log('Messages with loaded images: ', messages);
 
                 this.setState({
                     ...this.state,
-                    messages: this.props.messages,
+                    messages,
+                    // messages: this.props.messages,
                     allowStateUpdate: false
                 }, () => {
                     if (this.firstMessageButtonRef.current) {

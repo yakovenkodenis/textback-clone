@@ -22,8 +22,14 @@ const getDefaultMessage = id => ({
     sendTime: {
         unit: 'hour',
         measure: 3
-    }
+    },
+    edit: false
 });
+
+const dragIconStyles = {
+    transform: 'scale(1.6)',
+    cursor: 'pointer'
+};
 
 class Messages extends Component {
 
@@ -156,7 +162,7 @@ class Messages extends Component {
                 <td>
                     <div className="col-12 d-flex justify-content-center">
                         <i className="mdi mdi-drag-vertical"
-                            style={{transform: 'scale(1.6)', cursor: 'pointer'}}
+                            style={dragIconStyles}
                         />
                     </div>
                 </td>
