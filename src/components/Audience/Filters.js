@@ -66,11 +66,13 @@ export default class Filters extends Component {
 
             console.log('INITIATE LOADING WITH DATA: ', this.state);
 
-            this.props.updateFilters({
-                inTags: InTags,
-                notInTags: NotInTags, 
-                andTags: AndTags
-            });
+            if (this.props.updateFilters) {
+                this.props.updateFilters({
+                    inTags: InTags,
+                    notInTags: NotInTags, 
+                    andTags: AndTags
+                });
+            }
 
             this.props.getSubscribersList({ InTags, NotInTags, AndTags });
         }
@@ -117,15 +119,28 @@ export default class Filters extends Component {
     }
 
     syncFilters = () => {
-        this.props.updateFilters({
-            inTags: this.state.InTags,
-            notInTags: this.state.NotInTags, 
-            andTags: this.state.AndTags
-        });
+        if (this.props.updateFilters) {
+            this.props.updateFilters({
+                inTags: this.state.InTags,
+                notInTags: this.state.NotInTags, 
+                andTags: this.state.AndTags
+            });
+        }
     }
 
     render() {
         const { isMobile } = this.props;
+        const inTagsValue = this.props.defaultFilters
+            ? this.props.defaultFilters.inTags
+            : this.state.InTags;
+
+        const notInTagsValue = this.props.defaultFilters
+            ? this.props.defaultFilters.notInTags
+            : this.state.NotInTags;
+
+        const isAndTags = this.props.defaultFilters
+            ? this.props.defaultFilters.andTags
+            : this.state.AndTags;
 
         return (
             <React.Fragment>
@@ -146,7 +161,7 @@ export default class Filters extends Component {
                             isMulti
                             cacheOptions
                             defaultOptions
-                            value={this.props.defaultFilters.inTags || this.state.inTags}
+                            value={inTagsValue}
                             placeholder="Присвоен тег"
                             loadingMessage={() => "Загрузка..."}
                             loadOptions={this.loadTags}
@@ -162,7 +177,7 @@ export default class Filters extends Component {
                             isMulti
                             cacheOptions
                             defaultOptions
-                            value={this.props.defaultFilters.notInTags || this.state.notInTags}
+                            value={notInTagsValue}
                             placeholder="Не присвоен тег"
                             loadingMessage={() => "Загрузка..."}
                             loadOptions={this.loadTags}
@@ -176,7 +191,7 @@ export default class Filters extends Component {
                                 Соответствие одновременно всем критериям
                                 <input
                                     onChange={this.handleAndTagsChange}
-                                    checked={this.props.defaultFilters.andTags || this.state.AndTags}
+                                    checked={isAndTags}
                                     type="radio"
                                     value="ALL"
                                     name="logical-filter"
@@ -191,7 +206,7 @@ export default class Filters extends Component {
                                 Соответствие хотя бы одному из критериев
                                 <input
                                     onChange={this.handleAndTagsChange}
-                                    checked={!this.props.defaultFilters.andTags && !this.state.AndTags}
+                                    checked={!isAndTags}
                                     type="radio"
                                     name="logical-filter"
                                     id="logical-or"
