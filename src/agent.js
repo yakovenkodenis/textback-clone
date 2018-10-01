@@ -22,7 +22,7 @@ const handleErrors = err => {
 
 // const responseBody = res => res.body;
 const responseBody = res => {
-    // console.log('RESPONSE_BODY (agent.js)');
+    // console.log('RESPONSE_BODY (agent.js)', res);
     // console.log('RES:', res);
     return res.text ? JSON.parse(res.text) : {};
 }
@@ -377,6 +377,16 @@ const Profile = {
 
 };
 
+const OAuth = {
+    Vk: {
+        getGroupsToken: accessToken =>
+            superagent
+                .get(`http://api.vk.com/method/groups.get?fields=name&extended=1&filter=admin&access_token=${accessToken}&v=5.8`)
+                .end(handleErrors)
+                .then(responseBody),
+    }
+}
+
 
 export default {
     Auth,
@@ -386,5 +396,6 @@ export default {
     Channels,
     Messages,
     Files,
-    Newsletter
+    Newsletter,
+    OAuth
 };

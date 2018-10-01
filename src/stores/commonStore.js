@@ -13,6 +13,8 @@ class CommonStore {
     @observable lastUpdateTime = 0;
     @observable pollingInterval = undefined;
 
+    @observable accessTokens = {};
+
     constructor() {
         reaction(
             () => this.token,
@@ -49,6 +51,19 @@ class CommonStore {
     @action setPollingInterval(interval) {
         if (!interval) clearInterval(interval);
         else this.pollingInterval = interval;
+    }
+
+    @action setAccessTokenObject(obj) {
+        if (obj.state && obj.access_token && obj.state === 'auth_vk') {
+            console.log('VK authorization');
+            this.accessTokens[obj.state] = obj.access_token;
+        }
+    }
+
+    // for vk - "auth_vk"
+    // for facebook = "???"
+    @action resetAccessToken(socialNetwork) {
+        this.accessTokens[socialNetwork] = null;
     }
 }
 

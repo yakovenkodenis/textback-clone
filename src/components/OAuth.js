@@ -3,7 +3,7 @@ import { withRouter, Redirect } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 
 
-@inject('authStore', 'commonStore')
+@inject('commonStore')
 @withRouter
 @observer
 class OAuth extends Component {
@@ -36,6 +36,7 @@ class OAuth extends Component {
             );
 
             console.log(oauthResponse);
+            this.props.commonStore.setAccessTokenObject(oauthResponse);
 
             // SEND DATA TO THE SERVER HERE
         } catch(e) {
@@ -58,7 +59,7 @@ class OAuth extends Component {
         }
 
         return (
-            <Redirect to="/admin/settings/channels?modal" />
+            <Redirect to="/admin/settings/channels?" />
         );
     }
 }

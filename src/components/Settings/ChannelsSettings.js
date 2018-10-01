@@ -7,9 +7,10 @@ import 'react-table/react-table.css';
 
 import Modal from './Modal';
 import { reactTableTextProps } from '../../utils';
+import agent from '../../agent';
 
 
-@inject('channelsStore')
+@inject('channelsStore', 'commonStore')
 @withRouter
 @observer
 export default class ChannelsSettings extends Component {
@@ -22,11 +23,34 @@ export default class ChannelsSettings extends Component {
 
             vkAuthSuccessful: false,
             vkGroups: [],
-            vkGroupsToken: ''
+            vkGroupsToken: '',
+            vkAccessToken: null
         }
 
         this.socialNetworkModalValue = React.createRef();
         this.botIdModalValue = React.createRef();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.commonStore.accessTokens['auth_vk']) {
+            this.setState({
+                ...this.state,
+                vkAuthSuccessful: true,
+                vkAccessToken: this.props.commonStore.accessTokens['auth_vk']
+            }, () => {
+                this.props.commonStore.resetAccessToken('auth_vk');
+
+                // agent.OAuth.Vk.getGroupsToken(this.state.vkAccessToken).then(response => {
+                //     console.log('VK GROUPS TOKEN RESPONSE: ', response);
+                // });
+
+                const url = `https://api.vk.com/method/groups.get?fields=name&extended=1&filter=admin&access_token=${this.state.vkAccessToken}&v=5.8`;
+                fetch(url, { mode: 'cors' })
+                 .then(r => {
+                     console.log('VK GROUPS RESPONSE: ', r);
+                 });
+            });
+        }
     }
 
     onDeleteChannel = (channelType, channelId) => {
@@ -152,8 +176,7 @@ export default class ChannelsSettings extends Component {
             />
         );
 
-        // const redirectUri = 'http://192.168.0.116:3000/oauth';
-        const redirectUri = 'https://oauth.vk.com/blank.html';
+        const redirectUri = 'http://localhost:3000/oauth';
         const clientId = '6668833';
         const authHref = `https://oauth.vk.com/authorize?client_id=${clientId}&display=popup&redirect_uri=${redirectUri}&scope=groups&response_type=token&state=auth_vk&v=5.80`;
 
