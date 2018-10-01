@@ -6,6 +6,10 @@ import $ from 'jquery';
 
 import agent from '../../agent';
 
+import moment from 'moment';
+import 'moment/locale/ru';
+moment.locale('ru');
+
 
 @inject('newsletterStore')
 @withRouter
@@ -39,7 +43,13 @@ export default class PlannedNewsletters extends Component {
             <tr key={newsletter.newsletter_id}>
                 <td>{index + 1}</td>
                 <td>{newsletter.title}</td>
-                <td>planned time</td>
+                <td>
+                    {
+                        newsletter.date
+                        ? moment.unix(newsletter.date / 1000).format("DD MMMM YYYY HH:mm")
+                        : '-'
+                    }
+                </td>
                 <td>
                     <div className="col-12 d-flex justify-content-center">
                         <label

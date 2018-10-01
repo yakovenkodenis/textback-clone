@@ -251,7 +251,7 @@ export default class CreateButton extends Component {
                     {
                         messages.map((message) => (
                             <option value={message.messageId} key={message.messageId}>
-                                {message.message.messageText}
+                                {message.title}
                             </option>
                         ))
                     }
