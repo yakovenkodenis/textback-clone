@@ -25,6 +25,8 @@ import Audience from './Audience/Audience';
 import Profile from './Profile/Profile';
 import EditProfile from './Profile/EditProfile';
 
+import OAuth from './OAuth';
+
 import RightSideBar from './Dashboard/RightSidebar/RightSideBar';
 
 
@@ -85,6 +87,11 @@ const routes = [
         path: '/profile/edit',
         exact: true,
         component: () => <EditProfile />
+    },
+    {
+        path: '/oauth',
+        exact: true,
+        component: () => <OAuth />
     }
 ];
 

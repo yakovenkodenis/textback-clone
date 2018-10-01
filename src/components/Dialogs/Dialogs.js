@@ -37,20 +37,19 @@ class Dialogs extends Component {
         return `${first_name.toLowerCase()}-${last_name.toLowerCase()}-${subscriber_id}`;
     }
 
-    render() {
-
-        const {
-            match, isMobile, location
-        } = this.props;
-
-        const subscribers = this.props.subscribersStore.subscribers.map(subscriber => ({
+    getSubscribersFromStore = () => {
+        return this.props.subscribersStore.subscribers.map(subscriber => ({
             path: this.generateDialogPath(subscriber),
             name: `${subscriber.first_name} ${subscriber.last_name}`,
             previewText: subscriber.message_preview.text,
             ...subscriber
         }));
+    }
 
-        const dialogRoutes = subscribers.map((subscriber, index) => (
+    generateDialogRoutes = subscribers => {
+        const { match } = this.props;
+
+        return subscribers.map((subscriber, index) => (
             <Route 
                 key={subscriber.subscriber_id + '-' + subscriber.channel_id}
                 path={`/admin/dialogs/${match.params.currentFilter}/${subscriber.path}`}
@@ -63,14 +62,18 @@ class Dialogs extends Component {
                 }
             />
         ));
+    }
 
-        let dialogsList = match.params.currentFilter === 'all'
+    getFilteredDialogsList = subscribers => {
+        const { match, location } = this.props;
+
+        const dialogsList = match.params.currentFilter === 'all'
             ? subscribers
             : subscribers.filter(subscriber =>
                 subscriber.channel_type.toLowerCase() === match.params.currentFilter
             );
 
-        dialogsList = dialogsList.map(dialog => {
+        return dialogsList.map(dialog => {
             const isActive =
                 location.pathname === `/admin/dialogs/${match.params.currentFilter}/${dialog.path}/`
                 || location.pathname === `/admin/dialogs/${match.params.currentFilter}/${dialog.path}`;
@@ -85,6 +88,10 @@ class Dialogs extends Component {
                 unreadCount
             }
         });
+    }
+
+    generateDynamicBreadcrumbRouteForMobile = () => {
+        const { isMobile, location } = this.props;
 
         let dynamicBreadcrumbRoute = undefined;
 
@@ -115,6 +122,40 @@ class Dialogs extends Component {
             }
         }
 
+        return dynamicBreadcrumbRoute;
+    }
+
+    renderDialogRoutesDesktop = (dialogRoutes) => {
+        const { location, match } = this.props;
+
+        return (location.pathname === `/admin/dialogs/${match.params.currentFilter}`
+            || location.pathname === `/admin/dialogs/${match.params.currentFilter}/`)
+            && dialogRoutes.length > 0
+            ? (
+                <div className="col-9 d-flex justify-content-center mt-5">
+                    <p className="text-muted">Выберите диалог из списка</p>
+                </div>
+            ) : dialogRoutes;
+    }
+
+    renderDialogRoutesMobile = (dialogRoutes, dialogsList, dynamicBreadcrumbRoute) => {
+        return dynamicBreadcrumbRoute && dynamicBreadcrumbRoute !== ""
+            ? dialogRoutes
+            : (
+                <div className="col-12 clear-pr clear-pl">
+                    <DialogsList dialogs={dialogsList} />
+                </div>
+            );
+    }
+
+    render() {
+        const { isMobile } = this.props;
+
+        const subscribers = this.getSubscribersFromStore();
+        const dialogRoutes = this.generateDialogRoutes(subscribers);
+        const dialogsList = this.getFilteredDialogsList(subscribers);
+        const dynamicBreadcrumbRoute = this.generateDynamicBreadcrumbRouteForMobile();
+
         return (
             <div className="row dialogs-page">
                 <div className={`col-12 grid-margin ${isMobile ? "p-0" : /*make more dynamic?*/ "p-0"}`}>
@@ -144,33 +185,13 @@ class Dialogs extends Component {
                                     <div className="col-3 clear-pr clear-pl">
                                         <DialogsList dialogs={dialogsList} />
                                     </div>
-                                    
-                                    {
-                                        (location.pathname === `/admin/dialogs/${match.params.currentFilter}`
-                                        || location.pathname === `/admin/dialogs/${match.params.currentFilter}/`)
-                                        && dialogRoutes.length > 0
-                                        ? (
-                                            <div className="col-9 d-flex justify-content-center mt-5">
-                                                <p className="text-muted">Выберите диалог из списка</p>
-                                            </div>
-                                        ) : dialogRoutes
-                                        
-                                    }
-
+                                    {this.renderDialogRoutesDesktop(dialogRoutes)}
                                 </Default>
 
                                 <Mobile>
-
-                                    {
-                                        dynamicBreadcrumbRoute && dynamicBreadcrumbRoute !== ""
-                                        ? dialogRoutes
-                                        : (
-                                            <div className="col-12 clear-pr clear-pl">
-                                                <DialogsList dialogs={dialogsList} />
-                                            </div>
-                                        )
-                                    }
-
+                                    {this.renderDialogRoutesMobile(
+                                        dialogRoutes, dialogsList, dynamicBreadcrumbRoute
+                                    )}
                                 </Mobile>
 
                             </div>

@@ -17,6 +17,14 @@ export default class ChannelsSettings extends Component {
     constructor(props, context) {
         super(props, context);
 
+        this.state = {
+            showBotIdField: true,
+
+            vkAuthSuccessful: false,
+            vkGroups: [],
+            vkGroupsToken: ''
+        }
+
         this.socialNetworkModalValue = React.createRef();
         this.botIdModalValue = React.createRef();
     }
@@ -54,6 +62,21 @@ export default class ChannelsSettings extends Component {
             this.socialNetworkModalValue.current.value,
             this.botIdModalValue.current.value
         );
+    }
+
+    // 1 -- https://oauth.vk.com/authorize?client_id=6668833&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=groups&response_type=token&state=auth_vk&v=5.80
+    // 2 -- https://api.vk.com/method/groups.get?fields=name&extended=1&filter=admin&access_token=7824d8dd97a6045e974051b79b68c40c109d5647b6df62dc5e6ef25f2cd6fc8a7d7f8327f09745df7b72d&v=5.8
+    // 3 -- https://oauth.vk.com/authorize?client_id=6668833&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=messages,photos,docs,manage&group_ids=68959538&response_type=token&state=auth_vk&v=5.80
+
+    handleOnSocialNetworkChange = e => {
+        if (e.target.value === 'vk') {
+            this.setState({
+                ...this.state,
+                showBotIdField: false
+            }, () => {
+
+            });
+        }
     }
 
     render() {
@@ -129,6 +152,11 @@ export default class ChannelsSettings extends Component {
             />
         );
 
+        // const redirectUri = 'http://192.168.0.116:3000/oauth';
+        const redirectUri = 'https://oauth.vk.com/blank.html';
+        const clientId = '6668833';
+        const authHref = `https://oauth.vk.com/authorize?client_id=${clientId}&display=popup&redirect_uri=${redirectUri}&scope=groups&response_type=token&state=auth_vk&v=5.80`;
+
         return (
             <div className="row">
                 <div className="col-12 grid-margin">
@@ -146,6 +174,7 @@ export default class ChannelsSettings extends Component {
                                         <select
                                             className="form-control" id="socialNetwork"
                                             ref={this.socialNetworkModalValue}
+                                            onChange={this.handleOnSocialNetworkChange}
                                         >
                                             <option value="telegram">Telegram</option>
                                             <option value="viber">Viber</option>
@@ -154,13 +183,22 @@ export default class ChannelsSettings extends Component {
                                             <option value="facebook">Facebook</option>
                                         </select>
                                     </div>
-                                    <div className="form-group">
-                                        <label htmlFor="botId" className="col-form-label">ID бота:</label>
-                                        <input
-                                            type="text" className="form-control" id="botId"
-                                            ref={this.botIdModalValue}
-                                        />
-                                    </div>
+                                    
+                                    {
+                                        this.state.showBotIdField ? (
+                                            <div className="form-group">
+                                                <label htmlFor="botId" className="col-form-label">ID бота:</label>
+                                                <input
+                                                    type="text" className="form-control" id="botId"
+                                                    ref={this.botIdModalValue}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <a className="btn btn-lg btn-info" href={authHref}>
+                                                Авторизация ВК
+                                            </a>
+                                        )
+                                    }
                                 </form>
                             </Modal>
 

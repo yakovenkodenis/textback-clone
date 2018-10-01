@@ -23,6 +23,8 @@ class OAuth extends Component {
     }
 
     componentDidMount() {
+        console.log('OAuth component did fire!');
+
         const hash = this.state.hash;
         console.log('OAUTH HASH:\n', hash);
 
@@ -56,7 +58,7 @@ class OAuth extends Component {
         }
 
         return (
-            <Redirect to="/admin/settings/general" />
+            <Redirect to="/admin/settings/channels?modal" />
         );
     }
 }
