@@ -230,7 +230,7 @@ class DialogMessagesContainer extends Component {
     onDeleteMessages = () => {
         this.state.selectedMessages.forEach(message => {
             this.props.messagesStore.deleteMessage(
-                message.channel_id, message.user_id, message.message_id
+                message.channel_id, message.chat_id, message.message_id
             );
         });
 

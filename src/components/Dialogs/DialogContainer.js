@@ -20,6 +20,8 @@ class DialogContainer extends Component {
             image
         } = this.props;
 
+        console.log('DialogContainer PROPS: ', this.props);
+
         return isMobile
                 ? (
                     <div className="col-12 p-0">
