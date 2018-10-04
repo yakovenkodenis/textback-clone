@@ -185,6 +185,7 @@ class ChannelsSettings extends Component {
 
     render() {
         const { channels, inProgress } = this.props.channelsStore;
+        const { isMobile } = this.props;
 
         const table = (
             <ReactTable
@@ -264,7 +265,7 @@ class ChannelsSettings extends Component {
             <div className="row">
                 <div className="col-12 grid-margin">
                     <div className="card">
-                        <div className="card-body">
+                        <div className={`card-body ${isMobile ? "p-1" : ""}`}>
                             <h4 className="card-title">Настройки каналов</h4>
                             <button
                                 type="button" className="btn btn-lg btn-primary"
@@ -285,7 +286,7 @@ class ChannelsSettings extends Component {
                     updateState={this.updateButtonState}
                     authHref={authHref}
                     vkGroups={this.state.vkGroups}
-                    isMobile={this.props.isMobile}
+                    isMobile={isMobile}
                     close={this.closeAddChannelModal}
                 />
             </div>

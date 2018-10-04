@@ -212,13 +212,16 @@ class Messages extends Component {
                     </div>
                 </td>
 
-                <td>
-                    <div className="col-12 d-flex justify-content-center">
-                        <i className="mdi mdi-drag-vertical"
-                            style={dragIconStyles}
-                        />
-                    </div>
-                </td>
+                {
+                    !this.props.isMobile &&
+                    <td>
+                        <div className="col-12 d-flex justify-content-center">
+                            <i className="mdi mdi-drag-vertical"
+                                style={dragIconStyles}
+                            />
+                        </div>
+                    </td>
+                }
 
                 <td>{chain.title}</td>
                 <td>
@@ -269,7 +272,7 @@ class Messages extends Component {
                         <tr>
                             <th>Время</th>
                             <th>Активность</th>
-                            <th></th>
+                            { !this.props.isMobile && <th></th> }
                             <th>Название сообщения</th>
                             <th></th>
                         </tr>

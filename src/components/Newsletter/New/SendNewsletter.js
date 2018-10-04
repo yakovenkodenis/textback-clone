@@ -128,6 +128,7 @@ export default class SendNewsletter extends Component {
                 onChange={this.handleDateTimeChange}
                 onSave={this.handleDateTimeSave}
                 isOpen={this.state.displayPicker}
+                isMobile={isMobile}
             />
 
             <div className="flex justify-content-left mt-4">

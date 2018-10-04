@@ -247,7 +247,7 @@ export class MomentInput extends Component {
                     onClick={this.inputClick}
                     onTextChange={this.onTextChange}
                     className={inputClassName}
-                    style={inputStyle}
+                    style={this.props.isMobile ? {...inputStyle, width: '10rem'} : {inputStyle}}
                 />
                 {isOpen &&
                 <div className="r-input-moment" id={this._id} style={position === "bottom" ? {} : { display:"inline-block"}}>

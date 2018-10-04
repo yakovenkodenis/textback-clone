@@ -79,11 +79,13 @@ export default class PlannedNewsletters extends Component {
     }
 
     render() {
+        const { isMobile } = this.props;
+
         return (
             <div className="row">
                 <div className="col-12 grid-margin">
                     <div className="card">
-                        <div className="card-body">
+                        <div className={`card-body ${isMobile ? "p-1" : ""}`}>
                             <h4 className="">Запланированные рассылки</h4>
                             <table className="table table-hover table-bordered">
                                 <thead>
