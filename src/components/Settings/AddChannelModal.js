@@ -61,7 +61,9 @@ export default class AddChannelModal extends Component {
         console.log('ADDING CHANNEL: ', this.state);
         if (this.state.chosenVkGroup !== '') {
 
-            const vkGroupUrl = `https://oauth.vk.com/authorize?client_id=6668833&display=popup&redirect_uri=https://localhost:3000/oauth&scope=messages,photos,docs,manage&group_ids=${this.state.chosenVkGroup}&response_type=token&state=auth_vk&v=5.80`;
+            // const redirect_uri = 'https://localhost:3000/oauth';
+            const redirect_uri = 'https://mochaccino.herokuapp.com/oauth';
+            const vkGroupUrl = `https://oauth.vk.com/authorize?client_id=6668833&display=popup&redirect_uri=${redirect_uri}&scope=messages,photos,docs,manage&group_ids=${this.state.chosenVkGroup}&response_type=token&state=auth_vk&v=5.80`;
             this.setState({
                 ...this.state,
                 vkGroupUrl

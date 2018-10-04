@@ -249,8 +249,8 @@ export default class ChannelsSettings extends Component {
             />
         );
         
-        const redirectUri = 'https://localhost:3000/oauth';
-        // const redirectUri = 'https://mochaccino.herokuapp.com/oauth';
+        // const redirectUri = 'https://localhost:3000/oauth';
+        const redirectUri = 'https://mochaccino.herokuapp.com/oauth';
         const clientId = '6668833';
         const authHref = `https://oauth.vk.com/authorize?client_id=${clientId}&display=popup&redirect_uri=${redirectUri}&scope=groups&response_type=token&state=auth_vk&v=5.80`;
 
