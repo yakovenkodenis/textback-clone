@@ -16,12 +16,12 @@ export default class Modal extends Component {
 
         return (
             <div
-            className="modal fade"
-            id={modalId}
-            tabIndex="-1"
-            role="dialog"
-            aria-labelledby="ModalLabel"
-            style={{display: "none"}}
+                className="modal fade"
+                id={modalId}
+                tabIndex="-1"
+                role="dialog"
+                aria-labelledby="ModalLabel"
+                style={{display: 'none'}}
             >
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">

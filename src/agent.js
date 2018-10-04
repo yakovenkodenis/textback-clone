@@ -9,7 +9,8 @@ const superagent = superagentPromise(_superagent, global.Promise);
 
 // https://cors-anywhere.herokuapp.com/
 const PROXY = '';
-const API_ROOT = 'http://35.190.220.217:8900';
+// const API_ROOT = 'http://35.190.220.217:8900';
+const API_ROOT = 'https://fbtq.ru:8900';
 // const encode = encodeURIComponent;
 
 const handleErrors = err => {
@@ -370,7 +371,7 @@ const Newsletter = {
             "Action": "DeletePlannedNewsletter",
             NewsletterId
         }),
-    
+
 }
 
 const Profile = {
@@ -381,7 +382,7 @@ const OAuth = {
     Vk: {
         getGroupsToken: accessToken =>
             superagent
-                .get(`http://api.vk.com/method/groups.get?fields=name&extended=1&filter=admin&access_token=${accessToken}&v=5.8`)
+                .get(`https://api.vk.com/method/groups.get?fields=name&extended=1&filter=admin&access_token=${accessToken}&v=5.8`)
                 .end(handleErrors)
                 .then(responseBody),
     }

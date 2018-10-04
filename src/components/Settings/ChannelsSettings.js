@@ -2,11 +2,15 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 
+import fetchJsonp from 'fetch-jsonp';
+
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
-import Modal from './Modal';
 import { reactTableTextProps } from '../../utils';
+import AddChannelModal from './AddChannelModal';
+
+import agent from '../../agent';
 
 
 @inject('channelsStore', 'commonStore')
@@ -19,15 +23,51 @@ export default class ChannelsSettings extends Component {
 
         this.state = {
             showBotIdField: true,
+            isModalOpen: false,
 
             vkAuthSuccessful: false,
             vkGroups: [],
             vkGroupsToken: '',
-            vkAccessToken: null
+            vkAccessToken: null,
+
+
+            fakeResponse: {
+                "response": {
+                  "count": 1,
+                  "items": [
+                    {
+                      "id": 148835776,
+                      "name": "Coffee & Bakery на Сумской 77/79",
+                      "screen_name": "coffeebakery.kharkiv",
+                      "is_closed": 0,
+                      "type": "page",
+                      "is_admin": 1,
+                      "admin_level": 3,
+                      "is_member": 1,
+                      "photo_50": "https://pp.userapi.com/c639828/v639828001/26428/7ORW_a3pxMY.jpg?ava=1",
+                      "photo_100": "https://pp.userapi.com/c639828/v639828001/26427/2bwF2dmPRCg.jpg?ava=1",
+                      "photo_200": "https://pp.userapi.com/c639828/v639828001/26426/b3xrl2TMA7Y.jpg?ava=1"
+                    }
+                  ]
+                }
+            }
         }
 
         this.socialNetworkModalValue = React.createRef();
         this.botIdModalValue = React.createRef();
+    }
+
+    componentDidMount() {
+        const [, param] = this.props.match.url.split('?')
+        console.log('HASH PARAM: ', param);
+        if (param) {
+            this.setState({
+                ...this.state,
+                isModalOpen: true
+            }, () => {
+                // do stuff
+            });
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -35,19 +75,56 @@ export default class ChannelsSettings extends Component {
             this.setState({
                 ...this.state,
                 vkAuthSuccessful: true,
-                vkAccessToken: this.props.commonStore.accessTokens['auth_vk']
+                vkAccessToken: this.props.commonStore.accessTokens['auth_vk'],
+                isModalOpen: true
             }, () => {
-                this.props.commonStore.resetAccessToken('auth_vk');
+
+
+                // this.props.commonStore.resetAccessToken('auth_vk');
 
                 // agent.OAuth.Vk.getGroupsToken(this.state.vkAccessToken).then(response => {
                 //     console.log('VK GROUPS TOKEN RESPONSE: ', response);
                 // });
 
                 const url = `https://api.vk.com/method/groups.get?fields=name&extended=1&filter=admin&access_token=${this.state.vkAccessToken}&v=5.8`;
-                fetch(url, { mode: 'cors' })
-                 .then(r => {
-                     console.log('VK GROUPS RESPONSE: ', r);
-                 });
+
+
+                fetchJsonp(url)
+                  .then(response => response.json())
+                  .then(json => {
+                        console.log('parsed json', json);
+                        this.setState({
+                            ...this.state,
+                            vkGroups: json.response && json.response.count > 0
+                                      ? json.response.items
+                                      : []
+                        });
+                  }).catch(ex => {
+                        console.log('parsing failed', ex);
+
+                        this.setState({
+                            ...this.state,
+                            vkGroups: []
+                        });
+                  });
+
+                // const response = this.state.fakeResponse;
+
+                // if (response.response) {
+                //     this.setState({
+                //         ...this.state,
+                //         vkGroups: response.items
+                //     }, () => {
+                //         // get group tokens for each group; request:
+                //         // https://oauth.vk.com/authorize?client_id=6668833&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=messages,photos,docs,manage&group_ids=68959538&response_type=token&state=auth_vk&v=5.80
+
+                //         const groupIds = this.state.fakeResponse.response.items.map(i => i.id).join(',');
+                //         const request = `https://oauth.vk.com/authorize?client_id=6668833&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=messages,photos,docs,manage&group_ids=${groupIds}&response_type=token&state=auth_vk&v=5.80`;
+                //         console.log('REQUEST FOR GROUP TOKENS: ', request);
+
+                //         // send group tokens to server...
+                //     });
+                // }
             });
         }
     }
@@ -64,23 +141,6 @@ export default class ChannelsSettings extends Component {
     }
 
     onAddChannel = () => {
-        // const socialNetwork = this.socialNetworkModalValue.current.value;
-        // console.log('Adding channel for: ---> ', socialNetwork);
-
-        // switch (socialNetwork) {
-        //     case "telegram":
-        //         this.props.channelsStore.addTelegramChannel(
-        //             this.botIdModalValue.current.value
-        //         );
-        //         break;
-        //     case "vk":
-        //         this.props.channelsStore.addVkChannel(
-        //             this.botIdModalValue.current.value
-        //         );
-        //         break;
-        //     default: break;
-        // }
-
         this.props.channelsStore.addChannel(
             this.socialNetworkModalValue.current.value,
             this.botIdModalValue.current.value
@@ -102,8 +162,22 @@ export default class ChannelsSettings extends Component {
         }
     }
 
-    render() {
+    handleAddVkGroup = e => {
+        console.log('CHOSEN VK GROUP: ', e.target.value);
+    }
 
+    updateButtonState = state => {
+        console.log('Update button state: ', state);
+    }
+
+    openAddChannelModal = () => {
+        this.setState({
+            ...this.state,
+            isModalOpen: true
+        });
+    }
+
+    render() {
         const { channels, inProgress } = this.props.channelsStore;
 
         const table = (
@@ -174,9 +248,9 @@ export default class ChannelsSettings extends Component {
                 {...reactTableTextProps}
             />
         );
-
-        // const redirectUri = 'http://localhost:3000/oauth';
-        const redirectUri = 'https://mochaccino.herokuapp.com/oauth';
+        
+        const redirectUri = 'https://localhost:3000/oauth';
+        // const redirectUri = 'https://mochaccino.herokuapp.com/oauth';
         const clientId = '6668833';
         const authHref = `https://oauth.vk.com/authorize?client_id=${clientId}&display=popup&redirect_uri=${redirectUri}&scope=groups&response_type=token&state=auth_vk&v=5.80`;
 
@@ -186,51 +260,11 @@ export default class ChannelsSettings extends Component {
                     <div className="card">
                         <div className="card-body">
                             <h4 className="card-title">Настройки каналов</h4>
-                                
-                            <Modal
-                                modalId="add-channel-modal"
-                                handleAddChannel={this.onAddChannel}
-                            >
-                                <form>
-                                    <div className="form-group">
-                                        <label htmlFor="socialNetwork" className="col-form-label">Соц. сеть:</label>
-                                        <select
-                                            className="form-control" id="socialNetwork"
-                                            ref={this.socialNetworkModalValue}
-                                            onChange={this.handleOnSocialNetworkChange}
-                                        >
-                                            <option value="telegram">Telegram</option>
-                                            <option value="viber">Viber</option>
-                                            <option value="vk">VK</option>
-                                            <option value="instagram">Instagram</option>
-                                            <option value="facebook">Facebook</option>
-                                        </select>
-                                    </div>
-                                    
-                                    {
-                                        this.state.showBotIdField ? (
-                                            <div className="form-group">
-                                                <label htmlFor="botId" className="col-form-label">ID бота:</label>
-                                                <input
-                                                    type="text" className="form-control" id="botId"
-                                                    ref={this.botIdModalValue}
-                                                />
-                                            </div>
-                                        ) : (
-                                            <a className="btn btn-lg btn-info" href={authHref}>
-                                                Авторизация ВК
-                                            </a>
-                                        )
-                                    }
-                                </form>
-                            </Modal>
-
                             <button
                                 type="button" className="btn btn-lg btn-primary"
-                                data-toggle="modal"
-                                data-target="#add-channel-modal"
-                                data-whatever="not yet."
-                                disabled={inProgress}>
+                                disabled={inProgress}
+                                onClick={this.openAddChannelModal}
+                            >
                                 {inProgress ? <div className="loading-spinner"></div> : "Добавить канал"}
                             </button>
 
@@ -240,6 +274,12 @@ export default class ChannelsSettings extends Component {
                         </div>
                     </div>
                 </div>
+                <AddChannelModal
+                    isOpen={this.state.isModalOpen}
+                    updateState={this.updateButtonState}
+                    authHref={authHref}
+                    vkGroups={this.state.vkGroups}
+                />
             </div>
         )
     }
