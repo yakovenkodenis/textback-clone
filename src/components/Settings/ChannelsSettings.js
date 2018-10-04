@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
+import MediaQuery from 'react-responsive';
 
 import fetchJsonp from 'fetch-jsonp';
 
@@ -10,13 +11,11 @@ import 'react-table/react-table.css';
 import { reactTableTextProps } from '../../utils';
 import AddChannelModal from './AddChannelModal';
 
-import agent from '../../agent';
-
 
 @inject('channelsStore', 'commonStore')
 @withRouter
 @observer
-export default class ChannelsSettings extends Component {
+class ChannelsSettings extends Component {
 
     constructor(props, context) {
         super(props, context);
@@ -177,6 +176,13 @@ export default class ChannelsSettings extends Component {
         });
     }
 
+    closeAddChannelModal = () => {
+        this.setState({
+            ...this.state,
+            isModalOpen: false
+        });
+    }
+
     render() {
         const { channels, inProgress } = this.props.channelsStore;
 
@@ -279,8 +285,21 @@ export default class ChannelsSettings extends Component {
                     updateState={this.updateButtonState}
                     authHref={authHref}
                     vkGroups={this.state.vkGroups}
+                    isMobile={this.props.isMobile}
+                    close={this.closeAddChannelModal}
                 />
             </div>
         )
     }
 }
+
+const ResponsiveChannelsSettings = props => (
+    <MediaQuery maxDeviceWidth={767}>
+        {isMobile => (
+            <ChannelsSettings isMobile={isMobile} {...props} />
+        )}
+    </MediaQuery>
+);
+
+export default ResponsiveChannelsSettings;
+

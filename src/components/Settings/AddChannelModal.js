@@ -231,7 +231,7 @@ export default class AddChannelModal extends Component {
                         <button
                             className="btn btn-light"
                             type="button"
-                            data-dismiss="modal"
+                            onClick={this.props.close}
                         >
                             Закрыть
                         </button>
