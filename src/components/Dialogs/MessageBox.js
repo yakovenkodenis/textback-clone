@@ -352,7 +352,7 @@ export default class MessageBox extends Component {
                             className={`input-group-append ${isMobile ? "w-100 mx-auto my-1" : ""}`}
                         >
                             <button
-                                className={`file-upload-browse btn btn-light btn-icon-text ${isMobile ? "w-100" : ""}`}
+                                className={`file-upload-browse btn btn-light btn-icon-text ${isMobile ? "w-100" : "px-4"}`}
                                 type="button"
                                 onClick={this.openDropzone}
                             >
