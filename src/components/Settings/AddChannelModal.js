@@ -96,7 +96,8 @@ export default class AddChannelModal extends Component {
         } else {
             this.setState({
                 ...this.state,
-                socialNetwork: e.target.value
+                socialNetwork: e.target.value,
+                showBotIdField: true
             });
         }
     }
@@ -193,6 +194,7 @@ export default class AddChannelModal extends Component {
                                         type="text" className="form-control" id="botId"
                                         value={this.state.botIdModalValue}
                                         onChange={this.handleBotIdChange}
+                                        placeholder={`Вставьте сюда ID своего ${this.state.socialNetwork} бота...`}
                                     />
                                 </div>
                             ) : (
@@ -228,13 +230,16 @@ export default class AddChannelModal extends Component {
                                 )
                             )
                         }
-                        <button
-                            className="btn btn-light"
-                            type="button"
-                            onClick={this.props.close}
-                        >
-                            Закрыть
-                        </button>
+                        {
+                            this.state.showBotIdField &&
+                            <button
+                                className="btn btn-light"
+                                type="button"
+                                onClick={this.props.close}
+                            >
+                                Закрыть
+                            </button>
+                        }
                     </div>
                 </div>
             </div>
