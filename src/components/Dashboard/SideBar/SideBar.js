@@ -15,6 +15,8 @@ export default class NavBar extends Component {
 
         const { isActive } = this.props;
 
+        const { isAdmin } = this.props.userStore;
+
         const email = this.props.userStore.currentUser
           ? this.props.userStore.currentUser.email.split("@")[0]
           : window.localStorage.getItem('user')
@@ -41,7 +43,9 @@ export default class NavBar extends Component {
                     <span className="font-weight-bold mb-2">
                       {email}
                     </span>
-                    <span className="text-secondary text-small">Менеджер</span>
+                    <span className="text-secondary text-small">
+                      {isAdmin ? "Менеджер" : "Пользователь"}
+                    </span>
                   </div>
                   <i className="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
                 </Link>
@@ -126,8 +130,17 @@ export default class NavBar extends Component {
                 ]}
               />
 
+              {
+                isAdmin &&
+                <SidebarItem
+                  itemName='Управление'
+                  routePath='/admin/management'
+                  iconClassName='mdi-account-settings-variant'
+                />
+              }
+
     
-              <li className="nav-item sidebar-actions">
+              {/*<li className="nav-item sidebar-actions">
                 <span className="nav-link">
                   <div className="border-bottom" />            
                   <button className="btn btn-block btn-lg btn-gradient-primary mt-4">Стать Pro</button>
@@ -142,7 +155,7 @@ export default class NavBar extends Component {
                   </div>
                 </span>
               </li>
-
+              */}
 
             </ul>
 

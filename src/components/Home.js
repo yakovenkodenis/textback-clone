@@ -28,6 +28,7 @@ import EditProfile from './Profile/EditProfile';
 import OAuth from './OAuth';
 
 import RightSideBar from './Dashboard/RightSidebar/RightSideBar';
+import Management from './Management/Management';
 
 
 const routes = [
@@ -73,6 +74,11 @@ const routes = [
         path: '/audience',
         exact: true,
         component: () => <Audience />
+    },
+    {
+        path: '/management',
+        exact: true,
+        component: () => <Management />
     },
     {
         path: '/settings',

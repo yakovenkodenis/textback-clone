@@ -8,6 +8,8 @@ class UserStore {
     @observable updatingUser;
     @observable updatingUserErrors;
 
+    @observable isAdmin = true;
+
     constructor() {
         reaction(
             () => this.currentUser,
