@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import HTMLReactParser from 'html-react-parser';
 
 const ImageStyle = (width, height) => {
   return {
@@ -16,18 +17,15 @@ export default class Image extends Component {
     return (
       <div className={`responsive${isSelected ? " selected" : ""}`}
         onClick={onImageClick}>
+        {/*HTMLReactParser(src) */}
         <img
             src={src}
             alt=""
             className={`thumbnail${isSelected ? " selected" : ""}`}
             style={ImageStyle(150, 150)}
         />
-        <div className="checked">
-          {/*<img src={imgCheck} style={{ width: 75, height: 75, objectFit: "cover" }}/>*/}
-          <div className="icon"/>
-        </div>
       </div>
-    )
+    );
   }
 }
 

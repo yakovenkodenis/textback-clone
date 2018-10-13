@@ -12,8 +12,8 @@ export default class Management extends Component {
         super(props, context);
 
         this.state = {
-            shopId: '',
-            subscriptionPrice: 0
+            shopId: 'xasdgadgae43q34yjssgrt',
+            subscriptionPrice: 30
         }
     }
 
@@ -34,10 +34,12 @@ export default class Management extends Component {
             <div className="row">
                 <div className="col-12 grid-margin">
                     <div className="card">
-                        <div className="card-body">
+                        <div className="card-body col-6">
                             <h4 className="card-title">Управление</h4>
 
-                            <div className="form-group">
+                            <div className="display-5 my-3">Настройка Яндекс.Кассы</div>
+                            <div className="form-group mt-2">
+                                <label htmlFor="shopId">Идентификатор магазина</label>
                                 <input
                                     type="text"
                                     placeholder="Идентификатор магазина"
@@ -49,11 +51,12 @@ export default class Management extends Component {
                             </div>
 
                             <div className="form-group">
+                                <label htmlFor="subscriptionPrice">Стоимость подписки</label>
                                 <input
                                     type="number"
                                     placeholder="Стоимость подписки"
                                     className="form-control form-control-lg"
-                                    id="shopId"
+                                    id="subscriptionPrice"
                                     value={this.state.subscriptionPrice}
                                     onChange={e => { this.onDataChange(e, 'subscriptionPrice'); }}
                                 />

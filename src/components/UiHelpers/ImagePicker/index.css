@@ -4,7 +4,7 @@
 
 .image_picker .responsive {
     position: relative;
-    margin: 0 6px;
+    margin: 6px 6px;
     float: left;
     opacity: 1;
 }
@@ -27,7 +27,8 @@
 }
 
 .image_picker .responsive .selected {
-    background-color: #008cba;
+    background-color: #f8f9fa;
+    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.7);
 }
 
 .image_picker .responsive:hover {
@@ -50,12 +51,12 @@
     right: 0;
 }
 
-.image_picker .selected .checked .icon {
+/* .image_picker .selected .checked .icon {
     background: url("./assets/images/check.png");
     background-size: cover;
     height: 75px;
     width: 75px;
-}
+} */
 
 .image_picker .clear {
     clear: both;

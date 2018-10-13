@@ -49,7 +49,7 @@ class New extends Component {
 
         return (
             <div className="row">
-                <div className="col-12 grid-margin">
+                <div className="col-12 grid-margin px-0">
                     <nav aria-label="breadcrumb">
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item">
@@ -61,7 +61,7 @@ class New extends Component {
                         </ol>
                     </nav>
                     <div className="card">
-                        <div className="card-body pb-0">
+                        <div className="card-body pb-0 px-4">
                             <h4 className="card-title">Создание виджета</h4>
                             <ul className="nav nav-tabs" role="tablist">
                                 <li className="nav-item">
