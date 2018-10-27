@@ -176,7 +176,7 @@ export default class Appearance extends Component {
                             </div>
                             
                             <div className="form-group">
-                                <label>Фоновый цвет заголовка</label>
+                                <label>Цвет фона</label>
                                 <TwitterPicker
                                     triangle='hide'
                                     width='100%'

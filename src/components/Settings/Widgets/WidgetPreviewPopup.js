@@ -50,7 +50,13 @@ export default class WidgetPreviewPopup extends Component {
                 }}
             >
 
-                <div className={`${isModal ? "" : "test-preview"} notification-widget-dialog___modal-popup-content`} id="notification-widget-dialog___modal-popup-content-id">
+                <div
+                    className={`${isModal ? "" : "test-preview"} notification-widget-dialog___modal-popup-content`}
+                    id="notification-widget-dialog___modal-popup-content-id"
+                    style={{
+                        backgroundColor: this.props.headerColor
+                    }}
+                >
                     <div
                         className="notification-widget-dialog___modal-popup-header"
                         style={{
@@ -112,7 +118,12 @@ export default class WidgetPreviewPopup extends Component {
                         </div>
 
                     </div>
-                    <div className="notification-widget-dialog___modal-popup-footer">
+                    <div
+                        className="notification-widget-dialog___modal-popup-footer"
+                        style={{
+                            backgroundColor: this.props.headerColor
+                        }}
+                    >
                     </div>
                 </div>
             
