@@ -29,6 +29,7 @@ import SideBar from './Dashboard/SideBar/SideBar';
 
 import RightSideBar from './Dashboard/RightSidebar/RightSideBar';
 import LoadingSpinner from './LoadingSpinner';
+import ScrollToTopOnMount from './UiHelpers/ScrollToTopOnMount';
 // import Management from './Management/Management';
 
 const Dialogs = React.lazy(() => import('./Dialogs/Dialogs'));
@@ -241,7 +242,10 @@ class Home extends Component {
                                     // component={route.component}
                                     render={() => (
                                         <Suspense fallback={<LoadingSpinner />}>
-                                            {route.component()}
+                                            <React.Fragment>
+                                                <ScrollToTopOnMount />
+                                                {route.component()}
+                                            </React.Fragment>
                                         </Suspense>
                                     )}
                                 />

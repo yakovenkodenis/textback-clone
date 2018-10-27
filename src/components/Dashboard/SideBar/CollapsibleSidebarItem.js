@@ -14,7 +14,11 @@ export default class CollapsibleSidebarItem extends Component {
     handleOnClick = () => {
         action(() => {
             this.isCollapsed = !this.isCollapsed;
-        })();
+        })();        
+    }
+
+    goToDefaultRoute = e => {
+        this.props.history.push(this.props.routes[0].route);
     }
 
     toggleActive = () => {
@@ -32,7 +36,9 @@ export default class CollapsibleSidebarItem extends Component {
         const isActive = routes.some(el => new RegExp(el.route).test(location.pathname));
 
         const subItems = routes.map((route) => (
-            <li className='nav-item' key={shortid.generate()}>
+            <li className={
+                `nav-item submenu-item ${location.pathname === route.route ? "active" : ""}`
+            } key={shortid.generate()}>
                 <Link to={route.route} className='nav-link'>
                     {route.name}
                 </Link>
@@ -47,6 +53,7 @@ export default class CollapsibleSidebarItem extends Component {
                 <a
                     className={`nav-link ${this.isCollapsed ? 'collapsed' : ''}`}
                     data-toggle="collapse"
+                    onClick={this.goToDefaultRoute}
                     aria-expanded={this.isCollapsed}
                     aria-controls="ui-basic">
                     <span className="menu-title">{itemName}</span>
