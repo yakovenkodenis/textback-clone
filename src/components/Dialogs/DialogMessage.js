@@ -115,6 +115,11 @@ export default Watch(class DialogMessage extends Component {
             ...this.state,
             hover: true
         });
+
+        // this.setState((state, props) => ({
+        //     ...state,
+        //     hover: true
+        // }));
     }
 
     unhover = e => {
@@ -122,6 +127,11 @@ export default Watch(class DialogMessage extends Component {
             ...this.state,
             hover: false
         });
+
+        // this.setState((state, props) => ({
+        //     ...state,
+        //     hover: false
+        // }));
     }
 
     onSelect = e => {
@@ -132,6 +142,11 @@ export default Watch(class DialogMessage extends Component {
                 ...this.state,
                 selected: !this.state.selected
             });
+
+            // this.setState((state, props) => ({
+            //     ...state,
+            //     selected: !state.selected
+            // }));
         }
     }
 

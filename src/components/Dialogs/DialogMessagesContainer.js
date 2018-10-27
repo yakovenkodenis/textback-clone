@@ -50,10 +50,15 @@ class DialogMessagesContainer extends Component {
 
         // TODO think about responsiveness and number of messages in the message box
         window.onresize = e => {
-            this.setState({
-                ...this.state,
+            // this.setState({
+            //     ...this.state,
+            //     viewportHeight: document.documentElement.clientHeight - 250
+            // });
+
+            this.setState((state, props) => ({
+                ...state,
                 viewportHeight: document.documentElement.clientHeight - 250
-            });
+            }));
         }
 
         if (
@@ -107,6 +112,16 @@ class DialogMessagesContainer extends Component {
             offset: 0,   // for pagination
             limit: 50,    // for pagination
         });
+
+        // this.setState((state, props) => ({
+        //     viewportHeight: document.documentElement.clientHeight - 400,
+        //     selectedMessages: [],
+        //     afterDeletion: false,
+        //     loadingPrevious: false,
+        //     allowedToLoadPrevious: true,
+        //     offset: 0,   // for pagination
+        //     limit: 50,    // for pagination
+        // }));
     }
 
     elementVisibleInViewport = watcher => {
@@ -130,6 +145,13 @@ class DialogMessagesContainer extends Component {
                         allowedToLoadPrevious: false,
                         offset: this.state.offset + this.state.limit
                     });
+
+                    // this.setState((state, props) => ({
+                    //     ...state,
+                    //     loadingPrevious: true,
+                    //     allowedToLoadPrevious: false,
+                    //     offset: state.offset + state.limit
+                    // }));
                 }
             }
 
@@ -176,6 +198,11 @@ class DialogMessagesContainer extends Component {
             loadingPrevious: true
         });
 
+        // this.setState((state, props) => ({
+        //     ...state,
+        //     loadingPrevious: true
+        // }));
+
         return this.loadMessages()
             .then(() => {
                 nextTick(() => {
@@ -193,6 +220,12 @@ class DialogMessagesContainer extends Component {
                         ...this.state,
                         loadingPrevious: false
                     });
+
+
+                    // this.setState((state, props) => ({
+                    //     ...state,
+                    //     loadingPrevious: false
+                    // }));
                 });
             });
     }
@@ -224,6 +257,11 @@ class DialogMessagesContainer extends Component {
                 ...this.state,
                 selectedMessages
             });
+
+            // this.setState((state, props) => ({
+            //     ...state,
+            //     selectedMessages
+            // }));
         }
     }
 
@@ -240,6 +278,12 @@ class DialogMessagesContainer extends Component {
                 selectedMessages: [],
                 afterDeletion: true
             });
+
+            // this.setState((state, props) => ({
+            //     ...state,
+            //     selectedMessages: [],
+            //     afterDeletion: true
+            // }));
         }
     }
 

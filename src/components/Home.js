@@ -1,34 +1,48 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Route, withRouter } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
-import shortid from 'shortid';
+// import shortid from 'shortid';
 
 import { Default } from './Responsive';
 
 import NavBar from './Dashboard/NavBar';
 import SideBar from './Dashboard/SideBar/SideBar';
 
-import Dialogs from './Dialogs/Dialogs';
-import Analytics from './Analytics/Analytics';
+// import Dialogs from './Dialogs/Dialogs';
+// import Analytics from './Analytics/Analytics';
 
-import Newsletter from './Newsletter/Newsletter';
-import NewNewsletter from './Newsletter/New/New';
+// import Newsletter from './Newsletter/Newsletter';
+// import NewNewsletter from './Newsletter/New/New';
 
-import Settings from './Settings/Settings';
+// import Settings from './Settings/Settings';
 
-import Autofunnels from './Autofunnels/Autofunnels';
-import NewAutofunnel from './Autofunnels/New/New';
+// import Autofunnels from './Autofunnels/Autofunnels';
+// import NewAutofunnel from './Autofunnels/New/New';
 
-import Audience from './Audience/Audience';
+// import Audience from './Audience/Audience';
 
-import Profile from './Profile/Profile';
-import EditProfile from './Profile/EditProfile';
+// import Profile from './Profile/Profile';
+// import EditProfile from './Profile/EditProfile';
 
-import OAuth from './OAuth';
+// import OAuth from './OAuth';
 
 import RightSideBar from './Dashboard/RightSidebar/RightSideBar';
-import Management from './Management/Management';
+import LoadingSpinner from './LoadingSpinner';
+// import Management from './Management/Management';
+
+const Dialogs = React.lazy(() => import('./Dialogs/Dialogs'));
+const Analytics = React.lazy(() => import('./Analytics/Analytics'));
+const Newsletter = React.lazy(() => import('./Newsletter/Newsletter'));
+const NewNewsletter = React.lazy(() => import('./Newsletter/New/New'));
+const Settings = React.lazy(() => import('./Settings/Settings'));
+const Autofunnels = React.lazy(() => import('./Autofunnels/Autofunnels'));
+const NewAutofunnel = React.lazy(() => import('./Autofunnels/New/New'));
+const Audience = React.lazy(() => import('./Audience/Audience'));
+const Profile = React.lazy(() => import('./Profile/Profile'));
+const EditProfile = React.lazy(() => import('./Profile/EditProfile'));
+const Management = React.lazy(() => import('./Management/Management'));
+const OAuth = React.lazy(() => import('./OAuth'));
 
 
 const routes = [
@@ -219,12 +233,17 @@ class Home extends Component {
                                 padding: isMobile ? "0.25rem 0.25rem" : "1.25rem 2.25rem"
                             }}
                         >
-                            {routes.map((route) => (
+                            {routes.map((route, index) => (
                                 <Route
-                                    key={shortid.generate()}
+                                    key={index/*shortid.generate()*/}
                                     path={'/admin' + route.path}
                                     exact={route.exact}
-                                    component={route.component}
+                                    // component={route.component}
+                                    render={() => (
+                                        <Suspense fallback={<LoadingSpinner />}>
+                                            {route.component()}
+                                        </Suspense>
+                                    )}
                                 />
                             ))}
                         </div>

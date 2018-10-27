@@ -33,6 +33,17 @@ export default class TagsContainer extends Component {
                         ...this.state.tags
                     ]
                 });
+
+                // this.setState((state, props) => ({
+                //     ...state,
+                //     isFirstTime: false,
+                //     tags: [
+                //         ...response.data.tags.map(
+                //             tag => ({ value: tag.tag_id.toString(), label: tag.description })
+                //         ),
+                //         ...state.tags
+                //     ]
+                // }));
             }
         });
     }
