@@ -7,11 +7,14 @@ import ImagePicker from '../UiHelpers/ImagePicker/ImagePicker';
 // import { Step, StepList } from '../UiHelpers/Stepper';
 import { capitalize } from '../../utils';
 
+
 import vkIcon from './social-network-logos/vk.png';
 import tgIcon from './social-network-logos/telegram.png';
 import fbIcon from './social-network-logos/messenger.png';
 import vbIcon from './social-network-logos/viber.png';
 import instIcon from './social-network-logos/instagram.png';
+
+import { telegramInstruction, viberInstruction, general } from './instructions';
 
 const networks = [
     { value: 'VK', src: vkIcon, png: vkIcon },
@@ -19,7 +22,16 @@ const networks = [
     { value: 'viber', src: vbIcon, png: vbIcon },
     { value: 'instagram', src: instIcon, png: instIcon },
     { value: 'messenger', src: fbIcon, png: fbIcon },
-]
+];
+
+const instructions = {
+    vk: '',
+    telegram: telegramInstruction,
+    viber: viberInstruction,
+    instagram: '',
+    messenger: '',
+    general
+}
 
 @inject('channelsStore', 'commonStore')
 @withRouter
@@ -161,8 +173,13 @@ export default class OnboardingWizard extends Component {
                 </div>
 
                 {
-                    this.state.currentNetwork && 
-                    <h4>{capitalize(this.state.currentNetwork)}</h4>
+                    this.state.currentNetwork
+                    ? <h4>{capitalize(this.state.currentNetwork)}</h4>
+                    : <div
+                        className="mt-4 col-6 mx-auto" style={{lineHeight: 1.5}}
+                        dangerouslySetInnerHTML={{
+                        __html: instructions['general']
+                    }} />
                 }
 
                 {
@@ -184,8 +201,8 @@ export default class OnboardingWizard extends Component {
                         </div>
                     ) : (                  
                         this.state.showBotIdField && this.state.currentNetwork ? (
-                            <div className="form-group">
-                                <label htmlFor="botId" className="col-form-label">ID бота:</label>
+                            <div className="form-group col-8 mx-auto">
+                                <label htmlFor="botId" className="col-form-label">ID бота (токен):</label>
                                 <input
                                     type="text" className="form-control" id="botId"
                                     value={this.state.botId}
@@ -218,10 +235,16 @@ export default class OnboardingWizard extends Component {
                                 type="button"
                                 onClick={this.onAddChannel}
                             >
-                                Подключить
+                                Подключить аккаунт
                             </button>
                         )
                     )
+                }
+                {
+                    this.state.currentNetwork &&
+                    <div className="mt-4 col-6 mx-auto" style={{lineHeight: 1.5}} dangerouslySetInnerHTML={{
+                        __html: instructions[this.state.currentNetwork.toLowerCase()]
+                    }} />
                 }
             </div>
         )
