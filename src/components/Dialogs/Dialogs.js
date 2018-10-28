@@ -6,14 +6,15 @@ import MediaQuery from 'react-responsive';
 import DialogsList from './DialogsList';
 import DialogContainer from './DialogContainer';
 import { Default, Mobile } from '../Responsive';
+import OnboardingWizard from '../OnboardingWizard/OnboardingWizard';
 
 
-@inject('subscribersStore')
-@withRouter
+@inject('subscribersStore', 'channelsStore')
 @observer
+@withRouter
 class Dialogs extends Component {
 
-    componentWillMount() {
+    componentDidMount() {
         const { history } = this.props;
 
         if (!this.props.match.params.currentFilter) {
@@ -161,40 +162,48 @@ class Dialogs extends Component {
                 <div className={`col-12 grid-margin ${isMobile ? "p-0" : /*make more dynamic?*/ "p-0"}`}>
                     <div className="card">
                         <div className={`card-body ${isMobile ? "pt-1" : ""}`}>
-
-                        <Default>
-                            <h4 className="card-title">Диалоги</h4>
-                        </Default>
-
-                        <Mobile>
-                            <nav aria-label="breadcrumb">
-                                <ol className="breadcrumb">
-                                    <li className="breadcrumb-item">
-                                        <Link to='/admin/dialogs/all'>Диалоги</Link>
-                                    </li>
-                                    <li className="breadcrumb-item active">
-                                        {dynamicBreadcrumbRoute}
-                                    </li>
-                                </ol>
-                            </nav>
-                        </Mobile>
-                            
-                            <div className="row">
-
+                        {
+                            dialogsList.length === 0
+                            && this.props.channelsStore.channels.length === 0
+                            ? <OnboardingWizard />
+                            : (
+                            <React.Fragment>
                                 <Default>
-                                    <div className="col-3 clear-pr clear-pl">
-                                        <DialogsList dialogs={dialogsList} />
-                                    </div>
-                                    {this.renderDialogRoutesDesktop(dialogRoutes)}
+                                    <h4 className="card-title">Диалоги</h4>
                                 </Default>
 
                                 <Mobile>
-                                    {this.renderDialogRoutesMobile(
-                                        dialogRoutes, dialogsList, dynamicBreadcrumbRoute
-                                    )}
+                                    <nav aria-label="breadcrumb">
+                                        <ol className="breadcrumb">
+                                            <li className="breadcrumb-item">
+                                                <Link to='/admin/dialogs/all'>Диалоги</Link>
+                                            </li>
+                                            <li className="breadcrumb-item active">
+                                                {dynamicBreadcrumbRoute}
+                                            </li>
+                                        </ol>
+                                    </nav>
                                 </Mobile>
+                                
+                                <div className="row">
 
-                            </div>
+                                    <Default>
+                                        <div className="col-3 clear-pr clear-pl">
+                                            <DialogsList dialogs={dialogsList} />
+                                        </div>
+                                        {this.renderDialogRoutesDesktop(dialogRoutes)}
+                                    </Default>
+
+                                    <Mobile>
+                                        {this.renderDialogRoutesMobile(
+                                            dialogRoutes, dialogsList, dynamicBreadcrumbRoute
+                                        )}
+                                    </Mobile>
+
+                                </div>
+                            </React.Fragment>
+                            )
+                        }
                         </div>
                     </div>
                 </div>

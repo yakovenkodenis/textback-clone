@@ -226,7 +226,9 @@ export default class ReceiverChoiceForm extends Component {
 
         return (
         <React.Fragment>
-            <form className={`${isMobile ? "" : "d-flex justify-content-left"}`}>
+            <form className={
+                `${isMobile ? "" : "d-flex justify-content-left"}`
+            }>
                 <div className={`form-group ${isMobile ? "" : "mr-5"}`}>
                     <label htmlFor="selectReceiver">
                         Получатели

@@ -60,10 +60,10 @@ configure({
     enforceActions: true
 });
 
-// if (process.env.NODE_ENV !== 'production') {
-//     const { whyDidYouUpdate } = require('why-did-you-update');
-//     whyDidYouUpdate(React, { exclude: [ /^Route/ ] });
-// }
+if (process.env.NODE_ENV !== 'production') {
+    const { whyDidYouUpdate } = require('why-did-you-update');
+    whyDidYouUpdate(React, { exclude: [ /^Route/ ] });
+}
 
 ReactDOM.render(
     <Provider {...stores}>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
+import Joyride from 'react-joyride';
 
 import MessageComposerForm from './MessageComposerForm';
 import ReceiverChoiceForm from './ReceiverChoiceForm';
@@ -10,6 +11,44 @@ import CardWrapper from './CardWrapper';
 import SendNewsletter from './SendNewsletter';
 import agent from '../../../agent';
 
+
+const steps = [
+    {
+        target: '.first-step',
+        content: 'Здесь будет название вашей рассылки',
+        placement: 'auto'
+    },
+    {
+        target: '.second-step',
+        content: 'Тут вы можете выбрать список получателей рассылки',
+        placement: 'auto'
+    },
+    {
+        target: '.third-step',
+        content: 'Потом нужно составить сообщение',
+        placement: 'auto'
+    },
+    {
+        target: '.fourth-step',
+        content: 'А теперь запустите рассылку или сохраните её как черновик',
+        placement: 'auto'
+    },
+];
+
+const joyrideLocale = {
+    back: 'Назад',
+    close: 'Закрыть',
+    last: 'Конец',
+    next: 'Дальше',
+    skip: 'Пропустить'
+};
+
+const joyrideTheme = {
+    options: {
+        primaryColor: '#b66dff',
+        zIndex: 9999
+    }
+};
 
 @inject('newsletterStore')
 @withRouter
@@ -151,8 +190,19 @@ class New extends Component {
                 <PageHeader isMobile={isMobile} />
 
                 <div className="row">
+                    <Joyride steps={steps} run={true} callback={
+                            data => console.log('STEPPER: ', data)
+                        }
+                        debug
+                        continuous
+                        showProgress
+                        showSkipButton
+                        locale={joyrideLocale}
+                        styles={joyrideTheme}
+                    />
+
                     <CardWrapper title="Дайте название рассылке">
-                        <div className="form-group">
+                        <div className="form-group first-step">
                             <input
                                 type="text"
                                 placeholder="Название рассылки"
@@ -164,7 +214,7 @@ class New extends Component {
                         </div>
                     </CardWrapper>
 
-                    <CardWrapper title="Выберите получателя">
+                    <CardWrapper title="Выберите получателя" tourStepClass="second-step">
                         <ReceiverChoiceForm
                             isMobile={isMobile}
                             updateReceiver={this.updateReceiver}
@@ -180,6 +230,7 @@ class New extends Component {
                         messages={this.state.newsletter}
                         edit={this.props.edit}
                         isNewsletter={true}
+                        tourStepClass="third-step"
                     />
 
                     <CardWrapper title="Отправьте рассылку">
@@ -189,6 +240,7 @@ class New extends Component {
                             sendNewsletter={this.sendNewsletter}
                             updateSendingTime={this.updateSendingTime}
                             setUnixTime={this.state.time}
+                            tourStepClass="fourth-step"
                         />
                     </CardWrapper>
                 </div>

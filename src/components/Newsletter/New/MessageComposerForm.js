@@ -430,7 +430,7 @@ export default class MessageComposerForm extends Component {
     onDragLeave={this.onDragLeave}
     ref={this.dropzoneRef}
 >
-    <div className="card" style={dropzoneActive ? activeDropZoneStyles : null}>
+    <div className={`card ${this.props.tourStepClass}`} style={dropzoneActive ? activeDropZoneStyles : null}>
 
         {dropzoneActive &&
             <div

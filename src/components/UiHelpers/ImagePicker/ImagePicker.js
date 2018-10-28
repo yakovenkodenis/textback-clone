@@ -40,15 +40,17 @@ class ImagePicker extends Component {
         isSelected={this.state.picked.has(image.value)} 
         onImageClick={() => this.handleImageClick(image)} 
         key={i}
+        width={this.props.width || 150}
+        height={this.props.height || 150}
       />
     )
   }
 
   render() {
-    const { images } = this.props;
+    const { images, wrapperClass } = this.props;
 
     return (
-      <div className="image_picker">
+      <div className={`image_picker ${wrapperClass ? wrapperClass : ""}`}>
         { images.map(this.renderImage) }
         <div className="clear" />
       </div>

@@ -89,7 +89,7 @@ export default class SendNewsletter extends Component {
 
         return (
         <React.Fragment>
-            <div className="form-check ml-2">
+            <div className={`form-check ml-2`}>
                 <label htmlFor="start-immediately" className="form-check-label">
                     Отправить сейчас
                     <input
@@ -131,7 +131,7 @@ export default class SendNewsletter extends Component {
                 isMobile={isMobile}
             />
 
-            <div className="flex justify-content-left mt-4">
+            <div className={`flex justify-content-left mt-4 ${this.props.tourStepClass}`}>
                 <button
                     className={`btn btn-outline-success btn-icon-text ${isMobile ? "w-100 mb-1" : "mr-1"}`}
                     type="button"

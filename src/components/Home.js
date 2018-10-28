@@ -44,6 +44,7 @@ const Profile = React.lazy(() => import('./Profile/Profile'));
 const EditProfile = React.lazy(() => import('./Profile/EditProfile'));
 const Management = React.lazy(() => import('./Management/Management'));
 const OAuth = React.lazy(() => import('./OAuth'));
+const OnboardingOAuth = React.lazy(() => import('./OnboardingWizard/OAuth'));
 
 
 const routes = [
@@ -113,6 +114,11 @@ const routes = [
         path: '/oauth',
         exact: true,
         component: () => <OAuth />
+    },
+    {
+        path: '/oauth/onboarding',
+        exact: true,
+        component: () => <OnboardingOAuth />
     }
 ];
 

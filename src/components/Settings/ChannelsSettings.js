@@ -28,28 +28,6 @@ class ChannelsSettings extends Component {
             vkGroups: [],
             vkGroupsToken: '',
             vkAccessToken: null,
-
-
-            fakeResponse: {
-                "response": {
-                  "count": 1,
-                  "items": [
-                    {
-                      "id": 148835776,
-                      "name": "Coffee & Bakery на Сумской 77/79",
-                      "screen_name": "coffeebakery.kharkiv",
-                      "is_closed": 0,
-                      "type": "page",
-                      "is_admin": 1,
-                      "admin_level": 3,
-                      "is_member": 1,
-                      "photo_50": "https://pp.userapi.com/c639828/v639828001/26428/7ORW_a3pxMY.jpg?ava=1",
-                      "photo_100": "https://pp.userapi.com/c639828/v639828001/26427/2bwF2dmPRCg.jpg?ava=1",
-                      "photo_200": "https://pp.userapi.com/c639828/v639828001/26426/b3xrl2TMA7Y.jpg?ava=1"
-                    }
-                  ]
-                }
-            }
         }
 
         this.socialNetworkModalValue = React.createRef();
@@ -106,24 +84,6 @@ class ChannelsSettings extends Component {
                             vkGroups: []
                         });
                   });
-
-                // const response = this.state.fakeResponse;
-
-                // if (response.response) {
-                //     this.setState({
-                //         ...this.state,
-                //         vkGroups: response.items
-                //     }, () => {
-                //         // get group tokens for each group; request:
-                //         // https://oauth.vk.com/authorize?client_id=6668833&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=messages,photos,docs,manage&group_ids=68959538&response_type=token&state=auth_vk&v=5.80
-
-                //         const groupIds = this.state.fakeResponse.response.items.map(i => i.id).join(',');
-                //         const request = `https://oauth.vk.com/authorize?client_id=6668833&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=messages,photos,docs,manage&group_ids=${groupIds}&response_type=token&state=auth_vk&v=5.80`;
-                //         console.log('REQUEST FOR GROUP TOKENS: ', request);
-
-                //         // send group tokens to server...
-                //     });
-                // }
             });
         }
     }

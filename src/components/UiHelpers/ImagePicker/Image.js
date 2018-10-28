@@ -11,7 +11,7 @@ const ImageStyle = (width, height) => {
 
 export default class Image extends Component {
   render() {
-    const { src, isSelected, onImageClick } = this.props;
+    const { src, isSelected, onImageClick, width, height } = this.props;
 
     return (
       <div className={`responsive${isSelected ? " selected" : ""}`}
@@ -20,7 +20,7 @@ export default class Image extends Component {
             src={src}
             alt=""
             className={`thumbnail${isSelected ? " selected" : ""}`}
-            style={ImageStyle(150, 150)}
+            style={ImageStyle(width, height)}
         />
       </div>
     );
