@@ -99,7 +99,7 @@ export const stripURLSfromText = str =>
     str.match(urlRegex);
 
 export const linkify = text =>
-    text.replace(urlRegex, link => `<a href="${link}">${link}</a>`);
+    text.replace(urlRegex, link => `<a href="${link}" target="_blank">${link}</a>`);
 
 
 export const truncate = (msg, n, useWordBoundary) => {

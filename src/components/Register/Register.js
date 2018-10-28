@@ -72,10 +72,13 @@ class Register extends Component {
                         <div className={`col-lg-4 mx-auto ${isMobile ? "p-0" : ""}`}>
                             <div className="auth-form-light text-left p-5">
                                 <div className="brand-logo">
-                                    <img src={logo} alt="logo"/>
+                                    <img
+                                        src={logo} alt="logo" className="d-block mx-auto"
+                                        style={{transform: 'scale(1.6)'}}
+                                    />
                                 </div>
-                                <h4>Впервые здесь?</h4>
-                                <h6 className="font-weight-light">Скорее регистрируйся и присоединяйся к нам</h6>
+                                <h3>Регистрация</h3>
+                                <h6 className="font-weight-light">Впервые здесь? Скорее регистрируйся и присоединяйся к нам</h6>
 
                                 <ListErrors errors={this.state.errors} />
 

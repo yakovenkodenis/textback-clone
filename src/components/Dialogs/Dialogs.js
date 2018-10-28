@@ -10,11 +10,11 @@ import OnboardingWizard from '../OnboardingWizard/OnboardingWizard';
 
 
 @inject('subscribersStore', 'channelsStore')
-@observer
 @withRouter
+@observer
 class Dialogs extends Component {
 
-    componentDidMount() {
+    componentWillMount() {
         const { history } = this.props;
 
         if (!this.props.match.params.currentFilter) {
