@@ -3,6 +3,8 @@ import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import $ from 'jquery';
 import { ScrollContainer } from 'scrollmonitor-react';
+import produce from 'immer';
+import memoize from 'lodash/memoize';
 
 import DialogMessage from './DialogMessage';
 import { nextTick } from '../../utils';
@@ -38,6 +40,8 @@ class DialogMessagesContainer extends Component {
         }
 
         this.dialogMessagesContainerRef = React.createRef();
+
+        this.getDialogMessageComponent = memoize(message => this.renderDialogMessage(message));
     }
 
     componentWillReceiveProps(nextProps) {
@@ -55,10 +59,14 @@ class DialogMessagesContainer extends Component {
             //     viewportHeight: document.documentElement.clientHeight - 250
             // });
 
-            this.setState((state, props) => ({
-                ...state,
-                viewportHeight: document.documentElement.clientHeight - 250
+            this.setState(produce(this.state, draft => {
+                draft.viewportHeight = document.documentElement.clientHeight - 250
             }));
+
+            // this.setState((state, props) => ({
+            //     ...state,
+            //     viewportHeight: document.documentElement.clientHeight - 250
+            // }));
         }
 
         if (
@@ -103,15 +111,25 @@ class DialogMessagesContainer extends Component {
 
         console.log('DialogMessagesContainer is UNMOUNTED');
 
-        this.setState({
-            viewportHeight: document.documentElement.clientHeight - 400,
-            selectedMessages: [],
-            afterDeletion: false,
-            loadingPrevious: false,
-            allowedToLoadPrevious: true,
-            offset: 0,   // for pagination
-            limit: 50,    // for pagination
-        });
+        // this.setState({
+        //     viewportHeight: document.documentElement.clientHeight - 400,
+        //     selectedMessages: [],
+        //     afterDeletion: false,
+        //     loadingPrevious: false,
+        //     allowedToLoadPrevious: true,
+        //     offset: 0,   // for pagination
+        //     limit: 50,    // for pagination
+        // });
+
+        this.setState(produce(this.state, draft => {
+            draft.viewportHeight = document.documentElement.clientHeight - 400;
+            draft.selectedMessages = [];
+            draft.afterDeletion = false;
+            draft.loadingPrevious = false;
+            draft.allowedToLoadPrevious = false;
+            draft.offset = 0;
+            draft.limit = 50;
+        }));
 
         // this.setState((state, props) => ({
         //     viewportHeight: document.documentElement.clientHeight - 400,
@@ -139,12 +157,18 @@ class DialogMessagesContainer extends Component {
                 console.groupEnd();
 
                 if (this._isMounted) {
-                    this.setState({
-                        ...this.state,
-                        loadingPrevious: true,
-                        allowedToLoadPrevious: false,
-                        offset: this.state.offset + this.state.limit
-                    });
+                    // this.setState({
+                    //     ...this.state,
+                    //     loadingPrevious: true,
+                    //     allowedToLoadPrevious: false,
+                    //     offset: this.state.offset + this.state.limit
+                    // });
+
+                    this.setState(produce(this.state, draft => {
+                        draft.loadingPrevious = true;
+                        draft.allowedToLoadPrevious = false;
+                        draft.offset = draft.offset + draft.limit;
+                    }));
 
                     // this.setState((state, props) => ({
                     //     ...state,
@@ -194,7 +218,7 @@ class DialogMessagesContainer extends Component {
         const oldFirstMessageTopPosition = getTopPosition(firstMessage);
 
         this.setState({
-            ...this.state,
+            // ...this.state,
             loadingPrevious: true
         });
 
@@ -217,7 +241,7 @@ class DialogMessagesContainer extends Component {
                     }
 
                     this.setState({
-                        ...this.state,
+                        // ...this.state,
                         loadingPrevious: false
                     });
 
@@ -254,7 +278,7 @@ class DialogMessagesContainer extends Component {
 
         if (this._isMounted) {
             this.setState({
-                ...this.state,
+                // ...this.state,
                 selectedMessages
             });
 
@@ -273,11 +297,16 @@ class DialogMessagesContainer extends Component {
         });
 
         if (this._isMounted) {
-            this.setState({
-                ...this.state,
-                selectedMessages: [],
-                afterDeletion: true
-            });
+            // this.setState({
+            //     ...this.state,
+            //     selectedMessages: [],
+            //     afterDeletion: true
+            // });
+
+            this.setState(produce(this.state, draft => {
+                draft.selectedMessages = [];
+                draft.afterDeletion = true;
+            }));
 
             // this.setState((state, props) => ({
             //     ...state,
@@ -286,6 +315,17 @@ class DialogMessagesContainer extends Component {
             // }));
         }
     }
+
+    renderDialogMessage = message =>
+        <DialogMessage
+            {...message}
+            id={message.message_id}
+            key={message.message_id}
+            afterDeletion={this.state.afterDeletion}
+            onSelect={(shouldAdd) => { this.onSelectMessage(message, shouldAdd) }}
+            stateChange={this.elementVisibleInViewport}
+            scrollContainer={this.props.scrollContainer}
+        />
 
     render() {
         // let scrollHeight = this.dialogMessagesContainerRef.current.scrollHeight;
@@ -296,17 +336,19 @@ class DialogMessagesContainer extends Component {
 
         const messages = this.props.messagesStore.chat.messages;
 
-        const dialogItems = messages.map((message, index) => (
-            <DialogMessage
-                {...message}
-                id={index}
-                key={message.message_id + "-" + index}
-                afterDeletion={this.state.afterDeletion}
-                onSelect={(shouldAdd) => { this.onSelectMessage(message, shouldAdd) }}
-                stateChange={this.elementVisibleInViewport}
-                scrollContainer={this.props.scrollContainer}
-            />
-        ));
+        // const dialogItems = messages.map((message, index) => (
+        //     <DialogMessage
+        //         {...message}
+        //         id={index}
+        //         key={message.message_id + "-" + index}
+        //         afterDeletion={this.state.afterDeletion}
+        //         onSelect={(shouldAdd) => { this.onSelectMessage(message, shouldAdd) }}
+        //         stateChange={this.elementVisibleInViewport}
+        //         scrollContainer={this.props.scrollContainer}
+        //     />
+        // ));
+
+        const dialogItems = messages.map(message => this.getDialogMessageComponent(message));
 
         return (
             <React.Fragment>

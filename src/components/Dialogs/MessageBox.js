@@ -99,14 +99,14 @@ export default class MessageBox extends Component {
 
     onFileInputChange = e => {
         this.setState({
-            ...this.state,
+            // ...this.state,
             file: e.target.files[0]
         });
     }
 
     handleInputChange = message => {
         this.setState({
-            ...this.state,
+            // ...this.state,
             message
         })
     }
@@ -135,7 +135,7 @@ export default class MessageBox extends Component {
             channel_id, subscriber_id, message, keyboard, photosObj
         ).then(() => {
             this.setState({
-                ...this.state,
+                // ...this.state,
                 buttons: [],
                 files: []
             }, () => {
@@ -152,14 +152,14 @@ export default class MessageBox extends Component {
 
     closeModal = () => {
         this.setState({
-            ...this.state,
+            // ...this.state,
             isModalOpen: false
         });
     }
 
     openModal = () => {
         this.setState({
-            ...this.state,
+            // ...this.state,
             isModalOpen: true
         });
     }
@@ -181,14 +181,14 @@ export default class MessageBox extends Component {
         }
 
         this.setState({
-            ...this.state,
+            // ...this.state,
             buttons: activeButtons
         });
     }
 
     onDeleteButton = (e, buttonId) => {
         this.setState({
-            ...this.state,
+            // ...this.state,
             buttons: this.state.buttons.filter(button => button.id !== buttonId)
         });
     }
@@ -196,7 +196,7 @@ export default class MessageBox extends Component {
     onDragEnter = () => {
         console.log('onDragEnter');
         this.setState({
-            ...this.state,
+            // ...this.state,
             dropzoneActive: true
         });
     }
@@ -204,7 +204,7 @@ export default class MessageBox extends Component {
     onDragLeave = () => {
         console.log('onDragLeave');
         this.setState({
-            ...this.state,
+            // ...this.state,
             dropzoneActive: false
         });
     }
@@ -216,7 +216,7 @@ export default class MessageBox extends Component {
         // set attachments to activeMessageId in the state and make dropzone inactive
 
         this.setState({
-            ...this.state,
+            // ...this.state,
             dropzoneActive: false,
             files: [...this.state.files, ...acceptedFiles],
             sendButtonActive: false
@@ -228,7 +228,7 @@ export default class MessageBox extends Component {
                 const files = this.state.files;
                 files[index].progress = e.percent;
                 this.setState({
-                    ...this.state,
+                    // ...this.state,
                     files
                 });
             }
@@ -249,7 +249,7 @@ export default class MessageBox extends Component {
                 return file;
             });
             this.setState({
-                ...this.state,
+                // ...this.state,
                 files,
                 sendButtonActive: true
             });
@@ -260,7 +260,7 @@ export default class MessageBox extends Component {
         const files = this.state.files.filter(f => f.id !== file.id);
 
         this.setState({
-            ...this.state,
+            // ...this.state,
             files
         });
     }

@@ -4,6 +4,7 @@ import Image from 'react-image-webp';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { Watch } from 'scrollmonitor-react';
+import produce from 'immer';
 
 import { unixtimeToDate, formatDate, linkify } from '../../utils';
 
@@ -111,10 +112,14 @@ export default Watch(class DialogMessage extends Component {
     }
 
     hover = e => {
-        this.setState({
-            ...this.state,
-            hover: true
-        });
+        // this.setState({
+        //     ...this.state,
+        //     hover: true
+        // });
+
+        this.setState(produce(this.state, draft => {
+            draft.hover = true;
+        }));
 
         // this.setState((state, props) => ({
         //     ...state,
@@ -123,10 +128,14 @@ export default Watch(class DialogMessage extends Component {
     }
 
     unhover = e => {
-        this.setState({
-            ...this.state,
-            hover: false
-        });
+        // this.setState({
+        //     ...this.state,
+        //     hover: false
+        // });
+
+        this.setState(produce(this.state, draft => {
+            draft.hover = false;
+        }));
 
         // this.setState((state, props) => ({
         //     ...state,
@@ -138,10 +147,14 @@ export default Watch(class DialogMessage extends Component {
         if (e.target.tagName && e.target.tagName.toLowerCase() !== 'a') {
             this.props.onSelect(!this.state.selected);
 
-            this.setState({
-                ...this.state,
-                selected: !this.state.selected
-            });
+            // this.setState({
+            //     ...this.state,
+            //     selected: !this.state.selected
+            // });
+
+            this.setState(produce(this.state, draft => {
+                draft.selected = !draft.selected;
+            }));
 
             // this.setState((state, props) => ({
             //     ...state,

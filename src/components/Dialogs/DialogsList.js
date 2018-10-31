@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
+import memoize from 'lodash/memoize';
+// import produce from 'immer';
 
 import DialogListItem from './DialogListItem';
 import { truncate } from '../../utils';
@@ -19,18 +21,30 @@ export default class DialogsList extends Component {
         };
 
         this.searchInputField = React.createRef();
+
+        this.getMemoizedDialogItem = memoize(
+            (dialog, props) => this.renderDialogItem(dialog, props)
+        );
     }
 
     componentWillMount() {
         this.setState({
             dialogs: this.props.dialogs
         });
+
+        // this.setState(produce(this.state, draft => {
+        //     draft.dialogs = this.props.dialogs;
+        // }));
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
             dialogs: nextProps.dialogs
         });
+
+        // this.setState(produce(this.state, draft => {
+        //     draft.dialogs = nextProps.dialogs;
+        // }));
     }
 
     componentDidMount() {
@@ -57,7 +71,14 @@ export default class DialogsList extends Component {
         this.setState({
             dialogs: updatedDialogs
         });
+
+        // this.setState(produce(this.state, draft => {
+        //     draft.dialogs = updatedDialogs;
+        // }));
     }
+
+    renderDialogItem = (dialog, props) =>
+        <DialogListItem key={dialog.subscriber_id + '-' + dialog.channel_id} {...props} />
 
     getDialogs = dialogs => dialogs
      .slice()
@@ -81,7 +102,8 @@ export default class DialogsList extends Component {
             unreadCount, unread, isActive
         }
 
-        return <DialogListItem key={dialog.subscriber_id + '-' + dialog.channel_id} {...props} />;
+        // return <DialogListItem key={dialog.subscriber_id + '-' + dialog.channel_id} {...props} />;
+        return this.getMemoizedDialogItem(dialog, props);
     });
 
     render() {

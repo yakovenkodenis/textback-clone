@@ -2,7 +2,7 @@ import React, { Component, Suspense } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Route, withRouter } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
-// import shortid from 'shortid';
+import memoize from 'lodash/memoize';
 
 import { Default } from './Responsive';
 
@@ -137,6 +137,8 @@ class Home extends Component {
             isSidebarActive: false,
             isRightSidebarOpen: false
         };
+
+        this.getMemoizedRoute = memoize(route => this.renderRoute(route));
     }
 
     componentWillMount() {
@@ -213,6 +215,21 @@ class Home extends Component {
         }
     }
 
+    renderRoute = route =>
+        <Route
+            key={route.path}
+            path={'/admin' + route.path}
+            exact={route.exact}
+            render={() => (
+                <Suspense fallback={<LoadingSpinner />}>
+                    <React.Fragment>
+                        <ScrollToTopOnMount />
+                        {route.component()}
+                    </React.Fragment>
+                </Suspense>
+            )}
+        />
+
     render() {
         const { isMobile } = this.props;
 
@@ -240,22 +257,7 @@ class Home extends Component {
                                 padding: isMobile ? "0.25rem 0.25rem" : "1.25rem 2.25rem"
                             }}
                         >
-                            {routes.map((route, index) => (
-                                <Route
-                                    key={index/*shortid.generate()*/}
-                                    path={'/admin' + route.path}
-                                    exact={route.exact}
-                                    // component={route.component}
-                                    render={() => (
-                                        <Suspense fallback={<LoadingSpinner />}>
-                                            <React.Fragment>
-                                                <ScrollToTopOnMount />
-                                                {route.component()}
-                                            </React.Fragment>
-                                        </Suspense>
-                                    )}
-                                />
-                            ))}
+                            {routes.map(route => this.getMemoizedRoute(route))}
                         </div>
                     </div>
                 </div>
@@ -263,6 +265,23 @@ class Home extends Component {
         )
     }
 };
+
+// previous variant of routes rendering:
+// {routes.map((route, index) => (
+//     <Route
+//         key={index/*shortid.generate()*/}
+//         path={'/admin' + route.path}
+//         exact={route.exact}
+//         render={() => (
+//             <Suspense fallback={<LoadingSpinner />}>
+//                 <React.Fragment>
+//                     <ScrollToTopOnMount />
+//                     {route.component()}
+//                 </React.Fragment>
+//             </Suspense>
+//         )}
+//     />
+// ))}
 
 const ResponsiveHome = props => (
     <MediaQuery maxDeviceWidth={767}>

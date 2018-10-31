@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter, Route, Link } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
+import memoize from 'lodash/memoize';
 
 import DialogsList from './DialogsList';
 import DialogContainer from './DialogContainer';
@@ -13,6 +14,14 @@ import OnboardingWizard from '../OnboardingWizard/OnboardingWizard';
 @withRouter
 @observer
 class Dialogs extends Component {
+
+    constructor(props, context) {
+        super(props, context);
+
+        this.getMemoizedDialogRoute = memoize(
+            (subscriber, match) => this.renderDialogRoute(subscriber, match)
+        );
+    }
 
     componentWillMount() {
         const { history } = this.props;
@@ -47,22 +56,37 @@ class Dialogs extends Component {
         }));
     }
 
+    renderDialogRoute = (subscriber, match) =>
+        <Route 
+            key={subscriber.subscriber_id + '-' + subscriber.channel_id}
+            path={`/admin/dialogs/${match.params.currentFilter}/${subscriber.path}`}
+            exact={true}
+            component={
+                () => <DialogContainer
+                            currentFilter={match.params.currentFilter}
+                            {...subscriber}
+                    />
+            }
+        />
+
     generateDialogRoutes = subscribers => {
         const { match } = this.props;
 
-        return subscribers.map((subscriber, index) => (
-            <Route 
-                key={subscriber.subscriber_id + '-' + subscriber.channel_id}
-                path={`/admin/dialogs/${match.params.currentFilter}/${subscriber.path}`}
-                exact={true}
-                component={
-                    () => <DialogContainer
-                                currentFilter={match.params.currentFilter}
-                                {...subscriber}
-                          />
-                }
-            />
-        ));
+        // return subscribers.map((subscriber, index) => (
+        //     <Route 
+        //         key={subscriber.subscriber_id + '-' + subscriber.channel_id}
+        //         path={`/admin/dialogs/${match.params.currentFilter}/${subscriber.path}`}
+        //         exact={true}
+        //         component={
+        //             () => <DialogContainer
+        //                         currentFilter={match.params.currentFilter}
+        //                         {...subscriber}
+        //                   />
+        //         }
+        //     />
+        // ));
+
+        return subscribers.map(subscriber => this.getMemoizedDialogRoute(subscriber, match));
     }
 
     getFilteredDialogsList = subscribers => {
